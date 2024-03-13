@@ -1,0 +1,615 @@
+# Monash University
+
+# Faculty of Information Technology
+
+# FIT3152 - Data Analytics
+
+## Assignment 1, Semester 1, 2024
+
+**Name:** Rhyme Bulbul
+
+**Student ID:** 31865224
+
+**Project:** Analysis of country-level predictors of pro-social behaviours to reduce the spread of COVID-19 during the early stages of the pandemic
+
+
+**AI statement:** Generative AI was not used in this assignment
+
+## Task 1: Descriptive analysis and pre-processing
+
+#### 1(a)
+
+A condensed version of the data gathered for the PsyCorona baseline study, a psychological survey investigating pro-social behaviours in several nations during the COVID-19 epidemic, is contained in the file `PsyCoronaBaselineExtract.csv`, by Van Lissa et al. (2002).
+
+We start by taking a unique sample of the dataset based on my student ID, and attaching the data to the R search path for ease of variable use
+
+```{r message = FALSE}
+rm(list = ls())
+set.seed(31865224) 
+cvbase = read.csv("PsyCoronaBaselineExtract.csv")
+cvbase <- cvbase[sample(nrow(cvbase), 40000), ] # 40000 rows
+```
+
+We will require the help of a few libraries, so let’s import those
+
+```{r message = FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+It is helpful to learn about a dataset’s features and properties before working on it
+
+```{r results = "hide"}
+dim(cvbase)
+as.data.frame(sapply(cvbase, class))  # get data types of each column
+summary(cvbase, na.rm = TRUE)
+```
+
+In this case, we will run the dimensions method, to find out the data frame has 40,000 rows, given we have sampled it to be so when reading it in, and 52 columns.
+
+The only text attributes in the dataframe appear to be `coded_country` and the `Rank Order of Life` columns, while the rest are integer data
+
+According to the codebook extract, every column aside from `employstatus`, `gender`, `age`, `edu`, and `coded_country` contains ordinal data in the form of numbers that represent degrees of agreement for things like age group, education level, and level of agreement. Different `gender`, `age`, and `education` categories are coded by the integer values in their respective columns. Each record may only have a maximum of one employstatus column with a value of 1, indicating the employee's employment status.
+
+We may infer that the numerical attributes have different ranges from the `summary()` output. Survey questions evaluating a two-sided degree of agreement vary from a negative number to its modulus, while those measuring a one-sided degree of agreement go from 1 to a larger positive number, such 4 or 5.
+
+We are able to use the following, to understand `coded_country` better
+
+```{r results = "hide"}
+sort(unique(cvbase$coded_country))  # get unique country names in sorted order
+table(cvbase$coded_country)         # get number of entries for each country
+max(table(cvbase$coded_country))   # get maximum number of entries, and their corresponding countries
+which(table(cvbase$coded_country) == max(table(cvbase$coded_country))) 
+```
+
+```{r results = "hide"}
+min(table(cvbase$coded_country))   # get minimum number of entries, and their corresponding countries
+which(table(cvbase$coded_country) == min(table(cvbase$coded_country)))
+```
+
+Based on the outputs, there seems to be 110 unique countries inclusive of NA values, with each country having a widely different number of entries, the United States of America being the highest at 6987, and host of other countries having much less.
+
+Missing values are present in all columns, however this is the norm as surveys of this nature do not require participants to answer all questions. The `employstatus` columns appear to be the biggest culprit, given each participant will only pick one out of the 10 categories. In this dataframe, `employstatus_3` seems to have the least missing values, while `employstatus_8` has the highest number. Potentially, this could imply that the majority of participants are working 40 hours or more, while a small number of people who are disabled may be out of work.
+
+Another point to note is the mean age group in this dataframe amounts to 2.905, which indicates that the majority of participants are likely to be aged between 35-44 years. This could indicate working-class adults with concise lifestyle, and are studied accordingly to research the outcomes covid had on people.
+
+### 1(b)
+
+This dataset is relatively tidy and without too many missing values, hence preprocessing should not be required. However, the missing values in the `employstatus` column should be replaced with 0, as it would be easier to transform and process the data in binary format, which might be required for linear regression involving these attributes down the track.
+
+```{r}
+#cvbase <- apply(cvbase, 2, function(x) {x[is.na(x)] <- 0; return(x)})
+for (i in 1:10) {
+  cvbase[, i][is.na(cvbase[, i])] <- 0
+}
+```
+
+## Task 2: Focus country vs all other countries as a group
+
+### 2(a)
+
+My designated country is Croatia. We will start by creating bar charts for each group of countries, where the y-axis represents the survey questions, and the x-axis represents the mean of each questions' response. Below, we will create data frames for the mean values utilizing `ggplot2`, excluding non-numerical attributes such as `coded_country`.
+
+```{r message = FALSE, fig.height = 8.5, fig.width = 10}
+
+croatia <- cvbase[cvbase$coded_country == "Croatia", ]
+others <- anti_join(cvbase, croatia)
+
+numeric_cols <- sapply(croatia, is.numeric)  # Find numeric columns
+means <- colMeans(croatia[, numeric_cols], na.rm = TRUE)  # Calculate means
+
+#means <- colMeans(croatia[, !names(croatia) %in% c("coded_country")], na.rm = TRUE)
+croatia_means <- data.frame(mean = means)
+
+numeric_cols <- sapply(others, is.numeric)  # Find numeric columns
+others_means <- colMeans(others[, numeric_cols], na.rm = TRUE)  # Calculate means
+#means <- colMeans(rem[, !names(rem) %in% c("coded_country")], na.rm = TRUE)
+others_means <- data.frame(mean = others_means)
+
+croatia_plot <- ggplot(croatia_means) +
+  geom_bar(mapping = aes(x = rownames(croatia_means), y = mean), stat = "identity",
+    fill = "blue") +
+  coord_flip() +
+  labs(x = "Survey questions", y = "Mean value of responses",
+    title = "Mean values of responses for each survey question in Croatia")
+
+rem_plot <- ggplot(others_means) +
+  geom_bar(mapping = aes(x = rownames(others_means), y = mean), stat = "identity",
+    fill = "red") +
+  coord_flip() +
+  labs(x = "Survey questions", y = "Mean value of responses",
+    title = "Mean values of responses for each survey question in the rest of the world")
+
+croatia_plot
+rem_plot
+```
+
+
+Looking at both graphs of Croatia, and all other countries in comparison, most responses seem to be quite similar, except for Boredom, `bor01`,`bor02` and `bor03`. While the worldwide mean is between 0 (Neither agree nor disagree) and 1 (Somewhat agree), in Croatia, the mean is negative and closer to 1 (Somewhat disagree). This leads us to believe people in Croatia could be less bored than other countries worldwide, albeit slightly
+
+### 2(b)
+
+//TODO: start
+
+An initial look is taken at the correlation between predictor and pro-social attitude for Croatia. The `cor()` function is used and the correlation matrix is visualised with a heatmap.
+
+```{r fig.height = 8.5, fig.width = 8.5}
+usa_cor <- cor(subset(usa, select = -coded_country), use = "complete.obs")
+
+# reshapes matrix to long format for plotting
+usa_melted <- reshape2::melt(usa_cor)
+
+usa_cor_plot <- ggplot(data = usa_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for Croatia", x = "", y = "",
+    fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
+
+usa_cor_plot
+```
+
+Red and blue tiles indicate positive and negative correlation respectively, with tiles becoming white as correlation approaches 0. From this heatmap, there are many instances of strong correlation between predictors, but the subsection of the heatmap showing the correlation between pro-social attitudes and all other attributes is fairly light. This indicates that the attributes may not predict pro-social attitudes extremely well for Croatia.
+
+By fitting a linear regression model of each pro-social attitude against the attributes, we can see how well the responses predict the response to the pro-social attitude question. We will also be able to find out which predictors are the best.
+
+The following code fits a linear model of each pro=social attitude against the attributes. A function and for loop is used to summarise each model, including their R-squared values, significant predictors with p-value less than 0.001, and their respective coefficients. `prds` and `mdl` are vectors that will be used to compare the strong predictors for each model in a table later.
+
+```{r}
+prds <- NULL
+mdl <- NULL
+
+model_eval <- function(model) {
+  rsqr <- summary(model)$r.squared
+  a_rsqr <- summary(model)$adj.r.squared
+  sig <- which(summary(model)$coefficients[-1, 4] < 0.001) + 1
+  preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
+  coefs <- summary(model)$coefficients[sig, 1]
+
+  return(list(rsqr, a_rsqr, preds, coefs))
+}
+
+fitted_usa1 <- lm(c19ProSo01 ~ .,
+  data = subset(usa, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_usa2 <- lm(c19ProSo02 ~ .,
+  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_usa3 <- lm(c19ProSo03 ~ .,
+  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_usa4 <- lm(c19ProSo04 ~ .,
+  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in Croatia\n\n")
+counter <- 1
+for (model in list(fitted_usa1, fitted_usa2, fitted_usa3, fitted_usa4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("USA C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+The responses best predict `C19ProSo04`, as evident from its adjusted R-squared value of 0.2113349, which is the highest among all models. Its best predictors are `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish`. The model for `C19ProSo03` has the lowest adjusted R-squared value - 0.08190663 - with its best predictors being `PLRAC19`, `MLQ`, `c19NormShould`, `trustGovState` and `edu`.
+
+The arguably small R-squared values among the models are unsurprising as most of the survey questions are subjective. For example, different participants perceive different levels of calmness differently, and interpret financial strain differently. As a vast and populous country with many working classes and standards of life, different parts of Croatia are like separate countries on their own, with their own economies, healthcare and overall happiness. This makes it hard for the pro-social attitude responses to be predicted consistently.
+
+Each model has its own list of significant predictors, but some predictors can be considered more reliable overall as they appear more often across the models. The prime example would be `c19NormShould`, which is a strong predictor for all four models. This makes sense as someone who is willing to assist society during the pandemic would want the best for it, and thus encourage members of society to self-isolate and socially distance. These measures of curbing viral spread are suggested by Croatia's own Centers for Disease Control and Prevention (CDC), and as a developed nation with a well-educated population, individuals with pro-social intentions tend to follow these guidelines. On the other hand, someone without pro-social attitudes would be indifferent towards societal behaviours and not be bothered to follow new norms. The predictive strength of `c19NormShould` may also be affected by individuals who think that social distancing is bad for society, and that they are helping others by opposing these measures. Protests against lockdowns were common in Croatia during the pandemic, proving that this belief does exist.
+
+Other variables that predict three of the models well are `disc02`, `MLQ` and `trustGovState`. Individuals would tend to be more pro-social based on their concern about the society's future, their sense of purpose in life, and their belief on whether they can find common ground with society in dealing with the pandemic.
+
+### 2(c)
+
+To repeat the same task for the rest of the world, previous code is reused, but with the `rem` dataset instead of `usa`. The correlation matrix for this dataset is first visualised. From this point onwards, variants of reused code will appear in the **Appendix** to keep this report concise.
+
+```{r include = FALSE}
+rem_cor <- cor(subset(rem, select = -coded_country), use = "complete.obs")
+rem_melted <- reshape2::melt(rem_cor)
+
+rem_cor_plot <- ggplot(data = rem_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for the rest of the world", x = "", y = "",
+    fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r fig.height = 8.5, fig.width = 8.5}
+rem_cor_plot
+```
+
+Comparing both heatmaps we have thus far, we observe that `usa_cor_plot` has more darker-coloured tiles, indicating stronger correlation between predictors overall. In addition to having lighter tiles, `rem_cor_plot` looks "cleaner" with less scatter of coloured tiles. However, focusing on the subsections of the heatmaps that show the correlation between pro-social attitudes and all other attributes allows us to make an initial guess that the attributes for both groups of data should predict pro-social attitudes with roughly similar performance, as the subsections in both plots look fairly similar.
+
+```{r echo = FALSE}
+fitted_rem1 <- lm(c19ProSo01 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_rem2 <- lm(c19ProSo02 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_rem3 <- lm(c19ProSo03 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_rem4 <- lm(c19ProSo04 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in the rest of the world\n\n")
+counter <- 1
+for (model in list(fitted_rem1, fitted_rem2, fitted_rem3, fitted_rem4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("RoW C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+Note: the lines for predictor names and their coefficients are too long and were cut off instead of wrapped when this PDF was knitted from my R Markdown file. The cut-off lines are, in order, as follows:
+
+`affInsp` `PLRAC19` `disc02` `employstatus_10` `fail03` `lifeSat` `MLQ` `c19NormShould` `c19NormDo` `c19IsOrg` `trustGovState` `edu`
+
+`0.06154919` `0.0652525` `0.1005851` `0.3293603` `0.06135636` `0.05886684` `0.08799994` `0.1034505` `0.0727743` `0.05776118` `0.142124` `0.02873322`
+
+`affAnx` `affBor` `affExc` `affExh` `affInsp` `PLRAEco` `disc02` `disc03` `jbInsec02` `PFS01` `fail01` `lifeSat` `MLQ` `c19NormShould` `c19NormDo` `trustGovCtry` `trustGovState` `age` `edu`
+
+`0.04854233` `0.06002516` `0.06926414` `0.04935493` `0.04810877` `-0.03626116` `0.1502406` `0.0650781` `0.06608606` `-0.0901943` `-0.07940344` `0.06139211` `0.1117521` `0.1321387` `0.08202972` `0.06169359` `0.1511349` `-0.05740599` `0.05113085`
+
+`affExc` `affExh` `affInsp` `PLRAC19` `disc02` `disc03` `employstatus_10` `lifeSat` `MLQ` `c19NormShould` `c19NormDo` `c19IsOrg` `trustGovState` `age` `edu`
+
+`0.05042581` `0.04464075` `0.06039361` `0.07098512` `0.1348678` `0.07466859` `0.3418363` `0.09238179` `0.05582841` `0.08829495` `0.07615688` `0.0830227` `0.1792569` `-0.05783799` `0.03418924`
+
+`affInsp` `PLRAC19` `disc02` `disc03` `jbInsec01` `employstatus_10` `PFS02` `fail01` `fail02` `fail03` `lifeSat` `c19NormShould` `c19NormDo` `c19IsStrict` `trustGovState`
+
+`0.07070157` `0.08621845` `0.1716264` `0.04722402` `0.06153325` `0.348768` `0.04779941` `-0.06649288` `-0.05701471` `0.07318474` `0.08059154` `0.2330507` `0.04257108` `0.05811818` `0.09548559`
+
+Based on the summary for the rest of the world, all four models have roughly the same adjusted R-squared values between 0.12 and 0.17, which is narrower than the corresponding range for the US dataset (0.08 - 0.21). The models have many more significant predictors compared to the `usa` models. Strong predictors that predict all four models well are `disc02`, `lifeSat`, `c19NormShould`, `c19NormDo` and `trustGovState`. These predictors include most of those that had good performance across the four `usa` models, which are `c19NormShould`, `disc02` and `trustGovState`. As previously mentioned, Croatia by itself resembles a collection of separate countries due to its size and diversity. Hence, it is no surprise that strong predictors for Croatia would apply to other countries as a group as well.
+
+The findings of the best predictors for each pro-social attitude for Croatia and other countries as a group can be visualised in a table as shown below, generated using `ggplot2`.
+
+```{r fig.width = 10}
+summ_table <- table(predictors = prds, models = mdl)
+
+# reorder the columns
+summ_table <- summ_table[, c("USA C19ProSo01", "USA C19ProSo02", "USA C19ProSo03",
+  "USA C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03",
+  "RoW C19ProSo04")]
+
+summ_table_vis <- ggplot(data = as.data.frame(summ_table)) +
+  geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
+  scale_fill_gradientn(colours = c("pink", "green")) +
+  theme(legend.position = "none") +
+  scale_x_discrete(position = "top") +
+  scale_y_discrete(limits = rev) +
+  labs(x = "Models", y = "Predictors",
+    title = "Table of significant predictors for each model")
+
+summ_table_vis
+```
+
+## Task 3: Focus country vs cluster of similar countries
+
+### 3(a)
+
+In addition to the indicators found in the sources listed in the references, some other socioeconomic and health data have been sourced from other websites as well. The final data table (in **Appendix**) that I have compiled for use in clustering consists of 8 indicators: `HDI`, `GHS`, `freedom`, `political_stability`, `happiness`, `total_vax_per_hundred`, `total_cases_per_mil` and `total_deaths_per_mil`. Details and explanations about each indicator and their sources are included in the **Appendix**.
+
+To identify countries similar to Croatia, k-means clustering is performed. Countries with NA values are first removed for the `kmeans()` function to work. This has minimal impact on our results as most of these countries are very different from Croatia in terms of development and data transparency (eg. Afghanistan, Syria), and also do not appear in the baseline data in the first place (eg. Solomon Islands, Cuba). The data is then scaled and K-means clustering is performed with 15 random starts.
+
+```{r}
+collected <- read.csv("task3.csv")
+collected_clean <- na.omit(collected)
+collected_clean[, 2:9] <- scale(collected_clean[, 2:9])
+
+kfit <- kmeans(collected_clean[, 2:9], round(nrow(collected_clean) / 5), nstart = 15)
+clusters <- data.frame(country = collected_clean[[1]], cluster = kfit$cluster)
+
+target <- filter(clusters, country == "Croatia")$cluster
+similar <- filter(clusters, cluster == target)
+similar
+```
+
+Based on the clustering, countries similar to the Croatia are Belgium, Czech Republic, Lithuania, Slovenia and the United Kingdom.
+
+### 3(b)
+
+Baseline data of the countries belonging to the cluster are first extracted through an inner join of `cvbase` and `similar`, with Croatia data removed. A visualisation of the correlation matrix for this subset of data is then plotted, just as for `usa` and `rem`.
+
+```{r}
+colnames(similar)[colnames(similar) == "country"] <- "coded_country"
+intersect <- merge(cvbase, similar, by = "coded_country", all = FALSE)
+intersect <- intersect[, -ncol(intersect)]
+clus <- filter(intersect, coded_country != "Croatia")
+
+clus_cor <- cor(subset(clus, select = -coded_country), use = "complete.obs")
+clus_melted <- reshape2::melt(clus_cor)
+```
+
+```{r include = FALSE}
+clus_cor_plot <- ggplot(data = clus_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for countries similar to Croatia",
+    x = "", y = "", fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r fig.height = 8.5, fig.width = 8.5}
+clus_cor_plot
+```
+
+The scatter of coloured tiles for this heatmap resembles that of the Croatia heatmap, illustrating the similarity between these countries. The subsection of tiles showing correlation between predictors and pro-social attitudes are overall darker compared to the previous plots, indicating that the predictors for this cluster of countries might have better predictive performance compared to the previous two groups of data.
+
+To find out how participant responses predict pro-social attitudes for this cluster of similar countries, the same code as in 2(b) and 2(c) is reused to print a formatted summary of the four models.
+
+```{r echo = FALSE}
+fitted_clus1 <- lm(c19ProSo01 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_clus2 <- lm(c19ProSo02 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_clus3 <- lm(c19ProSo03 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_clus4 <- lm(c19ProSo04 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in countries similar to the US\n\n")
+counter <- 1
+for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  counter <- counter + 1
+}
+```
+
+From the output, the models for these similar countries generally have roughly the same adjusted R-squared values as the models for the United States and all other countries as a group. The highest adjusted R-squared value is seen in the model for `C19ProSo04` (0.2478493), just as with the United States models. However, unlike the previous eight models, none of these models have significant predictors with p-values less than 0.001 except the model for `C19ProSo04`, whose significant predictors are `disc02` and `PFS02`. `disc02` also appears as a strong predictor in the United States model for `C19ProSo04`, but not `PFS02`. The rest-of-the-world model for `C19ProSo04`, however, has both `disc02` and `PFS02` as strong predictors.
+
+Hence, the predictive performance of attributes for this cluster of countries is not significantly better than that of the United States nor the rest of the world, with similar R-squared values and predictors with overall higher p-values. The strong correlation we observed earlier may be due to chance or a small sample size, instead of actual statistically significant relationships between attribute and pro-social attitude.
+
+For the sake of comparison, we can set the definition of a strong predictor relative to the overall p-values in a model. We define a strong predictor for these new cluster models as a predictor with a p-value less than 0.05 (a commonly used threshold). The `model_eval` function is updated to reflect this (see **Appendix**) and a new visualisation table is created.
+
+```{r echo = FALSE}
+model_eval_2 <- function(model) {
+  rsqr <- summary(model)$r.squared
+  a_rsqr <- summary(model)$adj.r.squared
+  sig <- which(summary(model)$coefficients[-1, 4] < 0.05) + 1
+  preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
+  coefs <- summary(model)$coefficients[sig, 1]
+
+  return(list(rsqr, a_rsqr, preds, coefs))
+}
+
+cat("Summary of models for predicting pro-social attitudes in countries similar to the US\n\n")
+counter <- 1
+for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval_2(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.05:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("Similar C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+```{r include = FALSE}
+summ_table_2 <- table(predictors = prds, models = mdl)
+summ_table_2 <- summ_table_2[, c("USA C19ProSo01", "USA C19ProSo02", "USA C19ProSo03",
+  "USA C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03", "RoW C19ProSo04",
+  "Similar C19ProSo01", "Similar C19ProSo02", "Similar C19ProSo03", "Similar C19ProSo04")]
+
+summ_table_vis_2 <- ggplot(data = as.data.frame(summ_table_2)) +
+  geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
+  scale_fill_gradientn(colours = c("pink", "green")) +
+  theme(legend.position = "none") +
+  scale_x_discrete(position = "top") +
+  scale_y_discrete(limits = rev) +
+  labs(x = "Pro-social attitudes", y = "Predictors",
+    title = "Table of significant predictors for each pro-social attitude") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r fig.width = 10}
+summ_table_vis_2
+```
+
+We observe that the distribution of strong predictors of the similar countries' models is more alike to that of the United States models (ie. they look as "sparse" as the US models), with a few common significant predictors shared. The models of the group of all other countries share many more common significant predictors with the United States models, with more similar p-values. However, these models also have many strong predictors which are not as strong in the United States models. Therefore, the cluster of similar countries might give a better match to the important attributes for predicting pro-social attitudes. The higher p-values and fewer shared common strong predictors seen in their models may no longer be observed when further analysis is done or a larger sample size is introduced.
+
+A possible explanation is that, despite being similar to the United States, each country in the cluster are slightly different in terms of socioeconomic factors outside the indicators used for clustering. When these slight differences are aggregated as a group, their performance in predicting pro-social attitudes deviates more from that of the United States alone. On the other hand, the United States models share many common strong predictors with the models of the group of all countries, due to the complexity of  its politics, culture and other features of society, akin to a group of many countries. The group of all other countries may be too large and complex, and hence its models may report many significant predictors that are actually not significant in reality.
+
+## Appendix
+
+Head of `cvbase` at the end of 1(b).
+
+```{r}
+head(cvbase)
+```
+
+Code for correlation matrix of `rem` from 2(c).
+
+```{r eval = FALSE}
+rem_cor <- cor(subset(rem, select = -coded_country), use = "complete.obs")
+rem_melted <- reshape2::melt(rem_cor)
+
+rem_cor_plot <- ggplot(data = rem_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for the rest of the world", x = "", y = "",
+    fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+Code for summary results of `rem` models from 2(c).
+
+```{r eval = FALSE}
+fitted_rem1 <- lm(c19ProSo01 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_rem2 <- lm(c19ProSo02 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_rem3 <- lm(c19ProSo03 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_rem4 <- lm(c19ProSo04 ~ .,
+  data = subset(rem, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in the rest of the world\n\n")
+counter <- 1
+for (model in list(fitted_rem1, fitted_rem2, fitted_rem3, fitted_rem4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("RoW C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+Final table of data compiled and used for clustering in 3(a).
+
+```{r}
+collected
+```
+
+Explanation of each indicator used for clustering and their sources (from 3(a)).
+
+- `HDI`: Human Development Index (2021); a value between 0 and 1 that measures average achievement in human development based on three dimensions - life expectancy, education and standard of living. (Source: [Human Development Reports](https://hdr.undp.org/data-center/documentation-and-downloads))
+- `GHS`: Global Health Security Index (2021); a value between 0 and 100 that benchmarks a country's health security and preparedness in preventing, detecting and responding to health emergencies. (Source: [Global Health Security Index: Reports and Data](https://www.ghsindex.org/report-model/))
+- `freedom`: Human Freedom Index (2021); a value between 0 and 10 that assesses the level of human freedom in a country. Human freedom is a combination of two distinct dimensions - personal freedom (freedom of religion, speech, sexual orientation, etc.) and economic freedom (size of government, judicial impartiality, freedom to trade, etc.) (Source: [World Population Review](https://worldpopulationreview.com/country-rankings/freedom-index-by-country))
+- `political_stability`: a value **approximately** between -2.5 and 2.5 that evaluates political stability and absence of violence/terrorism of each country in 2021. (Source: [The World Bank Data Collections (and Governance Indicators)](https://info.worldbank.org/governance/wgi/))
+- `happiness`: World Happiness Report score (2021); a value between 0 and 10 that represents happiness of a country's citizens based on several socioeconomic factors. (Source: [World Happiness Report](https://worldhappiness.report/ed/2021/#appendices-and-data))
+- `total_vax_per_hundred`: latest updated total number of COVID-19 vaccinations administered per 100 people before 2022.
+- `total_cases_per_mil`: latest updated total number of COVID-19 cases per 1,000,000 people before 2022.
+- `total_deaths_per_mil`: latest updated total number of COVID-19 cases per 1,000,000 people before 2022.
+
+The last three indicators were sourced from [Our World in Data's COVID-19 Github repository](https://github.com/owid/covid-19-data/tree/master/public/data).
+
+Visualisation of k-means clustering performed in 3(a) (cluster plot).
+
+```{r}
+library(cluster)
+clusplot(collected_clean, kfit$cluster, color = TRUE, shade = TRUE, labels = 0, lines = 0)
+```
+
+Code for correlation matrix of `rem` from 3(b).
+
+```{r eval = FALSE}
+clus_cor_plot <- ggplot(data = clus_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for countries similar to the United States",
+    x = "", y = "", fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+Code for summary results of `clus` models from 3(b).
+
+```{r eval = FALSE}
+fitted_clus1 <- lm(c19ProSo01 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_clus2 <- lm(c19ProSo02 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_clus3 <- lm(c19ProSo03 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_clus4 <- lm(c19ProSo04 ~ .,
+  data = subset(clus, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in countries similar to the US\n\n")
+counter <- 1
+for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  counter <- counter + 1
+}
+```
+
+Code for summary results of `clus` models from 3(b), with updated `model_eval` function such that significant predictors have p-value less than 0.05.
+
+```{r eval = FALSE}
+model_eval_2 <- function(model) {
+  rsqr <- summary(model)$r.squared
+  a_rsqr <- summary(model)$adj.r.squared
+  sig <- which(summary(model)$coefficients[-1, 4] < 0.05) + 1
+  preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
+  coefs <- summary(model)$coefficients[sig, 1]
+
+  return(list(rsqr, a_rsqr, preds, coefs))
+}
+
+cat("Summary of models for predicting pro-social attitudes in countries similar to the US\n\n")
+counter <- 1
+for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval_2(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.05:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("Similar C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+Code for table of strong predictors of `usa`, `rem` and `clus` models from 3(b).
+
+```{r eval = FALSE}
+summ_table_2 <- table(predictors = prds, models = mdl)
+summ_table_2 <- summ_table_2[, c("USA C19ProSo01", "USA C19ProSo02", "USA C19ProSo03",
+  "USA C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03", "RoW C19ProSo04",
+  "Similar C19ProSo01", "Similar C19ProSo02", "Similar C19ProSo03", "Similar C19ProSo04")]
+
+summ_table_vis_2 <- ggplot(data = as.data.frame(summ_table_2)) +
+  geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
+  scale_fill_gradientn(colours = c("pink", "green")) +
+  theme(legend.position = "none") +
+  scale_x_discrete(position = "top") +
+  scale_y_discrete(limits = rev) +
+  labs(x = "Pro-social attitudes", y = "Predictors",
+    title = "Table of significant predictors for each pro-social attitude") +
+  theme(axis.text.x = element_text(angle = 90))
+```
