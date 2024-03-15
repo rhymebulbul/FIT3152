@@ -132,22 +132,43 @@ Looking at both graphs of Croatia, and all other countries in comparison, most r
 
 //TODO: start
 
-An initial look is taken at the correlation between predictor and pro-social attitude for Croatia. The `cor()` function is used and the correlation matrix is visualised with a heatmap.
+Let's start by taking a peek at the correlation between predictors for pro-social attitude for Croatia. The `cor()` function is used and the correlation matrix is visualised with a heatmap.
 
 ```{r fig.height = 8.5, fig.width = 8.5}
-usa_cor <- cor(subset(usa, select = -coded_country), use = "complete.obs")
 
+
+# Assuming 'usa' is your dataframe containing the data for the USA
+croatia_cor <- croatia %>%
+  select(-coded_country) %>%  # Exclude the 'coded_country' column
+  na.omit() %>%               # Remove rows with any missing values
+  cor()                       # Compute the correlation matrix
+
+# Print the correlation matrix
+#print(croatia_cor)
+
+```
+
+```{r fig.height = 8.5, fig.width = 8.5}
+#croatia_cor <- cor(subset(croatia, select = -coded_country), use = "complete.obs")
+# Check the structure of your subset
+# Remove rows with any missing values
+#croatia <- na.omit(croatia)
+
+# Now, compute correlations
+#croatia_cor <- cor(subset(croatia, select = -coded_country))
+
+#any(is.na(croatia_cor))
 # reshapes matrix to long format for plotting
-usa_melted <- reshape2::melt(usa_cor)
+croatia_melted <- reshape2::melt(croatia_cor)
 
-usa_cor_plot <- ggplot(data = usa_melted) +
+croatia_cor_plot <- ggplot(data = croatia_melted) +
   geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
   scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
-  labs(title = "Correlation between predictors for Croatia", x = "", y = "",
+  labs(title = "Correlation between predictors for croatia", x = "", y = "",
     fill = "correlation") +
   theme(axis.text.x = element_text(angle = 90))
 
-usa_cor_plot
+croatia_cor_plot
 ```
 
 Red and blue tiles indicate positive and negative correlation respectively, with tiles becoming white as correlation approaches 0. From this heatmap, there are many instances of strong correlation between predictors, but the subsection of the heatmap showing the correlation between pro-social attitudes and all other attributes is fairly light. This indicates that the attributes may not predict pro-social attitudes extremely well for Croatia.
@@ -170,18 +191,18 @@ model_eval <- function(model) {
   return(list(rsqr, a_rsqr, preds, coefs))
 }
 
-fitted_usa1 <- lm(c19ProSo01 ~ .,
-  data = subset(usa, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
-fitted_usa2 <- lm(c19ProSo02 ~ .,
-  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
-fitted_usa3 <- lm(c19ProSo03 ~ .,
-  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
-fitted_usa4 <- lm(c19ProSo04 ~ .,
-  data = subset(usa, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+fitted_croatia1 <- lm(c19ProSo01 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_croatia2 <- lm(c19ProSo02 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_croatia3 <- lm(c19ProSo03 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_croatia4 <- lm(c19ProSo04 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
 
 cat("Summary of models for predicting pro-social attitudes in Croatia\n\n")
 counter <- 1
-for (model in list(fitted_usa1, fitted_usa2, fitted_usa3, fitted_usa4)) {
+for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_croatia4)) {
   cat("C19ProSo0", counter, "\n", sep = "")
   res <- model_eval(model)
   cat("R-squared value:", res[[1]], "\n")
@@ -192,7 +213,7 @@ for (model in list(fitted_usa1, fitted_usa2, fitted_usa3, fitted_usa4)) {
   cat(res[[4]], "\n")
   cat("\n")
   for (pred in res[[3]]) {
-    mdl <- c(mdl, paste0("USA C19ProSo0", counter))
+    mdl <- c(mdl, paste0("Croatia C19ProSo0", counter))
   }
   prds <- c(prds, res[[3]])
   counter <- counter + 1
@@ -212,7 +233,8 @@ Other variables that predict three of the models well are `disc02`, `MLQ` and `t
 To repeat the same task for the rest of the world, previous code is reused, but with the `rem` dataset instead of `usa`. The correlation matrix for this dataset is first visualised. From this point onwards, variants of reused code will appear in the **Appendix** to keep this report concise.
 
 ```{r include = FALSE}
-rem_cor <- cor(subset(rem, select = -coded_country), use = "complete.obs")
+others <- anti_join(cvbase, croatia)
+rem_cor <- cor(subset(others, select = -coded_country), use = "complete.obs")
 rem_melted <- reshape2::melt(rem_cor)
 
 rem_cor_plot <- ggplot(data = rem_melted) +
@@ -285,8 +307,8 @@ The findings of the best predictors for each pro-social attitude for Croatia and
 summ_table <- table(predictors = prds, models = mdl)
 
 # reorder the columns
-summ_table <- summ_table[, c("USA C19ProSo01", "USA C19ProSo02", "USA C19ProSo03",
-  "USA C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03",
+summ_table <- summ_table[, c("Croatia C19ProSo01", "Croatia C19ProSo02", "Croatia C19ProSo03",
+  "Croatia C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03",
   "RoW C19ProSo04")]
 
 summ_table_vis <- ggplot(data = as.data.frame(summ_table)) +
@@ -420,8 +442,8 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 
 ```{r include = FALSE}
 summ_table_2 <- table(predictors = prds, models = mdl)
-summ_table_2 <- summ_table_2[, c("USA C19ProSo01", "USA C19ProSo02", "USA C19ProSo03",
-  "USA C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03", "RoW C19ProSo04",
+summ_table_2 <- summ_table_2[, c("Croatia C19ProSo01", "Croatia C19ProSo02", "Croatia C19ProSo03",
+  "Croatia C19ProSo04", "RoW C19ProSo01", "RoW C19ProSo02", "RoW C19ProSo03", "RoW C19ProSo04",
   "Similar C19ProSo01", "Similar C19ProSo02", "Similar C19ProSo03", "Similar C19ProSo04")]
 
 summ_table_vis_2 <- ggplot(data = as.data.frame(summ_table_2)) +
