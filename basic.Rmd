@@ -79,8 +79,13 @@ Another point to note is the mean age group in this dataframe amounts to 2.905, 
 This dataset is relatively tidy and without too many missing values, hence preprocessing should not be required. However, the missing values in the `employstatus` column should be replaced with 0, as it would be easier to transform and process the data in binary format, which might be required for linear regression involving these attributes down the track.
 
 ```{r}
-#cvbase <- apply(cvbase, 2, function(x) {x[is.na(x)] <- 0; return(x)})
-for (i in 1:10) {
+# for (i in 1:10) {
+#   cvbase[, i][is.na(cvbase[, i])] <- 0
+# }
+# for (i in 37:44) {
+#   cvbase[, i][is.na(cvbase[, i])] <- 0
+# }
+for (i in 1:52) {
   cvbase[, i][is.na(cvbase[, i])] <- 0
 }
 ```
@@ -130,87 +135,87 @@ Looking at both graphs of Croatia, and all other countries in comparison, most r
 
 ### 2(b)
 
-<!-- // TODO: start -->
-
 Let's start by taking a peek at the correlation between predictors for pro-social attitude for Croatia. The `cor()` function is used and the correlation matrix is visualised with a heatmap.
 
-
-
 ```{r fig.height = 8.5, fig.width = 8.5}
-# Select only numeric columns from the dataset
-numeric_croatia <- croatia[sapply(croatia, is.numeric)]
-# Calculate correlation matrix for Croatia with pairwise deletion
-cro_cor <- cor(numeric_croatia, use = "pairwise.complete.obs")
+# # Select only numeric columns from the dataset
+ numeric_croatia <- croatia[sapply(croatia, is.numeric)]
+# 
+# # Calculate correlation matrix for Croatia
+cro_cor <- cor(numeric_croatia, use = "complete.obs")
+
+# Remove diagonal elements from correlation matrix
+#diag(cro_cor) <- NA
 
 # Reshape matrix to long format for plotting
-cro_melted <- reshape2::melt(cro_cor)
+cro_melted <- reshape2::melt(cro_cor, na.rm = TRUE)
 
 # Create correlation plot for Croatia
-cro_cor_plot <- ggplot(data = cro_melted) +
-  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+cro_cor_plot <- ggplot(data = cro_melted, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
   scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
   labs(title = "Correlation between predictors for Croatia", x = "", y = "",
-    fill = "correlation") +
+       fill = "correlation") +
   theme(axis.text.x = element_text(angle = 90))
 
 cro_cor_plot
 
-
-
 ```
 
-Red and blue tiles indicate positive and negative correlation respectively, with tiles becoming white as correlation approaches 0. From this heatmap, there are many instances of strong correlation between predictors, but the subsection of the heatmap showing the correlation between pro-social attitudes and all other attributes is fairly light. This indicates that the attributes may not predict pro-social attitudes extremely well for Croatia.
+Tiles that are red or blue denote positive or negative correlation, respectively, and turn white as correlation gets closer to zero. Numerous examples of substantial association between predictors can be seen in this heatmap; nevertheless, the portion displaying the correlation between pro-social views and all other traits is quite weak. This suggests that the characteristics might not be a very good indicator of pro-social sentiments in Croatia.
 
-By fitting a linear regression model of each pro-social attitude against the attributes, we can see how well the responses predict the response to the pro-social attitude question. We will also be able to find out which predictors are the best.
+We can determine how well the replies predict the pro-social attitude question by fitting a linear regression model of each pro-social attitude against the qualities. Additionally, we will be able to identify the most accurate predictions.
 
-The following code fits a linear model of each pro=social attitude against the attributes. A function and for loop is used to summarise each model, including their R-squared values, significant predictors with p-value less than 0.001, and their respective coefficients. `prds` and `mdl` are vectors that will be used to compare the strong predictors for each model in a table later.
+A linear model of each pro-social attitude versus the qualities is fitted by the code that follows. Each model's R-squared values, significant predictors with p-values less than 0.001, and corresponding coefficients are summarised using a function and a for loop. The vectors {prds} and {mdl} will be utilised in a subsequent table to compare the strong predictors for every model.
 
-# ```{r}
-# prds <- NULL
-# mdl <- NULL
-# 
-# model_eval <- function(model) {
-#   rsqr <- summary(model)$r.squared
-#   a_rsqr <- summary(model)$adj.r.squared
-#   sig <- which(summary(model)$coefficients[-1, 4] < 0.001) + 1
-#   preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
-#   coefs <- summary(model)$coefficients[sig, 1]
-# 
-#   return(list(rsqr, a_rsqr, preds, coefs))
-# }
-# 
-# fitted_croatia1 <- lm(c19ProSo01 ~ .,
-#   data = subset(croatia, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
-# fitted_croatia2 <- lm(c19ProSo02 ~ .,
-#   data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
-# fitted_croatia3 <- lm(c19ProSo03 ~ .,
-#   data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
-# fitted_croatia4 <- lm(c19ProSo04 ~ .,
-#   data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
-# 
-# cat("Summary of models for predicting pro-social attitudes in Croatia\n\n")
-# counter <- 1
-# for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_croatia4)) {
-#   cat("C19ProSo0", counter, "\n", sep = "")
-#   res <- model_eval(model)
-#   cat("R-squared value:", res[[1]], "\n")
-#   cat("Adjusted R-squared value:", res[[2]], "\n")
-#   cat("Significant predictors with p-value < 0.001:\n")
-#   cat(res[[3]], "\n")
-#   cat("Coefficients of predictors:\n")
-#   cat(res[[4]], "\n")
-#   cat("\n")
-#   for (pred in res[[3]]) {
-#     mdl <- c(mdl, paste0("Croatia C19ProSo0", counter))
-#   }
-#   prds <- c(prds, res[[3]])
-#   counter <- counter + 1
-# }
-# ```
+```{r}
+prds <- NULL
+mdl <- NULL
 
-The responses best predict `C19ProSo04`, as evident from its adjusted R-squared value of 0.2113349, which is the highest among all models. Its best predictors are `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish`. The model for `C19ProSo03` has the lowest adjusted R-squared value - 0.08190663 - with its best predictors being `PLRAC19`, `MLQ`, `c19NormShould`, `trustGovState` and `edu`.
+model_eval <- function(model) {
+  rsqr <- summary(model)$r.squared
+  a_rsqr <- summary(model)$adj.r.squared
+  sig <- which(summary(model)$coefficients[-1, 4] < 0.001) + 1
+  preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
+  coefs <- summary(model)$coefficients[sig, 1]
 
-The arguably small R-squared values among the models are unsurprising as most of the survey questions are subjective. For example, different participants perceive different levels of calmness differently, and interpret financial strain differently. As a vast and populous country with many working classes and standards of life, different parts of Croatia are like separate countries on their own, with their own economies, healthcare and overall happiness. This makes it hard for the pro-social attitude responses to be predicted consistently.
+  return(list(rsqr, a_rsqr, preds, coefs))
+}
+
+fitted_croatia1 <- lm(c19ProSo01 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo02, c19ProSo03, c19ProSo04)))
+fitted_croatia2 <- lm(c19ProSo02 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo03, c19ProSo04)))
+fitted_croatia3 <- lm(c19ProSo03 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo04)))
+fitted_croatia4 <- lm(c19ProSo04 ~ .,
+  data = subset(croatia, select = -c(coded_country, c19ProSo01, c19ProSo02, c19ProSo03)))
+
+cat("Summary of models for predicting pro-social attitudes in Croatia\n\n")
+counter <- 1
+for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_croatia4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_eval(model)
+  cat("R-squared value:", res[[1]], "\n")
+  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("Significant predictors with p-value < 0.001:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (pred in res[[3]]) {
+    mdl <- c(mdl, paste0("Croatia C19ProSo0", counter))
+  }
+  prds <- c(prds, res[[3]])
+  counter <- counter + 1
+}
+```
+
+{C19ProSo04} has the greatest adjusted R-squared value of 0.2113349 out of all the models, indicating that the responses best predict it. `disc02}, `MLQ}, `c19NormShould}, and `c19IsPunish} are its best predictors. The model for {C19ProSo03} has the lowest adjusted R-squared value, 0.08190663, and {PLRAC19}, {MLQ{, {c19NormShould}, {trustGovState}, and {edu} are its best predictors.
+
+The fact that the majority of the survey items are deemed subjective makes the models' arguably low R-squared values predictable. For instance, different individuals interpret financial hardship differently and perceive various levels of serenity differently. Since Croatia is a large, populated nation with a wide range of living standards, its several regions are like independent nations with their own economies, healthcare systems, and general levels of satisfaction. Because of this, it is challenging to forecast the pro-social attitude reactions with consistency.
+
+####### TODO BELOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   #####
 
 Each model has its own list of significant predictors, but some predictors can be considered more reliable overall as they appear more often across the models. The prime example would be `c19NormShould`, which is a strong predictor for all four models. This makes sense as someone who is willing to assist society during the pandemic would want the best for it, and thus encourage members of society to self-isolate and socially distance. These measures of curbing viral spread are suggested by Croatia's own Centers for Disease Control and Prevention (CDC), and as a developed nation with a well-educated population, individuals with pro-social intentions tend to follow these guidelines. On the other hand, someone without pro-social attitudes would be indifferent towards societal behaviours and not be bothered to follow new norms. The predictive strength of `c19NormShould` may also be affected by individuals who think that social distancing is bad for society, and that they are helping others by opposing these measures. Protests against lockdowns were common in Croatia during the pandemic, proving that this belief does exist.
 
