@@ -297,6 +297,8 @@ All four models had adjusted R-squared values between 0.12 and 0.17, which is a 
 
 The table below, created with `ggplot2`, displays the results of the best predictors for each pro-social attitude for Croatia and other nations collectively.
 
+###### TODO NOW!!!!  ##########
+
 ```{r fig.width = 10}
 summ_table <- table(predictors = prds, models = mdl)
 
