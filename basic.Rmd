@@ -85,9 +85,12 @@ This dataset is relatively tidy and without too many missing values, hence prepr
 # for (i in 37:44) {
 #   cvbase[, i][is.na(cvbase[, i])] <- 0
 # }
-for (i in 1:52) {
-  cvbase[, i][is.na(cvbase[, i])] <- 0
-}
+
+cvbase[is.na(cvbase)] <- 0
+
+# for (i in 1:52) {
+#   cvbase[, i][is.na(cvbase[, i])] <- 0
+# }
 ```
 
 ## Task 2: Focus country vs all other countries as a group
@@ -131,7 +134,7 @@ rem_plot
 ```
 
 
-Looking at both graphs of Croatia, and all other countries in comparison, most responses seem to be quite similar, except for Boredom, `bor01`,`bor02` and `bor03`. While the worldwide mean is between 0 (Neither agree nor disagree) and 1 (Somewhat agree), in Croatia, the mean is negative and closer to 1 (Somewhat disagree). This leads us to believe people in Croatia could be less bored than other countries worldwide, albeit slightly
+Looking at both graphs of Croatia, and all other countries in comparison, most responses seem to be quite similar, except for Boredom, `bor01`,`bor02` and `bor03`. While the worldwide mean is between 0 (Neither agree nor disagree) and 1 (Somewhat agree), in Croatia, the mean is negative and closer to 1 (Somewhat disagree). This leads us to believe people in Croatia could be less bored than other countries worldwide, albeit slightly. Additionally, there seems to be no Corona Proximity for participants themselves, as well as members of their family in this dataset.
 
 ### 2(b)
 
@@ -139,7 +142,7 @@ Let's start by taking a peek at the correlation between predictors for pro-socia
 
 ```{r fig.height = 8.5, fig.width = 8.5}
 # # Select only numeric columns from the dataset
- numeric_croatia <- croatia[sapply(croatia, is.numeric)]
+numeric_croatia <- croatia[sapply(croatia, is.numeric)]
 # 
 # # Calculate correlation matrix for Croatia
 cro_cor <- cor(numeric_croatia, use = "complete.obs")
@@ -221,28 +224,35 @@ Although each model has a unique set of important predictors, some predictors ca
 
 ### 2(c)
 
-The previous code is reused, but with the `rem` dataset instead of `croaia`, to repeat the same task for the rest of the world. Initially, this dataset's correlation matrix is displayed. In order to keep this report as short as possible, variations of code that has been reused will now appear in the **Appendix**.
-
-####### TODO BELOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   #####
+The previous code is reused, but with the `rem` dataset instead of `croatia`, to repeat the same task for the rest of the world. Initially, this dataset's correlation matrix is displayed. In order to keep this report as short as possible, variations of code that has been reused will now appear in the **Appendix**.
 
 ```{r include = FALSE}
-# others <- anti_join(cvbase, croatia)
-# rem_cor <- cor(subset(others, select = -coded_country), use = "complete.obs")
-# rem_melted <- reshape2::melt(rem_cor)
-# 
-# rem_cor_plot <- ggplot(data = rem_melted) +
-#   geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
-#   scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
-#   labs(title = "Correlation between predictors for the rest of the world", x = "", y = "",
-#     fill = "correlation") +
-#   theme(axis.text.x = element_text(angle = 90))
+others <- anti_join(cvbase, croatia)
+
+# # Select only numeric columns from the dataset
+numeric_others <- others[sapply(others, is.numeric)]
+
+# # Calculate correlation matrix for Croatia
+rem_cor <- cor(numeric_others, use = "complete.obs")
+
+#rem_cor <- cor(subset(numeric_others, select = -coded_country), use = "complete.obs")
+rem_melted <- reshape2::melt(rem_cor)
+
+rem_cor_plot <- ggplot(data = rem_melted) +
+  geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
+  labs(title = "Correlation between predictors for the rest of the world", x = "", y = "",
+    fill = "correlation") +
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
 ```{r fig.height = 8.5, fig.width = 8.5}
-# rem_cor_plot
+rem_cor_plot
 ```
 
 Comparing both heatmaps we have thus far, we observe that `usa_cor_plot` has more darker-coloured tiles, indicating stronger correlation between predictors overall. In addition to having lighter tiles, `rem_cor_plot` looks "cleaner" with less scatter of coloured tiles. However, focusing on the subsections of the heatmaps that show the correlation between pro-social attitudes and all other attributes allows us to make an initial guess that the attributes for both groups of data should predict pro-social attitudes with roughly similar performance, as the subsections in both plots look fairly similar.
+
+####### TODO BELOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   #####
 
 ```{r echo = FALSE}
 # fitted_rem1 <- lm(c19ProSo01 ~ .,
