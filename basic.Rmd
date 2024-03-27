@@ -18,7 +18,7 @@ output:
 **Project:** Analysis of country-level predictors of pro-social behaviours to reduce the spread of COVID-19 during the early stages of the pandemic
 
 
-**AI statement:** Generative AI was not used in this assignment
+**AI statement:** Generative AI was used in this assignment
 
 ## Task 1: Descriptive analysis and pre-processing
 
@@ -615,3 +615,12 @@ K-means clustering, 3(a)
 #     title = "Table of significant predictors for each pro-social attitude") +
 #   theme(axis.text.x = element_text(angle = 90))
 ```
+
+ChatGPT was used to help model some code fragments in this assignment, including 2a, 2b, 2c, 3a and 3b. 
+Grammarly was used to assist with spell checking and grammar use in all parts of this assignment.
+
+Prompts used, include
+Fix any grammar or spelling mistakes in this paragraph
+Write R code to use ggplot to plot a correlation matrix for the entire world from a data set
+
+However, the output from generative AI was not the final text that appears in any case in this assignment, as it has been checked, amended and modified by the submitting student.
