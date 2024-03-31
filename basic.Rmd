@@ -396,8 +396,8 @@ counter <- 1
 for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
   cat("C19ProSo0", counter, "\n", sep = "")
   res <- model_evaluated_2(model)
-  cat("R-squared value:", res[[1]], "\n")
-  cat("Adjusted R-squared value:", res[[2]], "\n")
+  cat("R-squared:", res[[1]], "\n")
+  cat("Adjusted R-squared:", res[[2]], "\n")
   cat("95% confidence interval significant predictors:\n")
   cat(res[[3]], "\n")
   cat("Coefficients of predictors:\n")
@@ -422,28 +422,28 @@ summary_table <- summary_table[, c("Croatia_C19ProSo03",
  "Similar_C19ProSo01", "Similar_C19ProSo02", "Similar_C19ProSo03", "Similar_C19ProSo04"
   )]
 
-summ_table_vis_2 <- ggplot(data = as.data.frame(summary_table)) +
+summary_table_visualised_2 <- ggplot(data = as.data.frame(summary_table)) +
   geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
   scale_fill_gradientn(colours = c("pink", "green")) +
   theme(legend.position = "none") +
   scale_x_discrete(position = "top") +
   scale_y_discrete(limits = rev) +
   labs(x = "Pro-social attitudes", y = "Predictors",
-    title = "Table of significant predictors for each pro-social attitude") +
+    title = "Table for each pro-social attitude by significant predictors ") +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
 ```{r fig.width = 10}
-summ_table_vis_2
+summary_table_visualised_2
 ```
 
-We see that the distribution of strong predictors between the models of similar countries is more similar to the Croatian models, with a few shared significant predictors (i.e., appearing quite as "sparse" as the Croatia models). Given more comparable p-values, the models from the group of all other nations have a great deal more significant predictors in common with the Croatian models. These models do, however, also contain a large number of powerful predictors that are absent from the Croatian models. Consequently, the group of comparable nations may provide a better fit to the critical characteristics needed to predict pro-social sentiments. The higher p-values and fewer shared common strong predictors included in their models may become insignificant with additional study or a larger sample size.
+We see that the distribution of strong predictors between the models of similar countries is more similar to the Croatian models, with a few shared significant predictors (i.e., appearing quite as "sparse" as the Croatia models). Given more comparable p-values, the models from the group of all other nations have a great deal more significant predictors in common with the Croatian models. These models do, however, also contain a large number of powerful predictors that are absent from the Croatian models. Consequently, the group of comparable nations may provide a better fit to the critical characteristics needed to predict pro-social sentiments. The greater confidence level, as well as less common strongest predictors included throughout those models may become insignificant with additional study or a larger sample size.
 
 One explanation could be that, despite their similarities to Croatia, each country in the cluster varies slightly from the others in terms of socioeconomic factors that are not taken into account by the clustering indicators.. Their collective performance in forecasting pro-social attitudes differs substantially from Croatia alone when these small variations are taken into account. However, because Croatia's politics, culture, and other aspects of society are complicated, much like those of a group of many countries, its models have many strong predictors in common with the models pertaining to the cluster of all countries. The models may report multiple significant predictors that are not important because the cluster of all other countries could be too complicated or big.
 
-## Appendix
+### Appendix
 
-## References
+### References
 ChatGPT was used to help model some code fragments in this assignment, including 2a, 2b, 2c, 3a and 3b. 
 Grammarly was used to assist with spell checking and grammar use in all parts of this assignment.
 
@@ -595,8 +595,8 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 # for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 #   cat("C19ProSo0", counter, "\n", sep = "")
 #   res <- model_eval_2(model)
-#   cat("R-squared value:", res[[1]], "\n")
-#   cat("Adjusted R-squared value:", res[[2]], "\n")
+#   cat("R-squared:", res[[1]], "\n")
+#   cat("Adjusted R-squared:", res[[2]], "\n")
 #   cat("99.99% confidence interval significant predictors:\n")
 #   cat(res[[3]], "\n")
 #   cat("Coefficients of predictors:\n")
