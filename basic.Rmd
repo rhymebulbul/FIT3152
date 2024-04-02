@@ -379,8 +379,6 @@ Consequently, the predictive performance of qualities for this cluster of countr
 We can define a strong predictor in relation to a model's total p-values for comparative purposes. For these novel cluster models, we characterize a strong predictor as one with a p-value of less than 0.05, which is a widely accepted threshold. A new visualization table is constructed and the `model_evaluated` function is changed in line with the model.
 
 ```{r echo = FALSE}
-
-
 model_evaluated_2 <- function(model) {
   rsqr <- summary(model)$r.squared
   a_rsqr <- summary(model)$adj.r.squared
@@ -415,7 +413,7 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 ```{r include = FALSE}
 summary_table <- table(predictors = predictors, models = each_model)
 
-colnames(summary_table)
+# colnames(summary_table)
 
 summary_table <- summary_table[, c("Croatia_C19ProSo03",
   "Croatia_C19ProSo04", "RoW_C19ProSo01", "RoW_C19ProSo02", "RoW_C19ProSo03", "RoW_C19ProSo04",
@@ -577,56 +575,58 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 }
 ```
 
-`clus` models, updated `model_eval` function with p-value less than 0.05, 3(b)
+`clustered` models, updated `model_evaluated` function with 95% confidence interval, 3(b)
 
 ```{r eval = FALSE}
-# model_eval_2 <- function(model) {
-#   rsqr <- summary(model)$r.squared
-#   a_rsqr <- summary(model)$adj.r.squared
-#   sig <- which(summary(model)$coefficients[-1, 4] < 0.05) + 1
-#   preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
-#   coefs <- summary(model)$coefficients[sig, 1]
-# 
-#   return(list(rsqr, a_rsqr, preds, coefs))
-# }
-# 
-# cat("Summary of models for predicting pro-social attitudes in countries similar to the US\n\n")
-# counter <- 1
-# for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
-#   cat("C19ProSo0", counter, "\n", sep = "")
-#   res <- model_eval_2(model)
-#   cat("R-squared:", res[[1]], "\n")
-#   cat("Adjusted R-squared:", res[[2]], "\n")
-#   cat("99.99% confidence interval significant predictors:\n")
-#   cat(res[[3]], "\n")
-#   cat("Coefficients of predictors:\n")
-#   cat(res[[4]], "\n")
-#   cat("\n")
-#   for (pred in res[[3]]) {
-#     each_model <- c(each_model, paste0("Similar C19ProSo0", counter))
-#   }
-#   predictors <- c(predictors, res[[3]])
-#   counter <- counter + 1
-# }
+model_evaluated_2 <- function(model) {
+  rsqr <- summary(model)$r.squared
+  a_rsqr <- summary(model)$adj.r.squared
+  sig <- which(summary(model)$coefficients[-1, 4] < 0.05) + 1
+  preds <- rownames(summary(model)$coefficients[sig, , drop = FALSE])
+  coefs <- summary(model)$coefficients[sig, 1]
+
+  return(list(rsqr, a_rsqr, preds, coefs))
+}
+
+cat("Summary of models for predicting pro-social attitudes in countries similar to Croatia\n\n")
+counter <- 1
+for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
+  cat("C19ProSo0", counter, "\n", sep = "")
+  res <- model_evaluated_2(model)
+  cat("R-squared:", res[[1]], "\n")
+  cat("Adjusted R-squared:", res[[2]], "\n")
+  cat("95% confidence interval significant predictors:\n")
+  cat(res[[3]], "\n")
+  cat("Coefficients of predictors:\n")
+  cat(res[[4]], "\n")
+  cat("\n")
+  for (each in res[[3]]) {
+    each_model <- c(each_model, paste0("Similar_C19ProSo0", counter))
+  }
+  predictors <- c(predictors, res[[3]])
+  counter <- counter + 1
+}
 ```
 
 `croatia`, `rem` and `clus` models strongest predictors, 3(b)
 
 ```{r eval = FALSE}
-# summ_table_2 <- table(predictors = predictors, models = each_model)
-# summ_table_2 <- summ_table_2[, c("Croatia_C19ProSo01", "Croatia_C19ProSo02", "Croatia_C19ProSo03",
-#   "Croatia_C19ProSo04", "RoW_C19ProSo01", "RoW_C19ProSo02", "RoW_C19ProSo03", "RoW_C19ProSo04",
-#   "Similar C19ProSo01", "Similar C19ProSo02", "Similar C19ProSo03", "Similar C19ProSo04")]
-# 
-# summ_table_vis_2 <- ggplot(data = as.data.frame(summ_table_2)) +
-#   geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
-#   scale_fill_gradientn(colours = c("pink", "green")) +
-#   theme(legend.position = "none") +
-#   scale_x_discrete(position = "top") +
-#   scale_y_discrete(limits = rev) +
-#   labs(x = "Pro-social attitudes", y = "Predictors",
-#     title = "Table of significant predictors for each pro-social attitude") +
-#   theme(axis.text.x = element_text(angle = 90))
+summary_table <- table(predictors = predictors, models = each_model)
+
+summary_table <- summary_table[, c("Croatia_C19ProSo03",
+  "Croatia_C19ProSo04", "RoW_C19ProSo01", "RoW_C19ProSo02", "RoW_C19ProSo03", "RoW_C19ProSo04",
+ "Similar_C19ProSo01", "Similar_C19ProSo02", "Similar_C19ProSo03", "Similar_C19ProSo04"
+  )]
+
+summary_table_visualised_2 <- ggplot(data = as.data.frame(summary_table)) +
+  geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
+  scale_fill_gradientn(colours = c("pink", "green")) +
+  theme(legend.position = "none") +
+  scale_x_discrete(position = "top") +
+  scale_y_discrete(limits = rev) +
+  labs(x = "Pro-social attitudes", y = "Predictors",
+    title = "Table for each pro-social attitude by significant predictors ") +
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
 
