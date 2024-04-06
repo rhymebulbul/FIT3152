@@ -198,7 +198,7 @@ for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_cro
 }
 ```
 
-`C19ProSo04` has the greatest adjusted R-squared at 0.1016124 out of all the models, indicating that the responses best predict it. `disc02`, `MLQ`, `c19NormShould`, and `c19IsPunish` are its best predictors. The `C19ProSo03` model has the least adjusted R-squared value at 0.08190663, and `PLRAC19`, `MLQ`, `c19NormShould`, `trustGovState`, and `edu` are its best predictors.
+`C19ProSo04` has the greatest adjusted R-squared at 0.278256 out of all the models, indicating that the responses best predict it. `disc02`, `MLQ`, `c19NormShould`, and `c19IsPunish` are its best predictors. The `C19ProSo03` model has the least adjusted R-squared value at 0.08190663, and `PLRAC19`, `MLQ`, `c19NormShould`, `trustGovState`, and `edu` are its best predictors.
 
 The fact that the majority of the survey items are deemed subjective makes the models' arguably low R-squared values predictable. For instance, different individuals interpret financial hardship differently and perceive various levels of serenity differently. Since Croatia is a large, populated nation with a wide range of living standards, its several regions are like independent nations with their own economies, healthcare systems, and general levels of satisfaction. Because of this, it is challenging to forecast the pro-social attitude reactions with consistency.
 
@@ -439,16 +439,14 @@ One explanation could be that, despite their similarities to Croatia, each count
 ### Appendix
 
 ### References
-ChatGPT was used to help model some code fragments in this assignment, including 2a, 2b, 2c, 3a and 3b. 
-Grammarly was used to assist with spell checking and grammar use in all parts of this assignment.
+I acknowledge the use of [1] Grammarly (https://app.grammarly.com/) [2] to refine the academic language and accuracy of my own work. On 6 April 2024 I submitted my entire report with the instruction to [3] “Improve the academic tone and accuracy of language, including grammatical structures, punctuation and vocabulary”. [4] The output was then modified further to better represent my own tone and style of writing.
 
-Prompts used, include
-Fix any grammar or spelling mistakes in this paragraph
-Write R code to use ggplot to plot a correlation matrix for the entire world from a data set
+I acknowledge the use of [1] ChatGPT (https://chat.openai.com/) to [2] generate materials for background research and self-study in the drafting of this assessment. I entered the following prompts on 30 March 2024:
 
-However, the output from generative AI was not the final text that appears in any case in this assignment, as it has been checked, amended and modified by the submitting student.
+[3] Write basic R code to use ggplot to plot a correlation matrix from a data set
+[3] Write basic R code to fit a linear model
 
-
+[4] The output from the generative artificial intelligence was adapted and modified for the final response.
 
 `cvbase` head, 1(b)
 
@@ -456,7 +454,7 @@ However, the output from generative AI was not the final text that appears in an
 head(cvbase)
 ```
 
-`rem` Correlation matrix, 2(c)
+`others` Correlation matrix, 2(c)
 
 ```{r eval = FALSE}
 others <- anti_join(cvbase, croatia)
@@ -475,7 +473,7 @@ global_correlation_plot <- ggplot(data = global_melted) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
-`rem` models, 2(c)
+`others` models, 2(c)
 
 ```{r eval = FALSE}
 fitted_rest1 <- lm(c19ProSo01 ~ .,
@@ -514,7 +512,6 @@ external
 ```
 
 Clustering indicators, 3(a)
-##### TODO: WARNING!!!!!!!!#########
 - `HDI`: Human Development Index (2021); a value between 0 and 1 that measures average achievement in human development based on three dimensions - life expectancy, education and standard of living. (Source: [Human Development Reports](https://hdr.undp.org/data-center/documentation-and-downloads))
 - `GHS`: Global Health Security Index (2021); a value between 0 and 100 that benchmarks a country's health security and preparedness in preventing, detecting and responding to health emergencies. (Source: [Global Health Security Index: Reports and Data](https://www.ghsindex.org/report-model/))
 - `freedom`: Human Freedom Index (2021); a value between 0 and 10 that assesses the level of human freedom in a country. Human freedom is a combination of two distinct dimensions - personal freedom (freedom of religion, speech, sexual orientation, etc.) and economic freedom (size of government, judicial impartiality, freedom to trade, etc.) (Source: [World Population Review](https://worldpopulationreview.com/country-rankings/freedom-index-by-country))
@@ -524,7 +521,7 @@ Clustering indicators, 3(a)
 - `total_cases_per_mil`: latest updated total number of COVID-19 cases per 1,000,000 people before 2022.
 - `total_deaths_per_mil`: latest updated total number of COVID-19 cases per 1,000,000 people before 2022.
 
-The last three indicators were sourced from [Our World in Data's COVID-19 Github repository](https://github.com/owid/covid-19-data/tree/master/public/data).
+The final three indicators being sourced from [Our World in Data's COVID-19 Github repository](https://github.com/owid/covid-19-data/tree/master/public/data).
 
 K-means clustering, 3(a)
 
@@ -533,7 +530,7 @@ library(cluster)
 clusplot(cleaned_external, kfit$cluster, color = TRUE, shade = TRUE, labels = 0, lines = 0)
 ```
 
-`rem` correlation matrix, 3(b)
+`others` correlation matrix, 3(b)
 
 ```{r eval = FALSE}
 clustered_correlation_plotted <- ggplot(data = clustered_melted) +
@@ -544,7 +541,7 @@ clustered_correlation_plotted <- ggplot(data = clustered_melted) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
-`clus` model, 3(b)
+`clustered` model, 3(b)
 
 ```{r eval = FALSE}
 fitted_clus1 <- lm(c19ProSo01 ~ .,
@@ -605,7 +602,7 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 }
 ```
 
-`croatia`, `rem` and `clus` models strongest predictors, 3(b)
+`croatia`, `others` and `clustered` models strongest predictors, 3(b)
 
 ```{r eval = FALSE}
 summary_table <- table(predictors = predictors, models = each_model)
