@@ -443,8 +443,8 @@ I acknowledge the use of [1] Grammarly (https://app.grammarly.com/) [2] to refin
 
 I acknowledge the use of [1] ChatGPT (https://chat.openai.com/) to [2] generate materials for background research and self-study in the drafting of this assessment. I entered the following prompts on 30 March 2024:
 
-[3] Write basic R code to use ggplot to plot a correlation matrix from a data set
-[3] Write basic R code to fit a linear model
+[3] Write basic R code skeleton to use ggplot to plot a correlation matrix from a data set
+[3] Write basic R code skeleton to fit a linear model
 
 [4] The output from the generative artificial intelligence was adapted and modified for the final response.
 
