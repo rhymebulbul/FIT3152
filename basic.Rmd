@@ -71,7 +71,7 @@ min(table(cvbase$coded_country))
 which(table(cvbase$coded_country) == min(table(cvbase$coded_country)))
 ```
 
-Based on the outputs, there seems to be 110 unique countries inclusive of NA values, with each country having a widely different number of entries, the Croatia being the highest at 6987, and host of other countries having much less.
+Based on the outputs, there seems to be 110 unique countries inclusive of NA values, with each country having a widely different number of entries, the Croatia having only 222, and host of other countries having much less and much more.
 
 Missing values are present in all columns, however this is the norm as surveys of this nature do not require participants to answer all questions. The `employstatus` columns appear to be the biggest culprit, given each participant will only pick one out of the 10 categories. In this dataframe, `employstatus_3` seems to have the least missing values, while `employstatus_8` has the highest number. Potentially, this could imply that the majority of participants are working 40 hours or more, while a small number of people who are disabled may be out of work.
 
@@ -131,7 +131,7 @@ Looking at both graphs of Croatia, and all other countries in comparison, most r
 
 Let's start by taking a peek through the correlation of each predictor for pro-social attitude in Croatia. We can visualise the correlation matrix through a heatmap using `cor()`. While Croatia has a lower response rate than other highly populated countries, some operations might not have sufficient data to action.
 
-```{r fig.height = 8.5, fig.width = 8.5}
+```{r,  warning=FALSE, fig.height = 8.5, fig.width = 8.5}
 numeric_croatia <- croatia[sapply(croatia, is.numeric)]
 
 croatia_correlation <- cor(numeric_croatia, use = "complete.obs")
@@ -146,7 +146,6 @@ croatia_correlation_plotted <- ggplot(data = croatia_melted, aes(x = Var1, y = V
   theme(axis.text.x = element_text(angle = 90))
 
 croatia_correlation_plotted
-
 ```
 
 Tiles that are red or blue denote positive or negative correlation, respectively, and turn white as correlation gets closer to zero. Numerous examples of substantial association between predictors can be seen in this heatmap; nevertheless, the portion displaying the correlation between pro-social views and all other traits is quite weak. This suggests that the characteristics might not be a very good indicator of pro-social sentiments in Croatia.
@@ -198,9 +197,9 @@ for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_cro
 }
 ```
 
-`C19ProSo04` has the greatest adjusted R-squared at 0.278256 out of all the models, indicating that the responses best predict it. `disc02`, `MLQ`, `c19NormShould`, and `c19IsPunish` are its best predictors. The `C19ProSo03` model has the least adjusted R-squared value at 0.08190663, and `PLRAC19`, `MLQ`, `c19NormShould`, `trustGovState`, and `edu` are its best predictors.
+`C19ProSo03` has the greatest adjusted R-squared at 0.278256 out of all the models, indicating that the responses best predict it. `isoFriends_online` is its best predictor. The `C19ProSo04` model has the least adjusted R-squared value at 0.1016124 , and `rankOrdLife_4D` is its best predictor.
 
-The fact that the majority of the survey items are deemed subjective makes the models' arguably low R-squared values predictable. For instance, different individuals interpret financial hardship differently and perceive various levels of serenity differently. Since Croatia is a large, populated nation with a wide range of living standards, its several regions are like independent nations with their own economies, healthcare systems, and general levels of satisfaction. Because of this, it is challenging to forecast the pro-social attitude reactions with consistency.
+The fact that the majority of the survey items are deemed subjective makes the models' arguably low R-squared values predictable. For instance, different individuals interpret financial hardship differently and perceive various levels of serenity differently. Since Croatia is a moderately populated nation with a wide range of living standards, its several regions are like independent nations with their own economies, healthcare systems, and general levels of satisfaction. Because of this, it is challenging to forecast the pro-social attitude reactions with consistency.
 
 Although each model has a unique set of important predictors, some predictors can be regarded as generally more reliable because they are more frequently found in all of the models. The best illustration would be `c19NormShould`, a highly predictive variable for each of the models. During a pandemic, someone who is willing to assist society would want the best for it and would counsel individuals to isolate themselves and avoid social interactions.. The Centers for Disease Control and Prevention (CDC) in Croatia recommend these steps to stop the spread of viruses, and since Croatia is a developed country with a highly educated populace, people who aspire to be pro-social generally abide by these recommendations. Conversely, a person devoid of pro-social attitudes would not care about adhering to new rules or showing any interest in societal behaviors. Those who disagree with social distancing policies and believe that doing so benefits society as a whole may also have an impact on the predictive power of `c19NormShould`. During the epidemic, lock down protests were prevalent in Croatia, demonstrating the validity of this viewpoint.
 
@@ -267,7 +266,7 @@ All four models had adjusted R-squared somewhere between 0.12 and 0.17, pointing
 
 The table below displays the results of the strongest predictors for each pro-social behaviour for Croatia and the rest of the globe.
 
-```{r fig.width = 10}
+```{r fig.height = 8.5, fig.width = 10}
 tables_combined <- table(predictors = predictors, models = each_model)
 
 tables_combined <- tables_combined[, c("Croatia_C19ProSo03",
@@ -290,7 +289,7 @@ tables_combined_plotted
 
 ### 3(a)
 
-Some additional data is collected from external sources to supplement the indicators available in the sources mentioned in the references. Eight indicators make up the final data table I have compiled (in **Appendix** ) for use in clustering: `HDI`, `GHS`, `freedom`, `political_stability`, `happiness`, `total_vax_per_hundred`, `total_cases_per_mil`, and `total_deaths_per_mil`. The **Appendix** contains information and explanations regarding each indicator as well as its sources.
+Some additional data is collected from external sources to supplement the indicators available in the sources mentioned in the references. Eight indicators make up the final data table compiled (in **Appendix** ) for use in clustering: `HDI`, `GHS`, `freedom`, `political_stability`, `happiness`, `total_vax_per_hundred`, `total_cases_per_mil`, and `total_deaths_per_mil`. The **Appendix** contains information and explanations regarding each indicator as well as its sources.
 
 Using k-means clustering, nations that are comparable to Croatia are found. For the `kmeans()` function to function, countries with NA values must first be eliminated. This has no bearing on our findings because the majority of these nations—such as Afghanistan and Syria—do not initially appear in the baseline data and differ greatly from Croatia in terms of development and data transparency. After scaling the data, we use a few random beginnings to carry out K-means clustering.
 
@@ -370,9 +369,7 @@ for (model in list(fitted_clus1, fitted_clus2, fitted_clus3, fitted_clus4)) {
 }
 ```
 
-################ Also check last sentence of next paragraph
-
-Based on the results, the models for these comparable nations typically have adjusted R-squared values that are comparable to those of Croatia and all other nations combined. Similar to the Croatia models, `C19ProSo04` seems to have the greatest adjusted R-squared value (0.1356944). Except for `C19ProSo04`, which has significant predictors including `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish`, none of these models, in contrast to the preceding eight models, had significant predictors with p-values less than 0.001. In the Croatia model, `disc02` is also a very good predictor for `C19ProSo04`, but not for `PFS02`. However, `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish` are all significant predictors over the rest of the globe model for `C19ProSo04`.
+Based on the results, the models for these comparable nations typically have adjusted R-squared values that are comparable to those of Croatia and all other nations combined. Unlike the Croatia models, `C19ProSo04` seems to have the greatest adjusted R-squared value (0.1356944). Except for `C19ProSo04`, which has significant predictors including `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish`, none of these models, in contrast to the preceding eight models, had significant predictors with p-values less than 0.001. In the Croatia model, `disc02` is also a very good predictor for `C19ProSo04`, but not for `PFS02`. However, `disc02`, `MLQ`, `c19NormShould` and `c19IsPunish` are all significant predictors over the rest of the globe model for `C19ProSo04`.
 
 Consequently, the prediction of qualities for this cluster of countries is in no way particularly better off than Croatia or the rest of the globe, with comparable R-squared values and predictors with generally lower confidence intervals. The previously reported large correlation may have been insignificant sample size rather than representing genuine statistically significant links between pro-social attitudes and qualities.
 
@@ -428,7 +425,7 @@ summary_table_visualised_2 <- ggplot(data = as.data.frame(summary_table)) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
-```{r fig.width = 10}
+```{r fig.height = 8.5, fig.width = 10}
 summary_table_visualised_2
 ```
 
