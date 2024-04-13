@@ -201,13 +201,13 @@ for (model in list(fitted_croatia1, fitted_croatia2, fitted_croatia3, fitted_cro
 
 The fact that the majority of the survey items are deemed subjective makes the models' arguably low R-squared values predictable. For instance, different individuals interpret financial hardship differently and perceive various levels of serenity differently. Since Croatia is a moderately populated nation with a wide range of living standards, its several regions are like independent nations with their own economies, healthcare systems, and general levels of satisfaction. Because of this, it is challenging to forecast the pro-social attitude reactions with consistency.
 
-Although each model has a unique set of important predictors, some predictors can be regarded as generally more reliable because they are more frequently found in all of the models. The best illustration would be `c19NormShould`, a highly predictive variable for each of the models. During a pandemic, someone who is willing to assist society would want the best for it and would counsel individuals to isolate themselves and avoid social interactions.. The Centers for Disease Control and Prevention (CDC) in Croatia recommend these steps to stop the spread of viruses, and since Croatia is a developed country with a highly educated populace, people who aspire to be pro-social generally abide by these recommendations. Conversely, a person devoid of pro-social attitudes would not care about adhering to new rules or showing any interest in societal behaviors. Those who disagree with social distancing policies and believe that doing so benefits society as a whole may also have an impact on the predictive power of `c19NormShould`. During the epidemic, lock down protests were prevalent in Croatia, demonstrating the validity of this viewpoint.
+Although each model has a unique set of important predictors, some predictors can be regarded as generally more reliable because they are more frequently found in all of the models. Given the smaller size of the Croatia dataset, it is harder to find a highly predictive variable for each of the models other than `isoFriends_online`. During a pandemic, someone who has constant social interactions, whether in person, or at the very least online but outside of their household, would be expected to undestand and related to the nature of such a pandemic and it's effects. Conversely, a person devoid of pro-social attitudes would not care about adhering to new rules or showing any interest in societal behaviors. Those who disagree with social distancing policies and believe that doing so benefits society as a whole may also have an impact on the predictive power of variables. During the epidemic, lock down protests were prevalent in Croatia, demonstrating the validity of this viewpoint.
 
-`disc02`, `MLQ`, and `trustGovState` are additional variables that predict three of the models effectively. People are more likely to be pro-social if they care about the future of society, if they have a purpose in life, and if they think society can come to an agreement on how to handle the pandemic.
+`rankOrdLife_4D` is an additional variable that predicts the models effectively. People are more likely to be pro-social if they care about the future of society, if they have a purpose in life, and if they think society can come to an agreement on how to handle the pandemic.
 
 ### 2(c)
 
-The previous code blocks for 2(b) are modified, but with the `rem` data set instead of `croatia`, to produce a similar correlation matrix for the rest of the world. To keep the report concise, variants of code that have been modified further on, can be found in the **Appendix**.
+The previous code blocks for 2(b) are modified, but with the `others` data set instead of `croatia`, to produce a similar correlation matrix for the rest of the world. To keep the report concise, variants of code that have been modified further on, can be found in the **Appendix**.
 
 ```{r include = FALSE}
 others <- anti_join(cvbase, croatia)
@@ -218,7 +218,7 @@ global_correlation <- cor(numeric_others, use = "complete.obs")
 
 global_melted <- reshape2::melt(global_correlation)
 
-global_correlation_plot <- ggplot(data = global_melted) +
+global_correlation_plotted <- ggplot(data = global_melted) +
   geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
   scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
   labs(title = "Correlation between each of the world's predictors", x = "", y = "",
@@ -227,10 +227,10 @@ global_correlation_plot <- ggplot(data = global_melted) +
 ```
 
 ```{r fig.height = 8.5, fig.width = 8.5}
-global_correlation_plot
+global_correlation_plotted
 ```
 
-When we compare the two heatmaps we currently have, we see that `cro_cor_plot` has tiles coloured in a deeper shade of red, which suggests a larger overall correlation between the predictors. Apart from having lighter tiles, `rem_cor_plot` appears "cleaner" due to a reduced dispersion of coloured tiles. However, since the subsections in both plots appear fairly similar, focusing on the heatmap subsections that illustrate the association between pro-social attitudes and all other features, We can hypothesise that pro-social views should be predicted with somewhat equivalent performance by the attributes for both sets of data.
+When we compare the two heatmaps we currently have, we see that `croatia_correlation_plotted` has tiles coloured in a deeper shade of red, which suggests a larger overall correlation between the predictors. Apart from having lighter tiles, `global_correlation_plotted` appears "cleaner" due to a reduced dispersion of coloured tiles. However, since the subsections in both plots appear fairly similar, focusing on the heatmap subsections that illustrate the association between pro-social attitudes and all other features, We can hypothesise that pro-social views should be predicted with somewhat equivalent performance by the attributes for both sets of data.
 
 ```{r echo = FALSE}
 fitted_rest1 <- lm(c19ProSo01 ~ .,
@@ -262,7 +262,7 @@ for (model in list(fitted_rest1, fitted_rest2, fitted_rest3, fitted_rest4)) {
 }
 ```
 
-All four models had adjusted R-squared somewhere between 0.12 and 0.17, pointing to a smaller range than the comparable one for the Croatia data set (0.06 - 0.49), according to the summary for the rest of the world. The models' predictors are significantly more important than those of the `croatia` models. The four models are well predicted by `disc02`, `lifeSat`, `c19NormShould`, `c19NormDo`, and `trustGovState`. The majority of the predictors that performed well in all four of the `croatia` models, `c19NormShould`, `disc02`, and `trustGovState` are included in this set. As was already said, Croatia's sheer vastness and diversity make it seem like a collection of independent nations. It follows that strong predictors for Croatia would also apply to other nations collectively.
+All four models had adjusted R-squared somewhere between 0.12 and 0.17, pointing to a smaller range than the comparable one for the Croatia data set (0.06 - 0.49), according to the summary for the rest of the world. The models' predictors are significantly more important than those of the `croatia` models. The four models are well predicted by `employstatus`, `isoFriends_online`, `lifeSat`, `MLQ`, `bor`, `consp`, `rankOrdLife`,  `c19perBeh`, `c19RCAcoronaClose` and `edu`. The majority of the predictors that performed well in all four of the `croatia` models, `isoFriends_online` and `rankOrdLife` are included in this set. As was already said, Croatia's sheer vastness and diversity make it seem like a collection of independent nations. It follows that strong predictors for Croatia would also apply to other nations collectively.
 
 The table below displays the results of the strongest predictors for each pro-social behaviour for Croatia and the rest of the globe.
 
@@ -462,7 +462,7 @@ global_correlation <- cor(numeric_others, use = "complete.obs")
 
 global_melted <- reshape2::melt(global_correlation)
 
-global_correlation_plot <- ggplot(data = global_melted) +
+global_correlation_plotted <- ggplot(data = global_melted) +
   geom_tile(mapping = aes(x = Var1, y = Var2, fill = value)) +
   scale_fill_gradient2(low = "#6b74ff", mid = "white", high = "#e46c6c", midpoint = 0) +
   labs(title = "Correlation between each of the world's predictors", x = "", y = "",
