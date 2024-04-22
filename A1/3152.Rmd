@@ -275,7 +275,7 @@ tables_combined <- tables_combined[, c("Croatia_C19ProSo03",
 
 tables_combined_plotted <- ggplot(data = as.data.frame(tables_combined)) +
   geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
-  scale_fill_gradientn(colours = c("pink", "green")) +
+  scale_fill_gradientn(colours = c("grey", "green")) +
   theme(legend.position = "none") +
   scale_x_discrete(position = "top") +
   scale_y_discrete(limits = rev) +
@@ -416,7 +416,7 @@ summary_table <- summary_table[, c("Croatia_C19ProSo03",
 
 summary_table_visualised_2 <- ggplot(data = as.data.frame(summary_table)) +
   geom_tile(mapping = aes(x = models, y = predictors, fill = Freq, colour = "black")) +
-  scale_fill_gradientn(colours = c("pink", "green")) +
+  scale_fill_gradientn(colours = c("grey", "green")) +
   theme(legend.position = "none") +
   scale_x_discrete(position = "top") +
   scale_y_discrete(limits = rev) +
