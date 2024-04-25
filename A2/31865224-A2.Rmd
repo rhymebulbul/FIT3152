@@ -1,0 +1,86 @@
+# FIT3152 - Data analytics
+
+## Assignment 2
+
+**Name:** Rhyme Bulbul
+
+**Student ID:** 31865224
+
+**AI Statement:** Generative AI was not used in this assignment.
+
+<!-- - The main body of this report is almost 15 pages. This length is due to some long code blocks and the sizes of the decision tree diagram and ROC curve plots that have to be big to make them readable. All other pages are the Appendix, which include repeated code and outputs. -->
+<!-- - Due to length, from Question 9 onwards, similar code from Questions 4 and 5 used to make predictions, create confusion matrices, report accuracies, construct ROC curves and compute AUC values will not be shown in the main report but in the Appendix. ROC curve plots will also not be shown in the main report except that of Question 12, which shows the curves for all classifiers. -->
+
+<!-- My unique dataset of 2000 rows is first created with the following code from the specifications. Libraries needed to perform the tasks are imported as well. -->
+
+We start by utilizing the R skeleton code to import out phishing dataset and set a seed using my student number so the unique data is replicable. Next, we take a random sample of 2000 rows of data, and import libraries further code will rely on.
+
+```{r message = FALSE}
+rm(list = ls())
+Phish <- read.csv("PhishingData.csv")
+set.seed(31865224)
+L <- as.data.frame(c(1:50))
+L <- L[sample(nrow(L), 10, replace = FALSE),]
+Phish <- Phish[(Phish$A01 %in% L),]
+PD <- Phish[sample(nrow(Phish), 2000, replace = FALSE),]
+
+library(dplyr)
+library(caret)
+library(tree)
+library(e1071)
+#install.packages("adabag")
+#library(adabag)
+#install.packages("randomForest")
+#library(randomForest)
+library(ROCR)
+library(lightgbm)
+#install.packages("kernlab")
+#library(kernlab)
+```
+
+## Question 1
+
+<!-- The proportion of days when it is more humid than the previous day, and the opposite, can be computed by subsetting the data based on the value of `MHT`, which indicates whether the day in the next entry is more humid than that of the current one. -->
+
+There are 729 phishing sites and 1271 legitimate sites in this sample. This brings the proportion of phishing sites to legitimate sites is 0.57, which indicates that a bit over half of the sites included in this sample of the data set are phishing sites. The data is relatively clean with no missing or empty values for this attribute.
+
+```{r}
+phishing <- nrow(subset(PD, subset = Class == 1))
+legitimate <- nrow(subset(PD, subset = Class == 0))
+phishing
+legitimate
+phishing / legitimate
+nrow(PD[is.na(PD$Class), ])
+```
+
+<!-- Based on the results, the proportion is about 1.03, which means their respective frequencies are close to equal. The `MHT` field is also empty for 109 entries, so the true proportion may differ slightly as roughly 5% of the data has no target variable value. -->
+
+<!-- `summary()` is then run to get descriptions of the predictors. Due to its length, the output is shown in the Appendix. -->
+Next, we will run a summary of the data set to depict predictor descriptions such mean and standard deviation, which can be found in the appendix. Due to the nature of this data set, we are only familiar with the representation of the `Class` column, as all other columns are numbered from `A01` to `A25`.
+
+It is worth noting a large number of attributes including `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` have very low means, as well as quartiles of 0.00, which indicates they have a very low numerical value as well.
+In contrast, `A12` has comparatively high mean and quartiles, indicating a higher numerical value in the dataset. In addition, all attributes except `A01` have a small number of missing values.
+
+```{r results = "hide"}
+summary(PD)
+```
+
+<!-- Among the numerical real-valued attributes, most of the means are between 2 and 22. Some exceptions are `WindGustSpeed`, with a mean of 43.62, and more notably, `Pressure9am` and `Pressure3pm`, with means more than 1000 (which is normal for the scale at which atmospheric pressure is measured). Some interesting mean values are `Rainfall`'s mean of 2.941 despite having a max value of 156.4, and `WindGustSpeed`'s mean despite having a max value of 130. In both cases, this indicates a presence of a few extreme values. -->
+
+<!-- Additionally, one noteworthy observation is that there are NA values for every predictor except `Location`, with some predictors having significantly more than the rest (eg. `Sunshine` has 842 NA's compared to `Year`'s 22). -->
+
+<!-- Then, this code is run to compute the standard deviations of the numerical attributes. -->
+
+Next, analysing the numerical attributes standard deviation, we 
+
+```{r warning = FALSE}
+apply(PD, 2, sd, na.rm = TRUE)
+```
+
+<!-- As expected, `WindGustSpeed` and `Rainfall` are the two real-valued attributes with the largest standard deviations due to their extreme values. The smallest standard deviation belongs to `Cloud3pm`, meaning that the fraction of sky obscured by cloud at 3pm has been consistent, for this dataset. -->
+
+<!-- The only attributes that may, from first glance, be worth omitting are `Location` and `Year`, as a country's yearly climate is usually expected to be consistent. But due to Australia's size, diverse climate and geography, and climate change in recent years, both `Location` and `Year` might have a significant influence on `MHT` and should be kept. All other predictors are closely related to the weather and are thus assumed to have predictive power on `MHT` as well. -->
+
+
+
+
