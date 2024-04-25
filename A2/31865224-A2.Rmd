@@ -71,15 +71,172 @@ summary(PD)
 
 <!-- Then, this code is run to compute the standard deviations of the numerical attributes. -->
 
-Next, analysing the numerical attributes standard deviation, we 
+Next, analysing the numerical attributes standard deviation, we observe several columns including `AXXXXXXXXXXXXXXXXXXXXX` with an exquisitely low standard deviation, indicationg that those columns have been consistent in this sample of the dataset. On the flip side, it worth noting that several columns such as `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx` have particularly higher standard deviation, indicating disparity among the values in those columns.
 
 ```{r warning = FALSE}
 apply(PD, 2, sd, na.rm = TRUE)
 ```
 
+Considering the missing values and standard deviation, we should not be required to omit any attributes as the data set looks normal.
 <!-- As expected, `WindGustSpeed` and `Rainfall` are the two real-valued attributes with the largest standard deviations due to their extreme values. The smallest standard deviation belongs to `Cloud3pm`, meaning that the fraction of sky obscured by cloud at 3pm has been consistent, for this dataset. -->
 
 <!-- The only attributes that may, from first glance, be worth omitting are `Location` and `Year`, as a country's yearly climate is usually expected to be consistent. But due to Australia's size, diverse climate and geography, and climate change in recent years, both `Location` and `Year` might have a significant influence on `MHT` and should be kept. All other predictors are closely related to the weather and are thus assumed to have predictive power on `MHT` as well. -->
+
+
+## Question 2
+
+<!-- As all the predictors seem to have relatively equal importance based on their descriptions in the specifications (and it is generally a good idea to to build initial classifers using all attributes and skim them down from there), no columns are dropped. The only pre-processing required is to remove all rows with NA values to make the data suitable for model fitting. -->
+
+<!-- The following code extracts only complete entries from `WAUS` into a new data frame called `waus_clean`, and `MHT` is also converted to factors as its data type is numerical, which would result in a regression tree being built instead of a classification tree that classifies data points into 0 and 1. -->
+
+Given none of the columns have any priority we can omit them based off, all columns are included. However, rows with missing values have to be dropped to make the data set suitable to have a model fitted to it. 
+
+As such, we take a dataframe with the clean data, and convert the `Class` column into a factor, as it consists of a numerical data type and we are looking to build a classification tree rather than a regression tree. This now gives 1573 rows after dropping the ones with missing values.
+
+```{r}
+clean_pd <- PD[complete.cases(PD), ]
+clean_pd$Class <- as.factor(clean_pd$Class)
+
+nrow(clean_pd)
+#table(clean_pd$Class)
+```
+
+<!-- The outputs of the last two lines shows that the processed dataset now contains 655 rows, and the number of unique locations has been reduced to 5. -->
+
+## Question 3
+<!-- The adapted code to divide my data with a 70% to 30% train-test split is as follows. -->
+Adapting the given skeleton R code to divide the data into a 70% training and 30% test set, we get as follows
+
+```{r}
+train_row <- sample(1:nrow(clean_pd), 0.7 * nrow(clean_pd))
+pd_train <- clean_pd[train_row, ]
+pd_test <- clean_pd[-train_row, ]
+```
+
+## Question 4
+
+<!-- A classification model of each technique is constructed with default settings. -->
+We implement each of Decision Tree, Naive Baiyes, Bagging, Boosting and Random Forest below with R functions using their default settings.
+
+```{r}
+# Decision tree
+pd_tree <- tree(Class ~ ., data = pd_train)
+
+# Naive bayes
+pd_bayes <- naiveBayes(Class ~ ., data = pd_train)
+
+# Bagging
+#pd_bag <- bagging(Class ~ ., data = pd_train)
+
+# Boosting
+#pd_boost <- boosting(Class ~ ., data = pd_train)
+
+# Random forest
+#pd_forest <- randomForest(Class ~ ., data = pd_train)
+```
+
+## Question 5
+`TODO!!!`
+<!-- Each data point in the test data is classified into either `1` (more humid tomorrow) or `0` (less humid tomorrow) using `predict()` (`predict.bagging()` and `predict.boosting()` for bagging and boosting respectively). -->
+
+```{r}
+# decision tree
+pd_tree_predict <- predict(pd_tree, pd_test, type = "class")
+
+# naive bayes
+pd_bayes_predict <- predict(pd_bayes, pd_test)
+
+# bagging
+#pd_bag_predict <- predict.bagging(pd_bag, pd_test)
+
+# boosting
+#pd_boost_predict <- predict.boosting(pd_boost, pd_test)
+
+# random forest
+#pd_forest_predict <- predict(pd_forest, pd_test)
+```
+
+<!-- A confusion matrix is then created for each model, displayed alongside each model's accuracy, which is the total number of accurate predictions divided by total number of observations. A function is used to compute the accuracy for each confusion matrix, using the code `sum(diag(cm)) / sum(cm)`, where `cm` is a given confusion matrix. -->
+
+```{r}
+get_accuracy <- function(cm) {
+    return(sum(diag(cm)) / sum(cm))
+}
+
+# decision tree
+pd_tree_cm <- table("Predicted Class" = pd_tree_predict,
+                      "Actual Class" = pd_test$Class)
+pd_tree_acc <- get_accuracy(pd_tree_cm)
+cat("Decision tree (accuracy:", pd_tree_acc, ")\n")
+pd_tree_cm
+
+# naive bayes
+pd_bayes_cm <- table("Predicted Class" = pd_bayes_predict,
+                       "Actual Class" = pd_test$Class)
+pd_bayes_acc <- get_accuracy(pd_bayes_cm)
+cat("Naive bayes classifier (accuracy:", pd_bayes_acc, ")\n")
+pd_bayes_cm
+
+# bagging
+# pd_bag_acc <- get_accuracy(pd_bag_predict$confusion)
+# cat("Bagging (accuracy:", pd_bag_acc, ")\n")
+# pd_bag_predict$confusion
+
+# boosting
+# pd_boost_acc <- get_accuracy(pd_boost_predict$confusion)
+# cat("Boosting (accuracy:", pd_boost_acc, ")\n")
+# pd_boost_predict$confusion
+
+# random forest
+# pd_forest_cm <- table("Predicted Class" = pd_forest_predict,
+#                         "Actual Class" = pd_test$Class)
+# pd_forest_acc <- get_accuracy(pd_forest_cm)
+# cat("Random forest (accuracy:", pd_forest_acc, ")\n")
+# pd_forest_cm
+```
+
+<!-- Among the classifiers, only bagging and boosting have an accuracy above 0.6. In fact, they have identical accuracies (0.6345178). The other three classifiers have accuracies closer to that of random guessing, with the naive Bayes classifier having the worst accuracy at 0.5482234. -->
+
+## Question 6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
