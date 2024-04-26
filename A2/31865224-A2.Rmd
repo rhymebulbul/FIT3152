@@ -51,7 +51,7 @@ library(kernlab)
 
 ## Question 1
 
-<!-- The proportion of days when it is more humid than the previous day, and the opposite, can be computed by subsetting the data based on the value of `MHT`, which indicates whether the day in the next entry is more humid than that of the current one. -->
+<!-- The proportion of days when it is more humid than the previous day, and the opposite, can be computed by subsetting the data based on the value of `Class`, which indicates whether the day in the next entry is more humid than that of the current one. -->
 
 There are 729 phishing sites and 1271 legitimate sites in this sample. This brings the proportion of phishing sites to legitimate sites is 0.57, which indicates that a bit over half of the sites included in this sample of the data set are phishing sites. The data is relatively clean with no missing or empty values for this attribute.
 
@@ -64,7 +64,7 @@ phishing / legitimate
 nrow(PD[is.na(PD$Class), ])
 ```
 
-<!-- Based on the results, the proportion is about 1.03, which means their respective frequencies are close to equal. The `MHT` field is also empty for 109 entries, so the true proportion may differ slightly as roughly 5% of the data has no target variable value. -->
+<!-- Based on the results, the proportion is about 1.03, which means their respective frequencies are close to equal. The `Class` field is also empty for 109 entries, so the true proportion may differ slightly as roughly 5% of the data has no target variable value. -->
 
 <!-- `summary()` is then run to get descriptions of the predictors. Due to its length, the output is shown in the Appendix. -->
 Next, we will run a summary of the data set to depict predictor descriptions such mean and standard deviation, which can be found in the appendix. Due to the nature of this data set, we are only familiar with the representation of the `Class` column, as all other columns are numbered from `A01` to `A25`.
@@ -91,14 +91,14 @@ apply(PD, 2, sd, na.rm = TRUE)
 Considering the missing values and standard deviation, we should not be required to omit any attributes as the data set looks normal.
 <!-- As expected, `WindGustSpeed` and `Rainfall` are the two real-valued attributes with the largest standard deviations due to their extreme values. The smallest standard deviation belongs to `Cloud3pm`, meaning that the fraction of sky obscured by cloud at 3pm has been consistent, for this dataset. -->
 
-<!-- The only attributes that may, from first glance, be worth omitting are `Location` and `Year`, as a country's yearly climate is usually expected to be consistent. But due to Australia's size, diverse climate and geography, and climate change in recent years, both `Location` and `Year` might have a significant influence on `MHT` and should be kept. All other predictors are closely related to the weather and are thus assumed to have predictive power on `MHT` as well. -->
+<!-- The only attributes that may, from first glance, be worth omitting are `Location` and `Year`, as a country's yearly climate is usually expected to be consistent. But due to Australia's size, diverse climate and geography, and climate change in recent years, both `Location` and `Year` might have a significant influence on `Class` and should be kept. All other predictors are closely related to the weather and are thus assumed to have predictive power on `Class` as well. -->
 
 
 ## Question 2
 
 <!-- As all the predictors seem to have relatively equal importance based on their descriptions in the specifications (and it is generally a good idea to to build initial classifers using all attributes and skim them down from there), no columns are dropped. The only pre-processing required is to remove all rows with NA values to make the data suitable for model fitting. -->
 
-<!-- The following code extracts only complete entries from `WAUS` into a new data frame called `waus_clean`, and `MHT` is also converted to factors as its data type is numerical, which would result in a regression tree being built instead of a classification tree that classifies data points into 0 and 1. -->
+<!-- The following code extracts only complete entries from `pd` into a new data frame called `pd_clean`, and `Class` is also converted to factors as its data type is numerical, which would result in a regression tree being built instead of a classification tree that classifies data points into 0 and 1. -->
 
 Given none of the columns have any priority we can omit them based off, all columns are included. However, rows with missing values have to be dropped to make the data set suitable to have a model fitted to it. 
 
@@ -213,7 +213,139 @@ pd_forest_confusion_matrix
 
 Overall, we find most models have accuracy of 0.7 or higher, while Naive Bayes classifier has the least of 0.39 which is on par with random guesses.
 
+
 ## Question 6
+
+<!-- The confidence of predicting 'more humid tomorrow' is computed by adjusting the `type` parameter of the `predict()` function (`predict.bagging()` and `predict.boosting()` for bagging and boosting respectively) for each model. Their respective ROC curves is then computed using `prediction()` (which standardises the input data) and `performance()` (which evaluates a model's true positive rate and false positive rate). The ROC curves are then plotted on the same axis with different colours, and a diagonal line is added to represent the random classifier (for comparison purposes). -->
+
+We calculate the confidence of predicting `phishing` for each case by utilizing the parameter `type` from the function predict already used in each model. Next, we are able to construct a ROC curve for each curve using the prediction and performance functions to plot them on the same axis using a different colour for each classifier.
+
+```{r fig.height = 5, fig.width = 7}
+# decision tree
+pd_tree_predict_prob <- predict(pd_tree, pd_test, type = "vector")
+pd_tree_pred <- prediction(pd_tree_predict_prob[, 2], pd_test$Class)
+pd_tree_perf <- performance(pd_tree_pred, "tpr", "fpr")
+plot(pd_tree_perf, col = "red")
+
+# naive bayes
+pd_bayes_predict_prob <- predict(pd_bayes, pd_test, type = "raw")
+pd_bayes_pred <- prediction(pd_bayes_predict_prob[, 2], pd_test$Class)
+pd_bayes_perf <- performance(pd_bayes_pred, "tpr", "fpr")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+
+# bagging
+pd_bag_predict_prob <- predict.bagging(pd_bag, pd_test, type = "prob")
+pd_bag_pred <- prediction(pd_bag_predict_prob$prob[, 2], pd_test$Class)
+pd_bag_perf <- performance(pd_bag_pred, "tpr", "fpr")
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+
+# boosting
+pd_boost_predict_prob <- predict.boosting(pd_boost, pd_test, type = "prob")
+pd_boost_pred <- prediction(pd_boost_predict_prob$prob[, 2], pd_test$Class)
+pd_boost_perf <- performance(pd_boost_pred, "tpr", "fpr")
+plot(pd_boost_perf, col = "violet", add = TRUE)
+
+# random forest
+pd_forest_predict_prob <- predict(pd_forest, pd_test, type = "prob")
+pd_forest_pred <- prediction(pd_forest_predict_prob[, 2], pd_test$Class)
+pd_forest_perf <- performance(pd_forest_pred, "tpr", "fpr")
+plot(pd_forest_perf, col = "gold", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest"),
+       col = c("red", "blue", "darkgreen", "violet", "gold"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+```
+
+<!-- The AUC for each classifier is also calculated using `performance()`, but with the parameters adjusted to obtain the `auc` metric. -->
+
+Next, we calculate the `AUC` for each classifier utilizing the performance function with `auc` as the parameter. `AUC` is computed to be above .6 for all models, as well as above .7 for Bagging and Random Forest.
+
+```{r}
+pd_tree_auc <- performance(pd_tree_pred, "auc")@y.values[[1]]
+pd_bayes_auc <- performance(pd_bayes_pred, "auc")@y.values[[1]]
+pd_bag_auc <- performance(pd_bag_pred, "auc")@y.values[[1]]
+pd_boost_auc <- performance(pd_boost_pred, "auc")@y.values[[1]]
+pd_forest_auc <- performance(pd_forest_pred, "auc")@y.values[[1]]
+
+cat("Decision tree AUC", pd_tree_auc, "\n")
+cat("Naive Bayes classifier AUC", pd_bayes_auc, "\n")
+cat("Bagging AUC", pd_bag_auc, "\n")
+cat("Boosting tree AUC", pd_boost_auc, "\n")
+cat("Random forest AUC", pd_forest_auc, "\n")
+```
+
+<!-- If the classifiers are arranged in ascending order of AUC value, they would be in ascending order of accuracy as well, except that bagging and boosting have different AUC values. Boosting has an AUC value of 0.6351436, a little higher than that of bagging (0.6255202).  -->
+
+## Question 7
+
+<!-- A table to compare the results in Questions 5 and 6, namely the accuracies and AUC values of each classifier, is created in the form of a data frame, using the code as follows. -->
+
+Creating a table comparing the AUC and accuracy of each model throughout questions 5 and 6, Random Forest wins the highest values, with both well above 0.7. However, it is not well ahead of Bagging, also both above 0.7, as well as Decision Tree and Boosting which are both above 0.6. Only Naives Bayes Classifier performs poorly as observed previously.
+
+```{r}
+pd_accuracy_auc <- data.frame(
+  model = c("Decision tree", "Naive Bayes classifier", "Bagging", "Boosting",
+            "Random forest"),
+  accuracy = c(pd_tree_accuracy, pd_bayes_accuracy, pd_bag_accuracy, pd_boost_accuracy,
+               pd_forest_accuracy),
+  auc = c(pd_tree_auc, pd_bayes_auc, pd_bag_auc, pd_boost_auc, pd_forest_auc)
+)
+
+pd_accuracy_auc
+```
+
+<!-- From the output, there seems to exist a single "best" classifier based on the two metrics in focus, and that would be **boosting**. Both bagging and boosting have identical accuracies, but boosting has a slight edge due to its higher AUC value. However, it cannot be assumed now that boosting is definitely the single best classifier, due to the possibility of overfitting, which is a result of fitting too many attributes into a model. -->
+
+## Question 8
+
+We start by peeking through the summary of the decision tree for phishing data, with `A14 22 01 18 and 23` being the most important predictors of whether a website is a phishing one or is legitimate. Naives Bayes Classifiers, however assume each predictor to be independent and thus equal or no importance each.
+
+```{r}
+summary(pd_tree)
+```
+
+<!-- it is known that this classifier identifies the following attributes as the most important in predicting whether the next day would be more humid or not: `Sunshine`, `WindDir9am`, `WindGustDir`, `Rainfall`, `WindDir3pm`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. -->
+
+<!-- As a naive Bayes classifier assumes independence between predictors, the predictors have no measure of importance. -->
+
+<!-- For bagging, variable importance, in ascending order, can be displayed with the following code. -->
+
+Sorting the variables in order of ascending importance for the Bagging model, we can see that `A01 22 18 23 14` are significantly higher in importance than the rest, with `A03 05 07 10 11 13 21 and 25` having no importance at all.
+
+```{r}
+sort(pd_bag$importance)
+```
+
+<!-- The output shows that `WindGustDir`, `WindDir3pm` and `WindDir9am` are significantly more important compared to the other attributes. The least important predictor among these three, `WindGustDir` (with a weightage of 18.8087757), alone is nearly three times more important compared to the next less important predictor, `Sunshine` (with a weightage of 6.7237428). -->
+
+<!-- The process is repeated for boosting. -->
+
+Sorting again in order of importance for the Boosting model, we get similar results, with `A22 18 23 01 08 24 and 12` being significantly higher than others, again with `A03 07 13 and 25` with no importance at all.
+
+```{r}
+sort(pd_boost$importance)
+```
+
+<!-- Similarly, the boosting classifier considers `WindGustDir`, `WindDir3pm` and `WindDir9am` as significantly more important than the other attributes. In a similar fashion to bagging, `WindGustDir` is the least important among these three and `Sunshine` is the next less important predictor. However, `Sunshine`'s weightage (5.3837980) is also nearly three times less than that of `WindGustDir` (15.8714548). -->
+
+<!-- Finally, the variable importance for the random forest is inspected as well. -->
+Finally, we also sort in order of importance for the Random Forest Model, this time however `A01 08 12 14 18 22 23 24` have significantly high values higher than 20, compared to the rest with much lower values.
+
+```{r}
+pd_forest$importance
+```
+To conclude, we find `A01 18 22 23` to have consistently high importance throughout all the models in predicting `Class`, while, `A03 07 13 25` have the least importance. Given the models in question have sufficiently high accuracy, these 4 least important variables could potentially be omitted from the data with little to no effect on performance. However, it worth noting that with trees based classifiers being unstable, minor differences in the input sampled can result in the tree generated varying significantly. As such, it not possible to predict the performance gain by omitting such variables, and is recommended to analyse the results after testing and training and make decisions based on that information.
+<!-- Again, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important, being the only predictors whose weightages are more than 20. -->
+
+<!-- In conclusion, based on these classifiers, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important variables in predicting MHT. The decision tree considers other attributes important as well, which are `Sunshine`, `Rainfall`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. However, the importance of these attributes may be exaggerated as the decision tree does not possess good performance metrics (both accuracy and AUC value are less than 0.6), and decision trees that have been fitted using all attributes tend to overfit. We also cannot assume other variables yet to be mentioned can be omitted from the data, as decision trees are unstable classifiers, meaning small variations in input data result in very different trees being generated. This applies to bagging, boosting and random forests as well, all of which are tree-based classifiers. Hence, it is not possible to determine which variables can be omitted from the data with very little effect on performance based on their importance weightages alone. Rather, the omission of different variables must be experimented with practically and the test results have to be compared. -->
+
+
+
+## Question 9
+
 
 
 
