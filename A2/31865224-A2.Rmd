@@ -24,24 +24,24 @@ L <- L[sample(nrow(L), 10, replace = FALSE),]
 Phish <- Phish[(Phish$A01 %in% L),]
 PD <- Phish[sample(nrow(Phish), 2000, replace = FALSE),]
 
-install.packages("dplyr")
+#install.packages("dplyr")
 library(dplyr)
-install.packages("caret")
+#install.packages("caret")
 library(caret)
-install.packages("tree")
+#install.packages("tree")
 library(tree)
-install.packages("e1071")
+#install.packages("e1071")
 library(e1071)
 #install.packages("adabag")
-#library(adabag)
+library(adabag)
 #install.packages("randomForest")
-#library(randomForest)
-install.packages("ROCR")
+library(randomForest)
+#install.packages("ROCR")
 library(ROCR)
-install.packages("lightgbm")
+#install.packages("lightgbm")
 library(lightgbm)
 #install.packages("kernlab")
-#library(kernlab)
+library(kernlab)
 ```
 
 ## Question 1
