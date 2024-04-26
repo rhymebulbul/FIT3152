@@ -168,7 +168,7 @@ pd_boost_predict <- predict.boosting(pd_boost, pd_test)
 pd_forest_predict <- predict(pd_forest, pd_test)
 ```
 
-<!-- A confusion matrix is then created for each model, displayed alongside each model's accuracy, which is the total number of accurate predictions divided by total number of observations. A function is used to compute the accuracy for each confusion matrix, using the code `sum(diag(cm)) / sum(cm)`, where `cm` is a given confusion matrix. -->
+<!-- A confusion matrix is then created for each model, displayed alongside each model's accuracy, which is the total number of accurate predictions divided by total number of observations. A function is used to compute the accuracy for each confusion matrix, using the code `sum(diag(confusion_matrix)) / sum(confusion_matrix)`, where `confusion_matrix` is a given confusion matrix. -->
 
 Next, we develop a confusion matrix for each respective model, along with the accuracy of each. 
 
@@ -340,11 +340,84 @@ pd_forest$importance
 To conclude, we find `A01 18 22 23` to have consistently high importance throughout all the models in predicting `Class`, while, `A03 07 13 25` have the least importance. Given the models in question have sufficiently high accuracy, these 4 least important variables could potentially be omitted from the data with little to no effect on performance. However, it worth noting that with trees based classifiers being unstable, minor differences in the input sampled can result in the tree generated varying significantly. As such, it not possible to predict the performance gain by omitting such variables, and is recommended to analyse the results after testing and training and make decisions based on that information.
 <!-- Again, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important, being the only predictors whose weightages are more than 20. -->
 
-<!-- In conclusion, based on these classifiers, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important variables in predicting MHT. The decision tree considers other attributes important as well, which are `Sunshine`, `Rainfall`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. However, the importance of these attributes may be exaggerated as the decision tree does not possess good performance metrics (both accuracy and AUC value are less than 0.6), and decision trees that have been fitted using all attributes tend to overfit. We also cannot assume other variables yet to be mentioned can be omitted from the data, as decision trees are unstable classifiers, meaning small variations in input data result in very different trees being generated. This applies to bagging, boosting and random forests as well, all of which are tree-based classifiers. Hence, it is not possible to determine which variables can be omitted from the data with very little effect on performance based on their importance weightages alone. Rather, the omission of different variables must be experimented with practically and the test results have to be compared. -->
+<!-- In conclusion, based on these classifiers, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important variables in predicting Class. The decision tree considers other attributes important as well, which are `Sunshine`, `Rainfall`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. However, the importance of these attributes may be exaggerated as the decision tree does not possess good performance metrics (both accuracy and AUC value are less than 0.6), and decision trees that have been fitted using all attributes tend to overfit. We also cannot assume other variables yet to be mentioned can be omitted from the data, as decision trees are unstable classifiers, meaning small variations in input data result in very different trees being generated. This applies to bagging, boosting and random forests as well, all of which are tree-based classifiers. Hence, it is not possible to determine which variables can be omitted from the data with very little effect on performance based on their importance weightages alone. Rather, the omission of different variables must be experimented with practically and the test results have to be compared. -->
 
 
 
 ## Question 9
+
+<!-- To create a simple classifier for a person to make classifications by hand, I started from the decision tree created in Question 4. The approach here is to prune the tree to an optimal size, yielding a simpler decision tree that can be used to make classifications easily. -->
+
+<!-- To determine what size to prune the tree to, cross-validation is carried out on the original decision tree using `cv.tree()`. All attributes from the original tree were preserved, as the tree was trained on all attributes and, despite being possibly overfitted, is the most "complete" (contains the most information) tree to prune. In other words, **post-pruning** will be performed on the original tree to obtain the simple tree. -->
+
+```{r}
+pd_tree_cv <- cv.tree(pd_tree)
+pd_tree_cv
+```
+
+<!-- Based on the output, the tree size that yields the lowest deviance is 1. However, a tree with a single terminal node does not make sense. The next "best" tree size is 2, which is quite clearly an underfitted tree that is far too simple. Despite having the lowest deviances, trees of these sizes are expected to perform poorly on unseen data. The low deviances are most probably due to cross-validation finding such simple trees working well and overfitting on the training data. The optimal tree size, thus, cannot be selected based on the lowest deviance alone. -->
+
+<!-- The tree size with the next lowest deviance is 7. This is chosen, as it is a reasonable tree size that is not too large or small, and still yields a relatively low deviance. `prune.tree()` is used to prune the tree. -->
+
+```{r fig.height = 5, fig.width = 7}
+pd_tree_pruned <- prune.tree(pd_tree, best = 7)
+plot(pd_tree_pruned)
+text(pd_tree_pruned, pretty = 0)
+```
+
+<!-- The resulting decision tree is simple and easy to interpret. Consisting of only 7 terminal nodes, it splits on only 4 attributes, compared to the original decision tree which has 22 terminal nodes and splits on 9 attributes. -->
+
+<!-- Similar code from Question 5 is used to evaluate the performance of this pruned decision tree on the test data, create a confusion matrix and report its accuracy. -->
+
+```{r include = FALSE}
+pd_tree_pruned_predict <- predict(pd_tree_pruned, pd_test, type = "class")
+pd_tree_pruned_confusion_matrix <- table("Predicted Class" = pd_tree_pruned_predict,
+                             "Actual Class" = pd_test$Class)
+pd_tree_pruned_accuracy <- get_accuracy(pd_tree_pruned_confusion_matrix)
+```
+
+```{r}
+pd_tree_pruned_accuracy
+pd_tree_pruned_confusion_matrix
+```
+
+<!-- The accuracy of this pruned decision tree is 0.5634518, which is a slight improvement of that of the original tree (0.5532995). -->
+
+<!-- Similar code from Question 6 is then used to update the plot of ROC curves and compute the AUC value (see Appendix). -->
+
+```{r include = FALSE, results = "hide"}
+pd_tree_pruned_predict_prob <- predict(pd_tree_pruned, pd_test, type = "vector")
+pd_tree_pruned_pred <- prediction(pd_tree_pruned_predict_prob[, 2], pd_test$Class)
+pd_tree_pruned_perf <- performance(pd_tree_pruned_pred, "tpr", "fpr")
+
+plot(pd_tree_perf, col = "red")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+plot(pd_boost_perf, col = "violet", add = TRUE)
+plot(pd_forest_perf, col = "gold", add = TRUE)
+plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+         "Pruned decision tree"),
+       col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+
+pd_tree_pruned_auc <- performance(pd_tree_pruned_pred, "auc")@y.values[[1]]
+```
+
+```{r}
+pd_accuracy_auc <- rbind(pd_accuracy_auc, data.frame(model = "Pruned decision tree",
+                                               accuracy = pd_tree_pruned_accuracy,
+                                               auc = pd_tree_pruned_auc))
+pd_accuracy_auc                                              
+```
+
+<!-- Again, a slight improvement of the AUC value from the original decision tree's 0.5761548 to the pruned tree's 0.5838535 is observed. Most of this improvement is seen at low to medium-high thresholds. When the threshold is high, the pruned tree noticeably performs worse than random guessing. -->
+
+## Question 10
 
 
 
