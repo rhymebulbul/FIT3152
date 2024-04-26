@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # FIT3152 - Data analytics
 
 ## Assignment 2
@@ -132,18 +137,19 @@ pd_tree <- tree(Class ~ ., data = pd_train)
 pd_bayes <- naiveBayes(Class ~ ., data = pd_train)
 
 # Bagging
-#pd_bag <- bagging(Class ~ ., data = pd_train)
+pd_bag <- bagging(Class ~ ., data = pd_train)
 
 # Boosting
-#pd_boost <- boosting(Class ~ ., data = pd_train)
+pd_boost <- boosting(Class ~ ., data = pd_train)
 
 # Random forest
-#pd_forest <- randomForest(Class ~ ., data = pd_train)
+pd_forest <- randomForest(Class ~ ., data = pd_train)
 ```
 
 ## Question 5
 `TODO!!!`
 <!-- Each data point in the test data is classified into either `1` (more humid tomorrow) or `0` (less humid tomorrow) using `predict()` (`predict.bagging()` and `predict.boosting()` for bagging and boosting respectively). -->
+We start classifying the data into either 1 for phishing sites, or 0 for legitimate sites using the predict functions for each respective models
 
 ```{r}
 # decision tree
@@ -153,55 +159,59 @@ pd_tree_predict <- predict(pd_tree, pd_test, type = "class")
 pd_bayes_predict <- predict(pd_bayes, pd_test)
 
 # bagging
-#pd_bag_predict <- predict.bagging(pd_bag, pd_test)
+pd_bag_predict <- predict.bagging(pd_bag, pd_test)
 
 # boosting
-#pd_boost_predict <- predict.boosting(pd_boost, pd_test)
+pd_boost_predict <- predict.boosting(pd_boost, pd_test)
 
 # random forest
-#pd_forest_predict <- predict(pd_forest, pd_test)
+pd_forest_predict <- predict(pd_forest, pd_test)
 ```
 
 <!-- A confusion matrix is then created for each model, displayed alongside each model's accuracy, which is the total number of accurate predictions divided by total number of observations. A function is used to compute the accuracy for each confusion matrix, using the code `sum(diag(cm)) / sum(cm)`, where `cm` is a given confusion matrix. -->
 
+Next, we develop a confusion matrix for each respective model, along with the accuracy of each. 
+
 ```{r}
-get_accuracy <- function(cm) {
-    return(sum(diag(cm)) / sum(cm))
+get_accuracy <- function(confusion_matrix) {
+    return(sum(diag(confusion_matrix)) / sum(confusion_matrix))
 }
 
 # decision tree
-pd_tree_cm <- table("Predicted Class" = pd_tree_predict,
+pd_tree_confusion_matrix <- table("Predicted Class" = pd_tree_predict,
                       "Actual Class" = pd_test$Class)
-pd_tree_acc <- get_accuracy(pd_tree_cm)
-cat("Decision tree (accuracy:", pd_tree_acc, ")\n")
-pd_tree_cm
+pd_tree_accuracy <- get_accuracy(pd_tree_confusion_matrix)
+cat("Decision tree (accuracy:", pd_tree_accuracy, ")\n")
+pd_tree_confusion_matrix
 
 # naive bayes
-pd_bayes_cm <- table("Predicted Class" = pd_bayes_predict,
+pd_bayes_confusion_matrix <- table("Predicted Class" = pd_bayes_predict,
                        "Actual Class" = pd_test$Class)
-pd_bayes_acc <- get_accuracy(pd_bayes_cm)
-cat("Naive bayes classifier (accuracy:", pd_bayes_acc, ")\n")
-pd_bayes_cm
+pd_bayes_accuracy <- get_accuracy(pd_bayes_confusion_matrix)
+cat("Naive bayes classifier (accuracy:", pd_bayes_accuracy, ")\n")
+pd_bayes_confusion_matrix
 
 # bagging
-# pd_bag_acc <- get_accuracy(pd_bag_predict$confusion)
-# cat("Bagging (accuracy:", pd_bag_acc, ")\n")
-# pd_bag_predict$confusion
+pd_bag_accuracy <- get_accuracy(pd_bag_predict$confusion)
+cat("Bagging (accuracy:", pd_bag_accuracy, ")\n")
+pd_bag_predict$confusion
 
 # boosting
-# pd_boost_acc <- get_accuracy(pd_boost_predict$confusion)
-# cat("Boosting (accuracy:", pd_boost_acc, ")\n")
-# pd_boost_predict$confusion
+pd_boost_accuracy <- get_accuracy(pd_boost_predict$confusion)
+cat("Boosting (accuracy:", pd_boost_accuracy, ")\n")
+pd_boost_predict$confusion
 
 # random forest
-# pd_forest_cm <- table("Predicted Class" = pd_forest_predict,
-#                         "Actual Class" = pd_test$Class)
-# pd_forest_acc <- get_accuracy(pd_forest_cm)
-# cat("Random forest (accuracy:", pd_forest_acc, ")\n")
-# pd_forest_cm
+pd_forest_confusion_matrix <- table("Predicted Class" = pd_forest_predict,
+                        "Actual Class" = pd_test$Class)
+pd_forest_accuracy <- get_accuracy(pd_forest_confusion_matrix)
+cat("Random forest (accuracy:", pd_forest_accuracy, ")\n")
+pd_forest_confusion_matrix
 ```
 
 <!-- Among the classifiers, only bagging and boosting have an accuracy above 0.6. In fact, they have identical accuracies (0.6345178). The other three classifiers have accuracies closer to that of random guessing, with the naive Bayes classifier having the worst accuracy at 0.5482234. -->
+
+Overall, we find most models have accuracy of 0.7 or higher, while Naive Bayes classifier has the least of 0.39 which is on par with random guesses.
 
 ## Question 6
 
