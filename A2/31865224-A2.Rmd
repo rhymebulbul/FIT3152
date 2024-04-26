@@ -350,6 +350,10 @@ To conclude, we find `A01 18 22 23` to have consistently high importance through
 
 <!-- To determine what size to prune the tree to, cross-validation is carried out on the original decision tree using `cv.tree()`. All attributes from the original tree were preserved, as the tree was trained on all attributes and, despite being possibly overfitted, is the most "complete" (contains the most information) tree to prune. In other words, **post-pruning** will be performed on the original tree to obtain the simple tree. -->
 
+My starting point for developing a basic classifier that an individual may use to manually classify objects was the decision tree generated in Question 4. Here, the strategy is to trim the tree to the ideal size, resulting in a more straightforward decision tree that is readily employed for categorization.
+
+Using `cv.tree()`, cross-validation is performed on the original decision tree to determine what size to prune the tree to. The original tree was trained on all qualities, therefore all of its attributes were kept. Even if the tree may have become overfit, it is still the most "complete" (i.e., it has the most information) tree that needs to be pruned. Put another way, the original tree will undergo **post-pruning** in order to produce the simple tree.
+
 ```{r}
 pd_tree_cv <- cv.tree(pd_tree)
 pd_tree_cv
@@ -358,6 +362,14 @@ pd_tree_cv
 <!-- Based on the output, the tree size that yields the lowest deviance is 1. However, a tree with a single terminal node does not make sense. The next "best" tree size is 2, which is quite clearly an underfitted tree that is far too simple. Despite having the lowest deviances, trees of these sizes are expected to perform poorly on unseen data. The low deviances are most probably due to cross-validation finding such simple trees working well and overfitting on the training data. The optimal tree size, thus, cannot be selected based on the lowest deviance alone. -->
 
 <!-- The tree size with the next lowest deviance is 7. This is chosen, as it is a reasonable tree size that is not too large or small, and still yields a relatively low deviance. `prune.tree()` is used to prune the tree. -->
+
+
+
+The output indicates that a tree size of one produces the least deviation. On the other hand, a tree with only one terminal node is illogical. The next "best" tree size is 2, which is obviously an overly simplistic and underfitted tree. Trees of these sizes are anticipated to perform badly on unknown data, while having the lowest deviances. The low deviations are most likely the result of overfitting on the training set and cross-validation identifying simple trees that function effectively. Therefore, choosing the best tree size cannot be based just on the lowest deviation.
+
+Seven is the next-smallest deviant tree size. This tree size was selected because it produces a reasonably low deviation and is a suitable size—it is neither too big nor too little. To prune the tree, we use `prune.tree()`.
+
+
 
 ```{r fig.height = 5, fig.width = 7}
 pd_tree_pruned <- prune.tree(pd_tree, best = 7)
@@ -368,6 +380,14 @@ text(pd_tree_pruned, pretty = 0)
 <!-- The resulting decision tree is simple and easy to interpret. Consisting of only 7 terminal nodes, it splits on only 4 attributes, compared to the original decision tree which has 22 terminal nodes and splits on 9 attributes. -->
 
 <!-- Similar code from Question 5 is used to evaluate the performance of this pruned decision tree on the test data, create a confusion matrix and report its accuracy. -->
+
+
+The decision tree that results is clear-cut and straightforward to understand. Compared to the original decision tree, which had 22 terminal nodes and split on nine qualities, this decision tree has just seven terminal nodes and splits on four attributes.
+
+To assess how well this pruned decision tree performs on the test data, generate a confusion matrix, and report its accuracy, similar code from Question 5 is utilized.
+
+
+
 
 ```{r include = FALSE}
 pd_tree_pruned_predict <- predict(pd_tree_pruned, pd_test, type = "class")
@@ -384,6 +404,13 @@ pd_tree_pruned_confusion_matrix
 <!-- The accuracy of this pruned decision tree is 0.5634518, which is a slight improvement of that of the original tree (0.5532995). -->
 
 <!-- Similar code from Question 6 is then used to update the plot of ROC curves and compute the AUC value (see Appendix). -->
+
+
+This decision tree's pruned accuracy, of 0.7224576, is exactly the same as the original tree's accuracy of 0.7224576.
+
+Next, the plot of ROC curves is updated, and the AUC value is calculated using code similar to that from Question 6 (see Appendix).
+
+
 
 ```{r include = FALSE, results = "hide"}
 pd_tree_pruned_predict_prob <- predict(pd_tree_pruned, pd_test, type = "vector")
@@ -415,10 +442,122 @@ pd_accuracy_auc <- rbind(pd_accuracy_auc, data.frame(model = "Pruned decision tr
 pd_accuracy_auc                                              
 ```
 
-<!-- Again, a slight improvement of the AUC value from the original decision tree's 0.5761548 to the pruned tree's 0.5838535 is observed. Most of this improvement is seen at low to medium-high thresholds. When the threshold is high, the pruned tree noticeably performs worse than random guessing. -->
+<!-- Again, a slight improvement of the AUC value from the original decision tree's 0.6879415 to the pruned tree's 0.6879415	 is observed. Most of this improvement is seen at low to medium-high thresholds. When the threshold is high, the pruned tree noticeably performs worse than random guessing. -->
+
+
+Moreover, the AUC value from 0.6879415 is unchanged for the pruned tree. 
+<!-- The pruning tree performs noticeably worse than random guessing when the threshold is high. -->
+
 
 ## Question 10
 
+<!-- In my attempts to create the best tree-based classifier, I have tried adjusting parameters, omitting predictors, cross-validation, and scaling features on the classifiers created in Question 4. Unfortunately, no resulting classifier was able to beat the performance of the boosting and bagging classifiers built in Question 4 with default parameters. Instead, the strongest tree-based classifier I could create is a gradient-boosted trees model (note: I have sought confirmation from Dr Betts that a new type of tree-based classifier can be used for this question). -->
+
+<!-- Gradient boosting is an ensemble method that iteratively trains decision trees to to minimise the errors made by the ensemble of previously-trained trees. The functions to construct a gradient-boosted trees model is provided by the [`lightgbm`](https://cran.r-project.org/web/packages/lightgbm/index.html) package. -->
+
+<!-- Gradient boosting only accepts numerical input features and targets. Hence, the factor variables in the training and testing data are first encoded into numerical values. -->
+
+
+I have experimented with scaling features, removing predictors, modifying parameters, and cross-validation on the classifiers developed in Question 4 in an effort to develop the best tree-based classifier. Sadly, none of the final classifiers could outperform the default-parameter boosting and bagging classifiers included in Question 4. Rather, a gradient-boosted trees model is the most powerful tree-based classifier that can be developed.
+
+Using an ensemble approach called gradient boosting, decision trees are repeatedly trained to reduce the mistakes produced by the group of previously trained trees. Using the lightgbm package, one can create a gradient-boosted trees model.
+
+The only input features and targets that gradient boosting takes are numerical. As a result, before being tested and used in training, the factor variables are first converted into numerical values.
+
+
+
+```{r}
+pd_train_lgbm <- pd_train
+pd_test_lgbm <- pd_test
+
+for (col in colnames(pd_train_lgbm)[1:21]) {
+  if (is.factor(pd_train_lgbm[, col])) {
+    pd_train_lgbm[, col] <- as.numeric(pd_train_lgbm[, col])
+    pd_test_lgbm[, col] <- as.numeric(pd_test_lgbm[, col])
+  }
+}
+
+pd_train_lgbm$Class <- as.numeric(pd_train_lgbm$Class) - 1
+pd_test_lgbm$Class <- as.numeric(pd_test_lgbm$Class) - 1
+```
+
+<!-- The function that fits the model is `lgb.train()`, which requires the input data to be of a special class called `lgb.Dataset`. The following code adapts the training data to this class. -->
+
+```{r}
+pd_train_lgbmd <- lgb.Dataset(data = as.matrix(pd_train_lgbm[1:21]),
+                                label = as.matrix(pd_train_lgbm$Class))
+```
+
+<!-- The following parameters were used to get the best-performing gradient-boosted trees model, which is first assigned to a variable to be passed into `lgb.train()`. The parameter values were selected based on repetitive attempts with different values to get the best-performing model. -->
+
+<!-- - `objective = "binary"`: sets `lgb.train()` to train a binary classfication model -->
+<!-- - `learning_rate = 0.05`: sets the shrinkage rate (controls how much each tree in the ensemble contributes to the final prediction) to 0.05 -->
+<!-- - `feature_fraction = 0.7`: sets `lgb.train()` to randomly select 70% of features on each tree node -->
+<!-- - `bagging_fraction = 0.8`: sets `lgb.train()` to select 80% of data without resampling for bagging -->
+<!-- - `bagging_freq = 10`: sets `lgb.train()` to perform bagging at every 10 iterations -->
+
+```{r}
+params <- list(objective = "binary", learning_rate = 0.05, feature_fraction = 0.7,
+               bagging_fraction = 0.8, bagging_freq = 10)
+```
+
+<!-- `lgb.train()` is then run with these parameters and 100 rounds. -->
+
+```{r results = "hide"}
+pd_lgbm <- lgb.train(params = params, data = pd_train_lgbmd, nrounds = 100)
+```
+
+<!-- The confusion matrix is created and the accuracy is reported. -->
+
+```{r include = FALSE, message = FALSE}
+pd_lgbm_predict <- predict(pd_lgbm, as.matrix(pd_test_lgbm[1:21]),
+                             type = "response")
+pd_lgbm_cm <- table("Predicted Class" = ifelse(pd_lgbm_predict > 0.5, 1, 0),
+                     "Actual Class" = pd_test_lgbm$Class)
+pd_lgbm_accuracy <- get_accuracy(pd_lgbm_cm)
+```
+
+```{r}
+pd_lgbm_accuracy
+pd_lgbm_cm
+```
+
+<!-- The accuracy of the gradient-boosted trees model is 0.6548223, which outperforms every tree-based classifier we have thus far. As in previous questions, the ROC curve for this model is added to the plot and the AUC value is computed (see Appendix). -->
+
+```{r include = FALSE, results = "hide"}
+pd_lgbm_pred <- prediction(pd_lgbm_predict, pd_test_lgbm$Class)
+pd_lgbm_perf <- performance(pd_lgbm_pred, "tpr", "fpr")
+
+plot(pd_tree_perf, col = "red")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+plot(pd_boost_perf, col = "violet", add = TRUE)
+plot(pd_forest_perf, col = "gold", add = TRUE)
+plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+plot(pd_lgbm_perf, col = "green", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+         "Pruned decision tree", "Gradient-boosted trees"),
+       col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue", "green"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+
+pd_lgbm_auc <- performance(pd_lgbm_pred, "auc")@y.values[[1]]
+pd_accuracy_auc <- rbind(pd_accuracy_auc,
+                      data.frame(model = "Gradient-boosted trees",
+                                 accuracy = pd_lgbm_accuracy,
+                                 auc = pd_lgbm_auc))
+```
+
+```{r}
+pd_accuracy_auc
+```
+
+<!-- The AUC value is 0.6369122, which is also higher than that of every tree-based classifier thus far. Based on the ROC curve, this model performs worse than bagging and boosting at medium-high thresholds, but better at all other thresholds. These metrics show that this classifier is indeed better than the others for predictions of Class. -->
+
+<!-- The reason why gradient boosting was chosen when none of the other tree-based classifiers were able to improve was because gradient boosting is a variant of boosting, which is the most powerful classifier in Question 4. By implementing a possibly better variant of it that tends less to overfit and is good at capturing relationships between predictors, an improvement in performance is expected. Gradient boosting has also been known for strong performance in binary classification tasks in general. All original attributes of `pd` were retained as including all of them produced the best models for bagging and boosting. Of course, the factor predictors and target variable have to be first encoded into numerical values.  -->
 
 
 
@@ -426,15 +565,20 @@ pd_accuracy_auc
 
 
 
+## Question 11
+
+
+9/10 text re
+
+
+## Question 12
 
 
 
 
+# References
 
-
-
-
-
+# Appendix
 
 
 
