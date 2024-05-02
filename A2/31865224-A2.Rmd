@@ -31,7 +31,7 @@ library(caret)
 library(tree)
 #install.packages("e1071")
 library(e1071)
-#install.packages("adabag")
+#install.packages("adabag", dependencies = TRUE)
 library(adabag)
 #install.packages("randomForest")
 library(randomForest)
@@ -58,14 +58,14 @@ nrow(PD[is.na(PD$Class), ])
 
 Next, we will run a summary of the data set to depict predictor descriptions such mean and standard deviation, which can be found in the appendix. Due to the nature of this data set, we are only familiar with the representation of the `Class` column, as all other columns are numbered from `A01` to `A25`.
 
-It is worth noting a large number of attributes including `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` have very low means, as well as quartiles of 0.00, which indicates they have a very low numerical value as well.
+It is worth noting a large number of attributes such as `A02`, `A05`, `A06` and so on have very low means, as well as quartiles of 0.00, which indicates they have a very low numerical value as well.
 In contrast, `A12` has comparatively high mean and quartiles, indicating a higher numerical value in the dataset. In addition, all attributes except `A01` have a small number of missing values.
 
 ```{r results = "hide"}
 summary(PD)
 ```
 
-Next, analysing the numerical attributes standard deviation, we observe several columns including `AXXXXXXXXXXXXXXXXXXXXX` with an exquisitely low standard deviation, indicationg that those columns have been consistent in this sample of the dataset. On the flip side, it worth noting that several columns such as `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx` have particularly higher standard deviation, indicating disparity among the values in those columns.
+Next, analysing the numerical attributes standard deviation, we observe several columns including `A03`, `A04`, `A06`, `A07` and so on with an exquisitely low standard deviation, indicationg that those columns have been consistent in this sample of the dataset. On the flip side, it worth noting that several columns such as `A12`, `A13` have particularly higher standard deviation, indicating disparity among the values in those columns.
 
 ```{r warning = FALSE}
 apply(PD, 2, sd, na.rm = TRUE)
