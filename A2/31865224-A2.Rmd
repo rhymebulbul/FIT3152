@@ -369,8 +369,6 @@ The output indicates that a tree size of `8` produces the least deviation. On th
 
 `6` is the next-smallest deviant tree size. This tree size was selected because it produces a reasonably low deviation and is a suitable size—it is neither too big nor too little. To prune the tree, we use `prune.tree()`.
 
-######TODO chose tree to prune
-
 ```{r fig.height = 5, fig.width = 7}
 pd_tree_pruned <- prune.tree(pd_tree, best = 7)
 plot(pd_tree_pruned)
@@ -382,7 +380,7 @@ text(pd_tree_pruned, pretty = 0)
 <!-- Similar code from Question 5 is used to evaluate the performance of this pruned decision tree on the test data, create a confusion matrix and report its accuracy. -->
 
 
-The decision tree that results is clear-cut and straightforward to understand. Compared to the original decision tree, which had 22 terminal nodes and split on nine qualities, this decision tree has just seven terminal nodes and splits on four attributes.
+The decision tree that results is clear-cut and straightforward to understand. Compared to the original decision tree, which had 22 terminal nodes and split on nine qualities, this decision tree has just seven terminal nodes and splits on five attributes.
 
 To assess how well this pruned decision tree performs on the test data, generate a confusion matrix, and report its accuracy, similar code from Question 5 is utilized.
 
@@ -578,9 +576,9 @@ library(neuralnet)
 
 ```{r}
 pd_train_nn <- pd_train[, c(1, 2, 3, 4, 5, 6, 7, 9, 12, 13, 14, 15, 16, 17, 18, 19,
-                                21, 22)]
+                                21, 22, 26)]
 pd_test_nn <- pd_test[, c(1, 2, 3, 4, 5, 6, 7, 9, 12, 13, 14, 15, 16, 17, 18, 19, 21,
-                              22)]
+                              22, 26)]
 
 pd_train_nn$Class <- as.numeric(pd_train_nn$Class) - 1
 pd_test_nn$Class <- as.numeric(pd_test_nn$Class) - 1
@@ -592,16 +590,17 @@ pd_test_nn[1:17] <- scale(pd_test_nn[1:17])
 <!-- Now, the pre-processed data can be used to construct the ANN using `neuralnet()`. As in Question 5, the test data is used for predictions. A confusion matrix is drawn and the accuracy is reported. -->
 
 ```{r include = FALSE}
-pd_nn <- neuralnet(Class == 1 ~ ., pd_train_nn, hidden = 3, linear.output = FALSE)
-pd_nn_predict <- predict(pd_nn, pd_test_nn[, 1:17])
-pd_nn_cm <- table("Predicted Class" = ifelse(pd_nn_predict > 0.5, 1, 0),
-                    "Actual Class" = pd_test_nn$Class)
-pd_nn_acc <- get_accuracy(pd_nn_cm)
+# pd_nn <- neuralnet(Class == 1 ~ ., pd_train_nn, hidden = 3, linear.output = FALSE)
+# pd_nn_predict <- predict(pd_nn, pd_test_nn[, 1:17])
+# pd_nn_cm <- table("Predicted Class" = ifelse(pd_nn_predict > 0.5, 1, 0),
+#                     "Actual Class" = pd_test_nn$Class)
+# pd_nn_acc <- get_accuracy(pd_nn_cm)
+
 ```
 
 ```{r}
-pd_nn_acc
-pd_nn_cm
+# pd_nn_acc
+# pd_nn_cm
 ```
 
 <!-- The accuracy of the ANN is 0.6091371, which joins bagging, boosting and gradient-boosted trees as a classifier with an accuracy over 0.6. -->
@@ -609,41 +608,41 @@ pd_nn_cm
 <!-- To get the ROC curve and AUC value of the ANN, the `neuralnet` package has to be first detached as it overrides the `ROCR` package's `prediction()` method. -->
 
 ```{r message = FALSE}
-detach(package:neuralnet, unload = TRUE)
+# detach(package:neuralnet, unload = TRUE)
 ```
 
 <!-- As the predictions of the ANN are in the form of continuous values between 0 and 1, they effectively represent probabilities of a "1" classification as well. Thus, `pd_nn_predict` is passed directly into `prediction()`. The plot of ROC curves is updated and the AUC value is computed (see Appendix). -->
 
 ```{r include = FALSE, results = "hide"}
-pd_nn_pred <- prediction(pd_nn_predict, pd_test_nn$Class)
-pd_nn_perf <- performance(pd_nn_pred, "tpr", "fpr")
-
-plot(pd_tree_perf, col = "red")
-plot(pd_bayes_perf, col = "blue", add = TRUE)
-plot(pd_bag_perf, col = "darkgreen", add = TRUE)
-plot(pd_boost_perf, col = "violet", add = TRUE)
-plot(pd_forest_perf, col = "gold", add = TRUE)
-plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
-plot(pd_lgbm_perf, col = "green", add = TRUE)
-plot(pd_nn_perf, col = "chocolate", add = TRUE)
-
-abline(0, 1)
-legend("bottomright",
-       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
-         "Pruned decision tree", "Gradient-boosted trees", "ANN"),
-       col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue", "green",
-               "chocolate"),
-       lty = 1, bty = "n", inset = c(0, 0))
-title("ROC curves for classifiers that predict Class")
-
-pd_nn_auc <- performance(pd_nn_pred, "auc")@y.values[[1]]
-pd_acc_auc <- rbind(pd_acc_auc,
-                      data.frame(model = "Artificial neural network",
-                                 accuracy = pd_nn_acc, auc = pd_nn_auc))
+# pd_nn_pred <- prediction(pd_nn_predict, pd_test_nn$Class)
+# pd_nn_perf <- performance(pd_nn_pred, "tpr", "fpr")
+# 
+# plot(pd_tree_perf, col = "red")
+# plot(pd_bayes_perf, col = "blue", add = TRUE)
+# plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+# plot(pd_boost_perf, col = "violet", add = TRUE)
+# plot(pd_forest_perf, col = "gold", add = TRUE)
+# plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+# plot(pd_lgbm_perf, col = "green", add = TRUE)
+# plot(pd_nn_perf, col = "chocolate", add = TRUE)
+# 
+# abline(0, 1)
+# legend("bottomright",
+#        c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+#          "Pruned decision tree", "Gradient-boosted trees", "ANN"),
+#        col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue", "green",
+#                "chocolate"),
+#        lty = 1, bty = "n", inset = c(0, 0))
+# title("ROC curves for classifiers that predict Class")
+# 
+# pd_nn_auc <- performance(pd_nn_pred, "auc")@y.values[[1]]
+# pd_acc_auc <- rbind(pd_acc_auc,
+#                       data.frame(model = "Artificial neural network",
+#                                  accuracy = pd_nn_acc, auc = pd_nn_auc))
 ```
 
 ```{r}
-pd_acc_auc
+# pd_acc_auc
 ```
 
 <!-- The AUC value is 0.6852892, which is the best among all the classifiers we have thus far. The ROC curve shows that the ANN is the strongest classifier at high and medium-high thresholds, before gradually being outperformed by gradient-boosted trees further up the curve. The reason why the AUC value is the highest among all classifiers but the accuracy is not relatively high, may be due to the ANN predicting positives (`Class = 1`) well but not negatives, as shown by the confusion matrix. Having a high true positive rate contributes to the ANN's higher AUC, but due to mediocre performance on the negative class, the overall accuracy of the model is relatively medium. -->
