@@ -13,11 +13,6 @@ output:
 
 **AI Statement:** Generative AI was not used in this assignment.
 
-<!-- - The main body of this report is almost 15 pages. This length is due to some long code blocks and the sizes of the decision tree diagram and ROC curve plots that have to be big to make them readable. All other pages are the Appendix, which include repeated code and outputs. -->
-<!-- - Due to length, from Question 9 onwards, similar code from Questions 4 and 5 used to make predictions, create confusion matrices, report accuracies, construct ROC curves and compute AUC values will not be shown in the main report but in the Appendix. ROC curve plots will also not be shown in the main report except that of Question 12, which shows the curves for all classifiers. -->
-
-<!-- My unique dataset of 2000 rows is first created with the following code from the specifications. Libraries needed to perform the tasks are imported as well. -->
-
 We start by utilizing the R skeleton code to import out phishing dataset and set a seed using my student number so the unique data is replicable. Next, we take a random sample of 2000 rows of data, and import libraries further code will rely on.
 
 ```{r message = FALSE}
@@ -51,8 +46,6 @@ library(kernlab)
 
 ## Question 1
 
-<!-- The proportion of days when it is more humid than the previous day, and the opposite, can be computed by subsetting the data based on the value of `Class`, which indicates whether the day in the next entry is more humid than that of the current one. -->
-
 There are 729 phishing sites and 1271 legitimate sites in this sample. This brings the proportion of phishing sites to legitimate sites is 0.57, which indicates that a bit over half of the sites included in this sample of the data set are phishing sites. The data is relatively clean with no missing or empty values for this attribute.
 
 ```{r}
@@ -64,9 +57,6 @@ phishing / legitimate
 nrow(PD[is.na(PD$Class), ])
 ```
 
-<!-- Based on the results, the proportion is about 1.03, which means their respective frequencies are close to equal. The `Class` field is also empty for 109 entries, so the true proportion may differ slightly as roughly 5% of the data has no target variable value. -->
-
-<!-- `summary()` is then run to get descriptions of the predictors. Due to its length, the output is shown in the Appendix. -->
 Next, we will run a summary of the data set to depict predictor descriptions such mean and standard deviation, which can be found in the appendix. Due to the nature of this data set, we are only familiar with the representation of the `Class` column, as all other columns are numbered from `A01` to `A25`.
 
 It is worth noting a large number of attributes including `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` have very low means, as well as quartiles of 0.00, which indicates they have a very low numerical value as well.
@@ -76,12 +66,6 @@ In contrast, `A12` has comparatively high mean and quartiles, indicating a highe
 summary(PD)
 ```
 
-<!-- Among the numerical real-valued attributes, most of the means are between 2 and 22. Some exceptions are `WindGustSpeed`, with a mean of 43.62, and more notably, `Pressure9am` and `Pressure3pm`, with means more than 1000 (which is normal for the scale at which atmospheric pressure is measured). Some interesting mean values are `Rainfall`'s mean of 2.941 despite having a max value of 156.4, and `WindGustSpeed`'s mean despite having a max value of 130. In both cases, this indicates a presence of a few extreme values. -->
-
-<!-- Additionally, one noteworthy observation is that there are NA values for every predictor except `Location`, with some predictors having significantly more than the rest (eg. `Sunshine` has 842 NA's compared to `Year`'s 22). -->
-
-<!-- Then, this code is run to compute the standard deviations of the numerical attributes. -->
-
 Next, analysing the numerical attributes standard deviation, we observe several columns including `AXXXXXXXXXXXXXXXXXXXXX` with an exquisitely low standard deviation, indicationg that those columns have been consistent in this sample of the dataset. On the flip side, it worth noting that several columns such as `AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx` have particularly higher standard deviation, indicating disparity among the values in those columns.
 
 ```{r warning = FALSE}
@@ -89,16 +73,10 @@ apply(PD, 2, sd, na.rm = TRUE)
 ```
 
 Considering the missing values and standard deviation, we should not be required to omit any attributes as the data set looks normal.
-<!-- As expected, `WindGustSpeed` and `Rainfall` are the two real-valued attributes with the largest standard deviations due to their extreme values. The smallest standard deviation belongs to `Cloud3pm`, meaning that the fraction of sky obscured by cloud at 3pm has been consistent, for this dataset. -->
 
-<!-- The only attributes that may, from first glance, be worth omitting are `Location` and `Year`, as a country's yearly climate is usually expected to be consistent. But due to Australia's size, diverse climate and geography, and climate change in recent years, both `Location` and `Year` might have a significant influence on `Class` and should be kept. All other predictors are closely related to the weather and are thus assumed to have predictive power on `Class` as well. -->
 
 
 ## Question 2
-
-<!-- As all the predictors seem to have relatively equal importance based on their descriptions in the specifications (and it is generally a good idea to to build initial classifers using all attributes and skim them down from there), no columns are dropped. The only pre-processing required is to remove all rows with NA values to make the data suitable for model fitting. -->
-
-<!-- The following code extracts only complete entries from `pd` into a new data frame called `pd_clean`, and `Class` is also converted to factors as its data type is numerical, which would result in a regression tree being built instead of a classification tree that classifies data points into 0 and 1. -->
 
 Given none of the columns have any priority we can omit them based off, all columns are included. However, rows with missing values have to be dropped to make the data set suitable to have a model fitted to it. 
 
@@ -112,10 +90,10 @@ nrow(clean_pd)
 #table(clean_pd$Class)
 ```
 
-<!-- The outputs of the last two lines shows that the processed dataset now contains 655 rows, and the number of unique locations has been reduced to 5. -->
+
 
 ## Question 3
-<!-- The adapted code to divide my data with a 70% to 30% train-test split is as follows. -->
+
 Adapting the given skeleton R code to divide the data into a 70% training and 30% test set, we get as follows
 
 ```{r}
@@ -126,7 +104,6 @@ pd_test <- clean_pd[-train_row, ]
 
 ## Question 4
 
-<!-- A classification model of each technique is constructed with default settings. -->
 We implement each of Decision Tree, Naive Baiyes, Bagging, Boosting and Random Forest below with R functions using their default settings.
 
 ```{r}
@@ -147,8 +124,7 @@ pd_forest <- randomForest(Class ~ ., data = pd_train)
 ```
 
 ## Question 5
-`TODO!!!`
-<!-- Each data point in the test data is classified into either `1` (more humid tomorrow) or `0` (less humid tomorrow) using `predict()` (`predict.bagging()` and `predict.boosting()` for bagging and boosting respectively). -->
+
 We start classifying the data into either 1 for phishing sites, or 0 for legitimate sites using the predict functions for each respective models
 
 ```{r}
@@ -167,8 +143,6 @@ pd_boost_predict <- predict.boosting(pd_boost, pd_test)
 # random forest
 pd_forest_predict <- predict(pd_forest, pd_test)
 ```
-
-<!-- A confusion matrix is then created for each model, displayed alongside each model's accuracy, which is the total number of accurate predictions divided by total number of observations. A function is used to compute the accuracy for each confusion matrix, using the code `sum(diag(confusion_matrix)) / sum(confusion_matrix)`, where `confusion_matrix` is a given confusion matrix. -->
 
 Next, we develop a confusion matrix for each respective model, along with the accuracy of each. 
 
@@ -209,14 +183,11 @@ cat("Random forest (accuracy:", pd_forest_accuracy, ")\n")
 pd_forest_confusion_matrix
 ```
 
-<!-- Among the classifiers, only bagging and boosting have an accuracy above 0.6. In fact, they have identical accuracies (0.6345178). The other three classifiers have accuracies closer to that of random guessing, with the naive Bayes classifier having the worst accuracy at 0.5482234. -->
-
 Overall, we find most models have accuracy of 0.7 or higher, while Naive Bayes classifier has the least of 0.39 which is on par with random guesses.
 
 
-## Question 6
 
-<!-- The confidence of predicting 'more humid tomorrow' is computed by adjusting the `type` parameter of the `predict()` function (`predict.bagging()` and `predict.boosting()` for bagging and boosting respectively) for each model. Their respective ROC curves is then computed using `prediction()` (which standardises the input data) and `performance()` (which evaluates a model's true positive rate and false positive rate). The ROC curves are then plotted on the same axis with different colours, and a diagonal line is added to represent the random classifier (for comparison purposes). -->
+## Question 6
 
 We calculate the confidence of predicting `phishing` for each case by utilizing the parameter `type` from the function predict already used in each model. Next, we are able to construct a ROC curve for each curve using the prediction and performance functions to plot them on the same axis using a different colour for each classifier.
 
@@ -259,8 +230,6 @@ legend("bottomright",
 title("ROC curves for classifiers that predict Class")
 ```
 
-<!-- The AUC for each classifier is also calculated using `performance()`, but with the parameters adjusted to obtain the `auc` metric. -->
-
 Next, we calculate the `AUC` for each classifier utilizing the performance function with `auc` as the parameter. `AUC` is computed to be above .6 for all models, as well as above .7 for Bagging and Random Forest.
 
 ```{r}
@@ -277,13 +246,11 @@ cat("Boosting tree AUC", pd_boost_auc, "\n")
 cat("Random forest AUC", pd_forest_auc, "\n")
 ```
 
-<!-- If the classifiers are arranged in ascending order of AUC value, they would be in ascending order of accuracy as well, except that bagging and boosting have different AUC values. Boosting has an AUC value of 0.6351436, a little higher than that of bagging (0.6255202).  -->
+
 
 ## Question 7
 
-<!-- A table to compare the results in Questions 5 and 6, namely the accuracies and AUC values of each classifier, is created in the form of a data frame, using the code as follows. -->
-
-Creating a table comparing the AUC and accuracy of each model throughout questions 5 and 6, Random Forest wins the highest values, with both well above 0.7. However, it is not well ahead of Bagging, also both above 0.7, as well as Decision Tree and Boosting which are both above 0.6. Only Naives Bayes Classifier performs poorly as observed previously.
+Creating a table comparing the AUC and accuracy of each model throughout questions 5 and 6, Random Forest wins the highest values, with both well above 0.7. However, it is not well ahead of Bagging, also both above 0.7, as well as Decision Tree and Boosting which are both above 0.6. Only Naives Bayes Classifier performs poorly as observed previously. However classifiers should be evaluated with caution at this stage, lest the model be over fit.
 
 ```{r}
 pd_accuracy_auc <- data.frame(
@@ -297,7 +264,7 @@ pd_accuracy_auc <- data.frame(
 pd_accuracy_auc
 ```
 
-<!-- From the output, there seems to exist a single "best" classifier based on the two metrics in focus, and that would be **boosting**. Both bagging and boosting have identical accuracies, but boosting has a slight edge due to its higher AUC value. However, it cannot be assumed now that boosting is definitely the single best classifier, due to the possibility of overfitting, which is a result of fitting too many attributes into a model. -->
+
 
 ## Question 8
 
@@ -307,21 +274,11 @@ We start by peeking through the summary of the decision tree for phishing data, 
 summary(pd_tree)
 ```
 
-<!-- it is known that this classifier identifies the following attributes as the most important in predicting whether the next day would be more humid or not: `Sunshine`, `WindDir9am`, `WindGustDir`, `Rainfall`, `WindDir3pm`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. -->
-
-<!-- As a naive Bayes classifier assumes independence between predictors, the predictors have no measure of importance. -->
-
-<!-- For bagging, variable importance, in ascending order, can be displayed with the following code. -->
-
 Sorting the variables in order of ascending importance for the Bagging model, we can see that `A01 22 18 23 14` are significantly higher in importance than the rest, with `A03 05 07 10 11 13 21 and 25` having no importance at all.
 
 ```{r}
 sort(pd_bag$importance)
 ```
-
-<!-- The output shows that `WindGustDir`, `WindDir3pm` and `WindDir9am` are significantly more important compared to the other attributes. The least important predictor among these three, `WindGustDir` (with a weightage of 18.8087757), alone is nearly three times more important compared to the next less important predictor, `Sunshine` (with a weightage of 6.7237428). -->
-
-<!-- The process is repeated for boosting. -->
 
 Sorting again in order of importance for the Boosting model, we get similar results, with `A22 18 23 01 08 24 and 12` being significantly higher than others, again with `A03 07 13 and 25` with no importance at all.
 
@@ -329,26 +286,16 @@ Sorting again in order of importance for the Boosting model, we get similar resu
 sort(pd_boost$importance)
 ```
 
-<!-- Similarly, the boosting classifier considers `WindGustDir`, `WindDir3pm` and `WindDir9am` as significantly more important than the other attributes. In a similar fashion to bagging, `WindGustDir` is the least important among these three and `Sunshine` is the next less important predictor. However, `Sunshine`'s weightage (5.3837980) is also nearly three times less than that of `WindGustDir` (15.8714548). -->
-
-<!-- Finally, the variable importance for the random forest is inspected as well. -->
 Finally, we also sort in order of importance for the Random Forest Model, this time however `A01 08 12 14 18 22 23 24` have significantly high values higher than 20, compared to the rest with much lower values.
 
 ```{r}
 pd_forest$importance
 ```
 To conclude, we find `A01 18 22 23` to have consistently high importance throughout all the models in predicting `Class`, while, `A03 07 13 25` have the least importance. Given the models in question have sufficiently high accuracy, these 4 least important variables could potentially be omitted from the data with little to no effect on performance. However, it worth noting that with trees based classifiers being unstable, minor differences in the input sampled can result in the tree generated varying significantly. As such, it not possible to predict the performance gain by omitting such variables, and is recommended to analyse the results after testing and training and make decisions based on that information.
-<!-- Again, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important, being the only predictors whose weightages are more than 20. -->
-
-<!-- In conclusion, based on these classifiers, `WindGustDir`, `WindDir3pm` and `WindDir9am` are the most important variables in predicting Class. The decision tree considers other attributes important as well, which are `Sunshine`, `Rainfall`, `Cloud9am`, `Pressure9am`, `MinTemp` and `WindSpeed9am`. However, the importance of these attributes may be exaggerated as the decision tree does not possess good performance metrics (both accuracy and AUC value are less than 0.6), and decision trees that have been fitted using all attributes tend to overfit. We also cannot assume other variables yet to be mentioned can be omitted from the data, as decision trees are unstable classifiers, meaning small variations in input data result in very different trees being generated. This applies to bagging, boosting and random forests as well, all of which are tree-based classifiers. Hence, it is not possible to determine which variables can be omitted from the data with very little effect on performance based on their importance weightages alone. Rather, the omission of different variables must be experimented with practically and the test results have to be compared. -->
 
 
 
 ## Question 9
-
-<!-- To create a simple classifier for a person to make classifications by hand, I started from the decision tree created in Question 4. The approach here is to prune the tree to an optimal size, yielding a simpler decision tree that can be used to make classifications easily. -->
-
-<!-- To determine what size to prune the tree to, cross-validation is carried out on the original decision tree using `cv.tree()`. All attributes from the original tree were preserved, as the tree was trained on all attributes and, despite being possibly overfitted, is the most "complete" (contains the most information) tree to prune. In other words, **post-pruning** will be performed on the original tree to obtain the simple tree. -->
 
 Starting off by developing a basic classifier based on the decision tree generated in Question 4, that can be used to manually classify objects. The strategy is to trim the tree to the ideal size, resulting in a more straightforward decision tree that is readily employed for categorization.
 
@@ -358,12 +305,6 @@ Using `cv.tree()`, we perform cross-validation on the original decision tree to 
 pd_tree_cv <- cv.tree(pd_tree)
 pd_tree_cv
 ```
-
-<!-- Based on the output, the tree size that yields the lowest deviance is 1. However, a tree with a single terminal node does not make sense. The next "best" tree size is 2, which is quite clearly an underfitted tree that is far too simple. Despite having the lowest deviances, trees of these sizes are expected to perform poorly on unseen data. The low deviances are most probably due to cross-validation finding such simple trees working well and overfitting on the training data. The optimal tree size, thus, cannot be selected based on the lowest deviance alone. -->
-
-<!-- The tree size with the next lowest deviance is 7. This is chosen, as it is a reasonable tree size that is not too large or small, and still yields a relatively low deviance. `prune.tree()` is used to prune the tree. -->
-
-
 
 The output indicates that a tree size of `8` produces the least deviation. On the other hand, a tree with only one terminal node is illogical. The next best tree size is `7`, which is obviously an overly simplistic and under fitted tree. Trees of these sizes are anticipated to perform badly on unknown data, despite wielding the lowest deviance. The low deviations are most likely the result of over fitting on the training set and cross-validation identifying simple trees that function effectively. Therefore, choosing the best tree size cannot be based just on the lowest deviation.
 
@@ -375,17 +316,9 @@ plot(pd_tree_pruned)
 text(pd_tree_pruned, pretty = 0)
 ```
 
-<!-- The resulting decision tree is simple and easy to interpret. Consisting of only 7 terminal nodes, it splits on only 4 attributes, compared to the original decision tree which has 22 terminal nodes and splits on 9 attributes. -->
-
-<!-- Similar code from Question 5 is used to evaluate the performance of this pruned decision tree on the test data, create a confusion matrix and report its accuracy. -->
-
-
 The decision tree that results is clear-cut and straightforward to understand. Compared to the original decision tree, which had 22 terminal nodes and split on nine qualities, this decision tree has just seven terminal nodes and splits on five attributes.
 
 To assess how well this pruned decision tree performs on the test data, generate a confusion matrix, and report its accuracy, similar code from Question 5 is utilized.
-
-
-
 
 ```{r include = FALSE}
 pd_tree_pruned_predict <- predict(pd_tree_pruned, pd_test, type = "class")
@@ -399,16 +332,9 @@ pd_tree_pruned_accuracy
 pd_tree_pruned_confusion_matrix
 ```
 
-<!-- The accuracy of this pruned decision tree is 0.5634518, which is a slight improvement of that of the original tree (0.5532995). -->
-
-<!-- Similar code from Question 6 is then used to update the plot of ROC curves and compute the AUC value (see Appendix). -->
-
-
 This decision tree's pruned accuracy, of 0.7224576, is exactly the same as the original tree's accuracy of 0.7224576.
 
 Next, the plot of ROC curves is updated, and the AUC value is calculated using code similar to that from Question 6 (see Appendix).
-
-
 
 ```{r include = FALSE, results = "hide"}
 pd_tree_pruned_predict_prob <- predict(pd_tree_pruned, pd_test, type = "vector")
@@ -440,11 +366,8 @@ pd_accuracy_auc <- rbind(pd_accuracy_auc, data.frame(model = "Pruned decision tr
 pd_accuracy_auc                                              
 ```
 
-<!-- Again, a slight improvement of the AUC value from the original decision tree's 0.6879415 to the pruned tree's 0.6879415	 is observed. Most of this improvement is seen at low to medium-high thresholds. When the threshold is high, the pruned tree noticeably performs worse than random guessing. -->
-
-
 Moreover, the AUC value from 0.6879415 is unchanged for the pruned tree. 
-<!-- The pruning tree performs noticeably worse than random guessing when the threshold is high. -->
+
 
 
 ## Question 10
@@ -456,11 +379,11 @@ Moreover, the AUC value from 0.6879415 is unchanged for the pruned tree.
 <!-- Gradient boosting only accepts numerical input features and targets. Hence, the factor variables in the training and testing data are first encoded into numerical values. -->
 
 
-I have experimented with scaling features, removing predictors, modifying parameters, and cross-validation on the classifiers developed in Question 4 in an effort to develop the best tree-based classifier. Sadly, none of the final classifiers could outperform the default-parameter boosting and bagging classifiers included in Question 4. Rather, a gradient-boosted trees model is the most powerful tree-based classifier that can be developed.
+I have experimented with scaling features, removing predictors, modifying parameters, and cross-validation on the classifiers developed in Question 4 in an effort to develop the best tree-based classifier. It is unfortunate that none of the final classifiers could outperform the default-parameter boosting and bagging classifiers included in Question 4. Rather, a gradient-boosted trees model is the most powerful tree-based classifier that can be developed.
 
-Using an ensemble approach called gradient boosting, decision trees are repeatedly trained to reduce the mistakes produced by the group of previously trained trees. Using the lightgbm package, one can create a gradient-boosted trees model.
+Using an ensemble approach called gradient boosting, decision trees are repeatedly trained to reduce the mistakes produced by the group of previously trained trees. Using the lightgbm package, it is possible to create a gradient-boosted trees model.
 
-The only input features and targets that gradient boosting takes are numerical. As a result, before being tested and used in training, the factor variables are first converted into numerical values.
+The only input features and targets that gradient boosting takes are numerical. Therefore before testing and training, the factor variables are converted into numerical values.
 
 
 
@@ -480,6 +403,7 @@ pd_test_lgbm$Class <- as.numeric(pd_test_lgbm$Class) - 1
 ```
 
 <!-- The function that fits the model is `lgb.train()`, which requires the input data to be of a special class called `lgb.Dataset`. The following code adapts the training data to this class. -->
+We use lgb.train() to fit the model, which only accepts input data of type lgb.Dataset. As such we transform our phishing dataset as matrices into lgb.Dataset type.
 
 ```{r}
 pd_train_lgbmd <- lgb.Dataset(data = as.matrix(pd_train_lgbm[1:21]),
@@ -494,18 +418,26 @@ pd_train_lgbmd <- lgb.Dataset(data = as.matrix(pd_train_lgbm[1:21]),
 <!-- - `bagging_fraction = 0.8`: sets `lgb.train()` to select 80% of data without resampling for bagging -->
 <!-- - `bagging_freq = 10`: sets `lgb.train()` to perform bagging at every 10 iterations -->
 
+The best-performing gradient-boosted trees model was obtained using the following parameters, which are initially allocated to a variable that will be supplied to `lgb.train()}. After trying several settings repeatedly to get the best-performing model, the parameter values were chosen.
+
+- `learning_rate = 0.05` sets the shrinkage rate (which regulates how much each tree in the ensemble contributes to the final prediction) to 0.05. - `objective = "binary"` sets `lgb.train()` to train a binary classification model.
+The parameters `feature_fraction = 0.7` and `bagging_fraction = 0.8` instruct `lgb.train()` to choose 70% of features and 80% of data, respectively, at random for bagging; `bagging_freq = 10` instructs `lgb.train()` to carry out bagging every 10 iterations.
+
+
 ```{r}
 params <- list(objective = "binary", learning_rate = 0.05, feature_fraction = 0.7,
                bagging_fraction = 0.8, bagging_freq = 10)
 ```
 
 <!-- `lgb.train()` is then run with these parameters and 100 rounds. -->
+Next, 100 rounds of lgb.train() are executed with these settings.
 
 ```{r results = "hide"}
 pd_lgbm <- lgb.train(params = params, data = pd_train_lgbmd, nrounds = 100)
 ```
 
 <!-- The confusion matrix is created and the accuracy is reported. -->
+Finally, we develop a confusion matrix and measure the accuracy of the prediction
 
 ```{r include = FALSE, message = FALSE}
 pd_lgbm_predict <- predict(pd_lgbm, as.matrix(pd_test_lgbm[1:21]),
@@ -520,7 +452,8 @@ pd_lgbm_accuracy
 pd_lgbm_cm
 ```
 
-<!-- The accuracy of the gradient-boosted trees model is 0.6548223, which outperforms every tree-based classifier we have thus far. As in previous questions, the ROC curve for this model is added to the plot and the AUC value is computed (see Appendix). -->
+<!-- The accuracy of the gradient-boosted trees model is 0.7394068, which outperforms every tree-based classifier we have thus far. As in previous questions, the ROC curve for this model is added to the plot and the AUC value is computed (see Appendix). -->
+The gradient-boosted trees model exceeds all of our previous tree-based classifiers with an accuracy of 0.7394068. The ROC curve for this model is added to the display, just like in earlier questions, and the AUC value is calculated as referred to in the Appendix.
 
 ```{r include = FALSE, results = "hide"}
 pd_lgbm_pred <- prediction(pd_lgbm_predict, pd_test_lgbm$Class)
@@ -558,7 +491,10 @@ pd_accuracy_auc
 <!-- The reason why gradient boosting was chosen when none of the other tree-based classifiers were able to improve was because gradient boosting is a variant of boosting, which is the most powerful classifier in Question 4. By implementing a possibly better variant of it that tends less to overfit and is good at capturing relationships between predictors, an improvement in performance is expected. Gradient boosting has also been known for strong performance in binary classification tasks in general. All original attributes of `pd` were retained as including all of them produced the best models for bagging and boosting. Of course, the factor predictors and target variable have to be first encoded into numerical values.  -->
 
 
+The AUC score, 0.7395961, is likewise greater than the average of all previous tree-based classifiers, being exceed only by Bagging. The ROC curve indicates that at medium-high thresholds, this model outperforms boosting and bagging, but it performs better at all other thresholds. These metrics demonstrate that, when it comes to Class predictions, this classifier is superior to the others.
 
+
+Given that gradient boosting is a variation of boosting, the most potent classifier in Question 4, it was selected when no other tree-based classifiers could perform any better. An improvement in performance is anticipated by implementing a potentially superior variant of it that is good at capturing relationships between predictors and has a lower tendency to over fit. Additionally, gradient boosting is known to perform well in applications involving binary classification in general. Since incorporating all of them yielded the best models for bagging and boosting, all of the original attributes of the Phishing data were kept. Naturally, the target variable and factor predictors must first be converted into numerical values.
 
 
 
@@ -654,10 +590,107 @@ pd_test_nn[1:17] <- scale(pd_test_nn[1:17])
 
 # References
 
-9/10 text re
+
 11/12 all
 
 # Appendix
+Output of `summary(pd)` in Question 1.
+
+```{r echo = FALSE}
+summary(PD)
+```
+
+Diagram of initial decision tree plotted in Question 4.
+
+```{r fig.height = 9, fig.width = 7}
+plot(pd_tree)
+text(pd_tree, pretty = 0)
+```
+
+Code to make predictions, create confusion matrix, report accuracy, construct ROC curve and compute AUC value for the simple classifier (pruned decision tree) in Question 9.
+
+```{r eval = FALSE}
+pd_tree_pruned_predict <- predict(pd_tree_pruned, pd_test, type = "class")
+pd_tree_pruned_cm <- table("Predicted Class" = pd_tree_pruned_predict,
+                             "Actual Class" = pd_test$Class)
+pd_tree_pruned_acc <- get_accuracy(pd_tree_pruned_cm)
+
+pd_tree_pruned_predict_prob <- predict(pd_tree_pruned, pd_test, type = "vector")
+pd_tree_pruned_pred <- prediction(pd_tree_pruned_predict_prob[, 2],  pd_test$Class)
+pd_tree_pruned_perf <- performance(pd_tree_pruned_pred, "tpr", "fpr")
+
+plot(pd_tree_perf, col = "red")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+plot(pd_boost_perf, col = "violet", add = TRUE)
+plot(pd_forest_perf, col = "gold", add = TRUE)
+plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+         "Pruned decision tree"),
+       col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+
+pd_tree_pruned_auc <- performance(pd_tree_pruned_pred, "auc")@y.values[[1]]
+```
+
+ROC curves at Queestion 9.
+
+```{r echo = FALSE, fig.height = 5, fig.width = 7}
+plot(pd_tree_perf, col = "red")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+plot(pd_boost_perf, col = "violet", add = TRUE)
+plot(pd_forest_perf, col = "gold", add = TRUE)
+plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+         "Pruned decision tree"),
+       col = c("red", "blue", "darkgreen", "violet", "gold",
+               "skyblue"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+```
+
+Code to make predictions, create confusion matrix, report accuracy, construct ROC curve, compute AUC value and update classifier comparison table for the best tree-based classifier (gradient-boosted trees) in Question 10.
+
+```{r eval = FALSE}
+pd_lgbm_predict <- predict(pd_lgbm, as.matrix(pd_test_lgbm[1:21]),
+                             type = "response")
+pd_lgbm_cm <- table("Predicted Class" = ifelse(pd_lgbm_predict > 0.5, 1, 0),
+                     "Actual Class" = pd_test_lgbm$Class)
+pd_lgbm_acc <- get_accuracy(pd_lgbm_cm)
+pd_lgbm_pred <- prediction(pd_lgbm_predict, pd_test_lgbm$Class)
+pd_lgbm_perf <- performance(pd_lgbm_pred, "tpr", "fpr")
+
+plot(pd_tree_perf, col = "red")
+plot(pd_bayes_perf, col = "blue", add = TRUE)
+plot(pd_bag_perf, col = "darkgreen", add = TRUE)
+plot(pd_boost_perf, col = "violet", add = TRUE)
+plot(pd_forest_perf, col = "gold", add = TRUE)
+plot(pd_tree_pruned_perf, col = "skyblue", add = TRUE)
+plot(pd_lgbm_perf, col = "green", add = TRUE)
+
+abline(0, 1)
+legend("bottomright",
+       c("Decision tree", "Naive Bayes", "Bagging", "Boosting", "Random forest",
+         "Pruned decision tree", "Gradient-boosted trees"),
+       col = c("red", "blue", "darkgreen", "violet", "gold", "skyblue", "green"),
+       lty = 1, bty = "n", inset = c(0, 0))
+title("ROC curves for classifiers that predict Class")
+
+pd_lgbm_auc <- performance(pd_lgbm_pred, "auc")@y.values[[1]]
+pd_accuracy_auc <- rbind(pd_acc_auc,
+                      data.frame(model = "Gradient-boosted trees",
+                                 accuracy = pd_lgbm_acc, auc = pd_lgbm_auc))
+```
+
+
 
 
 
