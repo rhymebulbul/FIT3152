@@ -503,6 +503,7 @@ Given that gradient boosting is a variation of boosting, the most potent classif
 To implement an artificial neural network (ANN) classifier, the `neuralnet` package is used. 
 
 ```{r message = FALSE}
+#rm(list = ls())
 #install.packages("neuralnet")
 library(neuralnet)
 ```
