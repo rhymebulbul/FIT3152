@@ -1,7 +1,7 @@
 ---
 output:
   pdf_document: default
-  latex_engine: xelatex
+  latex_engine: lualatex
 ---
 # FIT3152 - Data analytics
 
@@ -565,7 +565,7 @@ Kernel-based machine learning methods for classification, regression, clustering
 
 A supervised learning model that can be used for both regression and classification, an SVM is a good fit for the data in this assignment. In binary classification, each instance is assigned to one of two classes by the SVM based on its search for a hyper plane, or decision boundary, that divides the training data. The examples from each class that are closest to one another in the feature space are known as support vectors, and they are used to build the hyper plane during training. In order to create as clear of a separation as possible, the goal is to maximize the distance between these points and the hyper plane. A kernel function, which converts the input into a higher-dimensional space, can also be implemented by SVMs. Thus, it is possible to find a hyper plane with a higher dimension that would be more effective in dividing the instances, (Lin, 2014).
 
-As binary classification problems are much easier to solve many techniques exist to decompose multi-class classification problems into many binary classification problems (voting, error codes, etc.). Pairwise coupling (one against one) constructs a rule for discriminating between every pair of classes and then selecting the class with the most winning two-class decisions. By using Platt’s probabilities output for SVM one can get a class probability for each of the k(k − 1)/2 models created in the pairwise classification. The couple method implements various techniques to combine these probabilities
+As binary classification problems are much easier to solve many techniques exist to decompose multi-class classification problems into many binary classification problems (voting, error codes, etc.). Pairwise coupling (one against one) constructs a rule for discriminating between every pair of classes and then selecting the class with the most winning two-class decisions. By using Platt’s probabilities output for SVM one can get a class probability for each of the k(k - 1)/2 models created in the pairwise classification. The couple method implements various techniques to combine these probabilities
 
 `ksvm()` is the `kernlab` technique that fits the SVM model. The argument `vanilladot` represents the linear kernel, which is the kernel that is used. This was selected because there are many predictors, which reduces the data points' capacity to be distinguished from one another in a higher-dimensional space.
 
