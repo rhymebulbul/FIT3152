@@ -250,7 +250,7 @@ cat("Random forest AUC", pd_forest_auc, "\n")
 
 ## Question 7
 
-Creating a table comparing the AUC and accuracy of each model throughout questions 5 and 6, Random Forest wins the highest values, with both well above 0.7. However, it is not well ahead of Bagging, also both above 0.7, as well as Decision Tree and Boosting which are both above 0.6. Only Naives Bayes Classifier performs poorly as observed previously. However classifiers should be evaluated with caution at this stage, lest the model be over fit.
+Creating a table comparing the AUC and accuracy of each model throughout questions 5 and 6, Random Forest wins the highest values, with both well above 0.7. However, it is not well ahead of Bagging, also both above 0.7, as well as Decision Tree and Boosting which are both above 0.6. Only Naives Bayes Classifier performs poorly as observed previously. However classifiers should be evaluated with caution at this stage, lest the model be over fit. As such, there is no single best classifier, only the right classifier for the right data set.
 
 ```{r}
 pd_accuracy_auc <- data.frame(
