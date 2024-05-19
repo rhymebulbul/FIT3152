@@ -1,0 +1,172 @@
+It’s the End of Google Search As We Know It
+Google is rethinking its most iconic and lucrative product by adding new AI features to search. One expert tells WIRED it’s “a change in the world order.”
+Liz Reid
+Liz Reid recently took over as Google's head of search as it rushes to add new AI features.PHOTOGRAPH: SAJJAD HUSSAIN/GETTY IMAGES
+
+Google Search is about to fundamentally change—for better or worse. To align with Alphabet-owned Google’s grand vision of artificial intelligence, and prompted by competition from AI upstarts like ChatGPT, the company’s core product is getting reorganized, more personalized, and much more summarized by AI.
+
+At Google’s annual I/O developer conference in Mountain View, California, today, Liz Reid showed off these changes, setting her stamp early on in her tenure as the new head of all things Google search. (Reid has been at Google a mere 20 years, where she has worked on a variety of search products.) Her AI-soaked demo was part of a broader theme throughout Google’s keynote, led primarily by CEO Sundar Pichai: AI is now underpinning nearly every product at Google, and the company only plans to accelerate that shift.
+
+
+
+ADVERTISEMENT
+
+“In the era of Gemini we think we can make a dramatic amount of improvements to search,” Reid said in an interview with WIRED ahead of the event, referring to the flagship generative AI model launched late last year. “People’s time is valuable, right? They deal with hard things. If you have an opportunity with technology to help people get answers to their questions, to take more of the work out of it, why wouldn’t we want to go after that?”
+
+Google AI
+Google's new search features make it possible to use video and voice to make complex queries. COURTESY OF GOOGLE
+
+MOST POPULAR
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+BUSINESS
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+WILL KNIGHT
+
+It’s Time to Believe the AI Hype
+BUSINESS
+It’s Time to Believe the AI Hype
+STEVEN LEVY
+
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+GEAR
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+SCOTT GILBERTSON
+
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BACKCHANNEL
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BRENDAN I. KOERNER
+
+ADVERTISEMENT
+
+It’s as though Google took the index cards for the screenplay it’s been writing for the past 25 years and tossed them into the air to see where the cards might fall. Also: The screenplay was written by AI.
+
+These changes to Google Search have been long in the making. Last year the company carved out a section of its Search Labs, which lets users try experimental new features, for something called Search Generative Experience. The big question since has been whether, or when, those features would become a permanent part of Google Search. The answer is, well, now.
+
+Google's search overhaul comes at a time when critics are becoming increasingly vocal about what feels to some like a degraded search experience, and for the first time in a long time, the company is feeling the heat of competition, from the massive mashup between Microsoft and OpenAI. Smaller startups like Perplexity, You.com, and Brave have also been riding the generative AI wave and getting attention, if not significant mindshare yet, for the way they’ve rejiggered the whole concept of search.
+
+Automatic Answers
+Google says it has made a customized version of its Gemini AI model for these new Search features, though it declined to share any information about the size of this model, its speeds, or the guardrails it has put in place around the technology.
+
+This search-specific spin on Gemini will power at least a few different elements of the new Google Search. AI Overviews, which Google has already been experimenting with in its labs, is likely the most significant. AI-generated summaries will now appear at the top of search results.
+
+One example from WIRED’s testing: In response to the query “Where is the best place for me to see the northern lights?” Google will, instead of listing web pages, tell you in authoritative text that the best places to see the northern lights, aka the aurora borealis, are in the Arctic Circle in places with minimal light pollution. It will also offer a link to NordicVisitor.com. But then the AI continues yapping on below that, saying “Other places to see the northern lights include Russia and Canada’s northwest territories.”
+
+Reid says that AI Overviews like this won’t show up for every search result, even if the feature is now becoming more prevalent. It’s reserved for more complex questions. Every time a person searches, Google is attempting to make an algorithmic value judgment behind the scenes as to whether it should serve up AI-generated answers or a conventional blue link to click. “If you search for Walmart.com, you really just want to go to Walmart.com,” Reid says. “But if you have an extremely customized question, that’s where we’re going to bring this.”
+
+AI Overviews are rolling out this week to all Google search users in the US. The feature will come to more countries by the end of the year, Reid said, which means more than a billion people will see AI Overviews in their search results. They will appear across all platforms—the web, mobile, and as part of the search engine experience in browsers, such as when people search through Google on Safari.
+
+
+MOST POPULAR
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+BUSINESS
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+WILL KNIGHT
+
+It’s Time to Believe the AI Hype
+BUSINESS
+It’s Time to Believe the AI Hype
+STEVEN LEVY
+
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+GEAR
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+SCOTT GILBERTSON
+
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BACKCHANNEL
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BRENDAN I. KOERNER
+
+ADVERTISEMENT
+
+Another update coming to search is a function for planning ahead. You can, for example, ask Google to meal-plan for you, or to find a pilates studio nearby that’s offering a class with an introductory discount. In the Googley-eyed future of search, an AI agent can round up a few studios nearby, summarize reviews of them, and plot out the time it would take someone to walk there. This is one of Google’s most obvious advantages over upstart search engines, which don’t have anything close to the troves of reviews, mapping data, or other knowledge that Google has, and may not be able to tap into APIs for real-time or local information so easily.
+
+The most jarring changes that Google has been exploring in its Search Labs is an “AI-organized” results page. This at first glance looks to eschew the blue-links search experience entirely.
+
+One example provided by Reid: A search for where to go for an anniversary dinner in the greater Dallas area would return a page with a few “chips” or buttons at the top to refine the results. Those might include categories like Dine-In, Takeout, and Open Now. Below that might be a sponsored result—Google’s gonna ad—and then a grouping of what Google judges to be “anniversary-worthy restaurants” or “romantic steakhouses.” That might be followed by some suggested questions to tweak the search even more, like, “Is Dallas a romantic city?”
+
+AI-organized search is still being rolled out, but it will start appearing in the US in English “in the coming weeks.” So will an enhanced video search option, like Google Lens on steroids, where you can point your phone’s camera at an object like a broken record player and ask how to fix it.
+
+PLAY/PAUSE BUTTON
+Google says its search app will soon be able to answer complex, multistep queries. COURTESY OF GOOGLE
+If all these new AI features sound confusing, you might have missed Google’s latest galaxy-brain ambitions for what was once a humble text box. Reid makes clear that she thinks most consumers assume Google Search is just one thing, where in fact it’s many things to different people, who all search in different ways.
+
+“That’s one of the reasons why we’re excited about working on some of the AI-organized results pages,” she said. “Like, how do you make sense of space? The fact that you want lots of different content is great. But is it as easy as it can be yet in terms of browsing through and consuming the information?”
+
+
+MOST POPULAR
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+BUSINESS
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+WILL KNIGHT
+
+It’s Time to Believe the AI Hype
+BUSINESS
+It’s Time to Believe the AI Hype
+STEVEN LEVY
+
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+GEAR
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+SCOTT GILBERTSON
+
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BACKCHANNEL
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BRENDAN I. KOERNER
+
+ADVERTISEMENT
+
+But by generating AI Overviews—and by determining when those overviews should appear—Google is essentially deciding what is a complex question and what is not, and then making a judgment on what kind of web content should inform its AI-generated summary. Sure, it’s a new era of search where search does the work for you; it’s also a search bot that has the potential to algorithmically favor one kind of result over others.
+
+“One of the biggest changes to happen in search with these AI models is that the AI actually creates a kind of informed opinion,” says Jim Yu, the executive chairman of BrightEdge, a search engine optimization firm that has been closely monitoring web traffic for more than 17 years. “The paradigm of search for the last 20 years has been that the search engine pulls a lot of information and gives you the links. Now the search engine does all the searches for you and summarizes the results and gives you a formative opinion.”
+
+Doing that raises the stakes for Google’s search results. When algorithms are deciding that what a person needs is one coagulated answer, instead of coughing up several links for them to then click through and read, errors are more consequential. Gemini has not been immune to hallucinations—instances where the AI shares blatantly wrong or made-up information.
+
+Last year a writer for The Atlantic asked Google to name an African country beginning with the letter “K,” and the search engine responded with a snippet of text—originally generated by ChatGPT—that none of the countries in Africa begin with the letter K, clearly overlooking Kenya. Google’s AI image-generation tool was very publicly criticized earlier this year when it depicted some historical figures, such as George Washington, as Black. Google temporarily paused that tool.
+
+New World Order
+Google’s reimagined version of AI search shoves the famous “10 blue links” it used to provide on results pages further into the rearview. First ads and info boxes began to take priority at the top of Google’s pages; now, AI-generated overviews and categories will take up a good chunk of search real estate. And web publishers and content creators are nervous about these changes—rightfully.
+
+The research firm Gartner predicted earlier this year that by 2026, traditional search engine volume will drop by 25 percent, as a more “agent”-led search approach, in which AI models retrieve and generate more direct answers, takes hold.
+
+“Generative AI solutions are becoming substitute answer engines, replacing user queries that previously may have been executed in traditional search engines,” Alan Antin, a vice president analyst at Gartner, said in a statement that accompanied the report. “This will force companies to rethink their marketing channels strategy.”
+
+What does that mean for the web? “It’s a change in the world order,” says Yu, of BrightEdge. “We’re at this moment where everything in search is starting to change with AI.”
+
+Eight months ago BrightEdge developed something it calls a generative parser, which monitors what happens when searchers interact with AI-generated results on the web. He says over the past month the parser has detected that Google is less frequently asking people if they want an AI-generated answer, which was part of the experimental phase of generative search, and more frequently assuming they do. “We think it shows they have a lot more confidence that you’re going to want to interact with AI in search, rather than prompting you to opt in to an AI-generated result.”
+
+
+MOST POPULAR
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+BUSINESS
+OpenAI’s Long-Term AI Risk Team Has Disbanded
+WILL KNIGHT
+
+It’s Time to Believe the AI Hype
+BUSINESS
+It’s Time to Believe the AI Hype
+STEVEN LEVY
+
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+GEAR
+The 25 Best Outdoor Summer Deals From REI’s Anniversary Sale
+SCOTT GILBERTSON
+
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BACKCHANNEL
+I Went Undercover as a Secret OnlyFans Chatter. It Wasn’t Pretty
+BRENDAN I. KOERNER
+
+ADVERTISEMENT
+
+Changes to search also have major implications for Google’s advertising business, which makes up the vast majority of the company’s revenue. In a recent quarterly earnings call, Pichai declined to share revenue from its generative AI experiments broadly. But as WIRED’s Paresh Dave pointed out, by offering more direct answers to searchers, “Google could end up with fewer opportunities to show search ads if people spend less time doing additional, more refined searches.” And the kinds of ads shown may have to evolve along with Google’s generative AI tools.
+
+Google has said it will prioritize traffic to websites, creators, and merchants even as these changes roll out, but it hasn’t pulled back the curtain to reveal exactly how it plans to do this.
+
+When asked in a press briefing ahead of I/O whether Google believes users will still click on links beyond the AI-generated web summary, Reid said that so far Google sees people “actually digging deeper, so they start with the AI overview and then click on additional websites.”
+
+In the past, Reid continued, a searcher would have to poke around to eventually land on a website that gave them the info they wanted, but now Google will assemble an answer culled from various websites of its choosing. In the hive mind at the Googleplex, that will still spark exploration. “[People] will just use search more often, and that provides an additional opportunity to send valuable traffic to the web,” Reid said.
+
+It’s a rosy vision for the future of search, one where being served bite-size AI-generated answers somehow prompts people to spend more time digging deeper into ideas. Google Search still promises to put the world’s information at our fingertips, but it’s less clear now who is actually tapping the keys.

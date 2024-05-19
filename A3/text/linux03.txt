@@ -1,0 +1,196 @@
+LineageOS
+
+Article
+Talk
+Read
+Edit
+View history
+
+Tools
+From Wikipedia, the free encyclopedia
+LineageOS
+
+
+LineageOS 21 default home screen
+Developer	LineageOS open-source community
+Written in	C (core), C++ (some third party libraries), Java and Kotlin (UI)
+OS family	Android (Linux)
+Working state	Active
+Source model	Open source[a]
+Latest release	LineageOS 21 (based on Android 14) / 14 February 2024; 3 months ago[2]
+Marketing target	Firmware replacement for Android mobile devices
+Available in	
+Languages list
+Update method	Over-the-air (OTA), ROM flashing
+Package manager	APK-based
+Platforms	arm, arm64, x86, x86-64
+Kernel type	Monolithic (Linux)
+License	Apache 2[3] and other licenses[4]
+Preceded by	CyanogenMod CyanogenOS
+Official website	www.lineageos.org
+LineageOS is an Android-based operating system for smartphones, tablet computers, and set-top boxes, with mostly free and open-source software. It is the successor to CyanogenMod, from which it was forked in December 2016, when Cyanogen Inc. announced it was discontinuing development and shut down the infrastructure behind the project.[5][6] Since Cyanogen Inc. retained the rights to the Cyanogen name, the project rebranded its fork as LineageOS.[7]
+
+LineageOS was officially launched on 23 December 2016, with the source code available on both GitHub and GitLab.[8][9] In March 2017, it reportedly had one million users with the OnePlus One being the most popular device.[10]
+
+History
+Main article: CyanogenMod
+CyanogenMod (often abbreviated "CM") was a popular[11] open-source operating system for smartphones and tablet computers, based on the Android mobile platform. CyanogenMod users can opt-in to report their use of the firmware.[12] In March 2015, Forbes indicated over 50 million people were running CyanogenMod on their phones.[11][13]
+
+In 2013, the founder, Stefanie Jane (formerly known as Steve Kondik and Stefanie Kondik), obtained venture funding under the name Cyanogen Inc. to allow commercialization of the project.[14][15] In her view, the company did not capitalize on the project's success and in 2016 she either left or was forced out[16][17] as part of a corporate restructure which involved a change of CEO, closure of offices and projects, and cessation of services.[18] The code itself, being both open source and popular, was forked under the new name LineageOS and efforts began to resume development as a community project.[citation needed]
+
+CyanogenMod offered a number of features and options not available in the official firmware distributed by most mobile device vendors. Features supported by CyanogenMod included native theme support,[19] FLAC audio codec support, a large Access Point Name list, Privacy Guard (per-application permission management application), support for tethering over common interfaces, CPU overclocking, root access, soft buttons and other "tablet tweaks," toggles in the notification pull-down (such as Wi-Fi, Bluetooth and satellite navigation), and other interface and performance enhancements.[citation needed] Many of the features from CyanogenMod were later integrated into the official Android code base.[citation needed] CyanogenMod's developers said that it did not contain spyware or bloatware.[20][21]
+
+Development
+
+This section relies excessively on references to primary sources. Please improve this section by adding secondary or tertiary sources. (May 2022) (Learn how and when to remove this message)
+Like CyanogenMod, the LineageOS project is developed by many device-specific maintainers and uses Gerrit for its code review process. It also retained the old versioning format, where the major version number corresponds to the place in the alphabet of the first letter of the codename (and of the commercial name for Android versions prior to 10) (for example, Android 7.1, known as Android Nougat, is LineageOS 14.1). Prior to the official launch of LineageOS, many developers from XDA had already developed unofficial versions of LineageOS from the source code. All the released builds are signed with LineageOS' private keys.[22]
+
+Builds were released on a weekly basis until 12 November 2018, when the release cycle for devices changed: the latest LineageOS branch is built daily, with devices receiving a "nightly" OTA update, while devices on the older branch were moved to a weekly release cycle.[23]
+
+Starting on 5 June 2020, the latest LineageOS branch moved back to a weekly release cycle, as the server couldn't build all available supported devices in just one day, with some devices receiving updates later on the next day.[24]
+
+Version history
+See also: Android version history and CyanogenMod § History and development
+On 22 January 2017, the first official builds of versions 14.1 and 13.0 became available, following the official announcement in a blog post.[22]
+On 11 February 2018, the builds of version 13.0 ceased,[25] while the source code remained available and security fixes were still accepted on Gerrit.
+On 26 February 2018, the first official builds of version 15.1 became available on certain devices.[26] The 14.1 versions of Lineage OS were to remain in active development, but without feature advancements.
+On 24 February 2019, the builds of version 14.1 ceased and builds of version 15.1 moved to a weekly cadence.[27]
+On 1 March 2019, the first official builds of version 16.0 became available.[28] The version 15.1 branch remained in active development, but without feature advancements.
+On 28 February 2020, the version 15.1 builds ceased in preparation for the version 17.1 release.[29]
+On 1 April 2020, the first official builds of version 17.1 became available.[30] The version 16.0 builds were moved to a weekly cadence while the branch remained in active development, but without feature advancements.
+On 16 February 2021, the version 16.0 builds ceased in preparation for the version 18.1 release.[31]
+On 1 April 2021, the first official builds of version 18.1 became available.[32] The version 17.1 branch remained in active development.
+On 16 February 2022, the builds of version 17.1 ceased in preparation for the version 19 release.[33]
+On 26 April 2022, the first builds of version 19.1 became available.[34] The 18.1 branch remains in active development.
+On 22 August 2022, the first builds of version 20 Gerrit patches became available, pending official announcement.[35] The version 18.1 and 19.1 branches remain in active development.
+On 31 December 2022, the first builds of version 20 became available.[36] The 18.1 and 19.1 branches remain in active development.
+On 14 February 2024, LineageOS 21 builds are being released to supported devices.[2] While the 18.1 branch is preserved to maintain legacy devices, 19.1 branch retired naturally,[37] with 20 continuing to receive security patches update.
+On March 5 2024, LineageOS has posted a blog to announce the deprecation of version 18.1 shortly after Google has ended the security patch update for Android 11.[38][39] A total of 52 devices were dropped and received a final build on that day.[40]
+Version	AOSP version	First build release date	Last build release date	Ref.
+13.0	6.0.1
+(Marshmallow)	20 December 2016 as CM
+22 January 2017 as LOS	11 February 2018	[22][25]
+14.1	7.1.2
+(Nougat)	9 November 2016 as CM
+22 January 2017 as LOS	24 February 2019	[22][27]
+15.1	8.1.0
+(Oreo)	26 February 2018	28 February 2020	[26][29]
+16.0	9.0.0
+(Pie)	1 March 2019	16 February 2021	[28][31]
+17.1	10
+(Quince Tart)	1 April 2020	16 February 2022	[30][33]
+18.1	11
+(Red Velvet Cake)	1 April 2021	5 March 2024	[32][38]
+19.1	12.1
+(Snow Cone)	26 April 2022	12 November 2023	[34][37]
+20	13
+(Tiramisu)	31 December 2022	(Current)	[36]
+21	14
+(Upside Down Cake)	14 February 2024	(Current)	[2]
+Legend:Old versionOlder version, still maintainedLatest versionFuture release
+Features
+Like its predecessor, CyanogenMod, LineageOS is perceived as free from unnecessary software often pre-installed by a phone's manufacturer or carrier that is considered to be bloatware.[41][20]
+
+Community
+LineageOS allows the community to get involved with development in various ways. Gerrit is used for the code review process for both the operating system and the infrastructure.
+
+The wiki, containing information regarding installation, support, and development of LineageOS, is also open to contributions through Gerrit. Other Lineage platforms include Crowdin for managing translations, Gitlab Issues for bug tracking, and a stats page, which displays the number of active installations from users who opt in to report this statistic. There is also an IRC channel hosted on Libera.chat (#lineageos) and subreddit (r/lineageos).[42]
+
+The XDA Developers forums have been used by members of the Lineage community since the software's inception. Many devices are left unsupported by official releases so community members develop their own unofficial ROMs allowing older phones to use Lineage.[citation needed]
+
+During August 2017 the LineageOS team held a Summer Survey[43] in which they asked users for feedback to improve the development of the operating system. The results were published[44] in October and, according to the team, they used the gathered data to improve the upcoming LineageOS 15 release. A second Summer Survey was conducted in August 2018.[45]
+
+As a response to one of the main suggestions received during their first public survey, LineageOS launched a section on their blog titled "LineageOS Engineering Blog" where Lineage maintainers and developers can contribute articles discussing advanced technical information pertaining to Android development.[46]
+
+LineageOS is also known for posting a "regularly irregular review"[47] on its blog in which the active development of the work is discussed, though this has been pretty much discontinued since 2020.
+
+LineageOS apps
+LineageOS includes free and open-source apps:
+
+Current
+
+Aperture - A camera app maintained by various LineageOS developers, based on Google's CameraX library. It replaced Snap and Camera2 with the release of LineageOS 20.
+AudioFX – Audio optimizer with presets to alter the listening experience.
+Browser – A lightweight browser that relies on the system WebView, for low-end devices, also known as Jelly.
+Calculator – Resembles a four-function calculator and offers some more advanced functions.
+Calendar – Calendar functionality with Day, Week, Month, Year or Agenda views. A modified version of Etar is used, starting with version 17.1.
+Clock – World clock, countdown timer, stopwatch and alarms.
+Contacts – Phonebook for numbers and email addresses.
+Files – A simple file manager to move, copy and rename files on internal storage or SD card.
+FlipFlap – An app for smart flip covers, only included on select devices.
+FM Radio – An app for listening to FM radio broadcasts, included on devices with an FM tuner.
+Glimpse - A brand new gallery app with Material You design in mind. Available on devices running LineageOS 21 or later.
+Messaging – An MMS/SMS messaging app.
+Music – A simple music player, also known as Eleven.
+Phone – Includes speed dial, phone number lookups and call blocking.
+Recorder – A sound recorder. In versions prior to 18.1 it could also record the screen.
+Trebuchet – A customizable launcher.
+Former
+
+Camera – Dependent on device specification will take video or photos, including panoramic. It can also be used to read QR codes. This app is also known as Snap. This app is now replaced by Aperture.
+Clock – A weather widget.
+Email – Email client that handles POP3, IMAP and Exchange (removed in version 18.1).[48]
+Gallery – Organize photos and videos into a timeline or albums for easy viewing. Replaced by Glimpse.
+Gello – A browser based on Chromium and developed by CyanogenMod. This app is now replaced by Jelly.
+Terminal – A simple and standard terminal app. Hidden unless enabled in the developer settings. (removed in version 18.1).[49]
+Themes – Originally an app by itself, now integrated into the settings app.
+WeatherUnderground Weather Provider – A weather provider.
+Yahoo Weather Provider – A weather provider.
+Although they are not included in LineageOS as such due to legal issues,[50] users can flash the normal Google apps, including the Google Play Store and Play Apps, with a .zip package, usually referred to as gapps, while installing LineageOS. A side effect of using LineageOS and other custom roms is the impact on SafetyNet API.[51] App developers can choose to enable a toggle in the app developer console to hide their app on the Play Store if a device doesn't pass SafetyNet tests, or can choose to check the SafetyNet status of a device to disable certain functionality. Notable examples would be Netflix, which is hidden on the Play Store, and Google Pay, which checks SafetyNet each time the app is used. Devices running LineageOS may have a smaller selection of usable apps in the Play Store as a result of these checks. LineageOS can be made to work with apps such as Netflix and Google Pay by installing Magisk and certain modules designed to hide the bootloader status.[52]
+
+Customization features
+LineageOS offers several features that Android Open Source Project (AOSP) does not include. Some of these features are:
+
+Button customization – Set custom location for buttons on the navigation bar, or enable on-screen buttons for devices with hardware buttons.[53]
+Custom Quick-Setting tiles – Quick Setting Tiles such as "Caffeine" preventing the device from sleeping, enabling/disabling Heads Up notifications, "Ambient Display" and "ADB over network" are present to easily toggle frequently accessed settings.
+LiveDisplay – Adjust color temperature for the time of day.
+Lock screen customization – The lock screen allows all sorts of customizations, including media cover art, a music visualizer, and double-tap to sleep.
+Styles – Set a global dark or light theme mode and customize accent colors. This functionality can also be managed automatically by the system based on wallpaper or time of day (in line with LiveDisplay).
+System Profiles – Enable or disable common settings based on the selected profile (For example, a "Home" profile and a "Work" profile). The profile can be selected either manually or through the use of a "trigger", such as upon connecting to a specific WiFi access point, connecting to a Bluetooth device, or tapping an NFC tag.
+Custom pattern sizes – In addition to Android's 3x3 pattern size, a 4x4, 5x5 or 6x6 size can be used.
+Security & privacy features
+PIN scramble – For users securing their device with a PIN, the layout can be scrambled each time the device locks to make it difficult for people to figure out your lock by looking over your shoulder.
+Privacy guard – Allow the user to fine-tune what permissions are granted to each application. For some permissions, it's possible to set a manual approval each time the permission is requested. It's also possible to find out how often apps use a specific permission. This feature was removed in the 17.1 branch in favor of an equivalent "permission controller" based on a hidden AOSP feature.
+Protected Apps – Hide specific apps behind a secure lock. This works hand-in-hand with Trebuchet; the app's icon is removed from the launcher, and "secure folders" can be created to easily access these applications. A pattern is used to lock these apps.
+Some "sensitive numbers", such as abuse support numbers, are not included in the call log for privacy.[54] The phone application also includes a list of helpline numbers for the users to be able to easily reach them.[32]
+Trust - helps to keep the device secure and protects privacy.[55]
+Developers & power user features
+LineageSDK – a set of APIs for app developers to integrate their apps with LineageOS specific features such as System Profiles, Styles and Weather.[56] It has been officially discontinued on 8 January 2024.[57]
+Lineage Recovery - an AOSP-based recovery.
+(Optional) Root – Permit apps to function with root access to perform advanced tasks. This requires flashing from Recovery either LineageOS's root add-on (supported until version 16.0[58]) or a third-party implementation such as Magisk or SuperSU.
+Telephone call recorder, not available in all countries, due to legal restrictions.
+Trust interface
+As LineageOS evolved through development, the Trust interface was introduced for all the LineageOS 15.1 builds released since 12 June 2018.[59] The interface can be found on supported devices under Security and Privacy tab under the Settings option, and enables the user to "get an overview of the status of core security features and explanations on how to act to make sure the device is secure and the data is private".
+
+Additionally, while carrying out any action on the device, the trust icon is displayed, notifying the user that the action is safe.
+
+Supported devices
+
+POCO X3 Pro smartphone running LineageOS
+The number of devices supported by LineageOS has increased over time, now standing around with more than 200 devices being supported in 2024. Official builds on currently supported development branches are labeled as "nightly". For the first two months of the project, parallel experimental builds were also produced, allowing in-place upgrades from previous CyanogenMod installations and easing migration to LineageOS.[60][61]
+
+In 2019, LineageOS development builds were available for 109 phone models with over 3.0 million active installs.[62] As of 26 April 2022, 41 devices are receiving official 19 builds and 136 devices are receiving official 18.1 builds. On 17 February 2024, it is recorded that 118 devices are receiving official 21 builds, another 71 devices with 20 builds, and the legacy 18.1 branch still has a total of 52 devices.[63]
+
+The compatibility layer Waydroid (formerly called Anbox-Halium) is using LineageOS in an LXC container in order to use Android apps on a desktop or mobile Linux distribution.[64]
+
+Criticism and reception
+2018 April Fools' prank
+LineageOS was criticized for a deceptive April Fool's prank included with some April 2018 builds.[65]
+
+During the first week of April 2018 LineageOS released new builds with the "LOSGenuine" prank that informed unaware users of the software possibly being counterfeit via a persistent notification (which could not be disabled unless the user ran the following command in a root shell):
+
+setprop persist.lineage.nofool true
+When the notification was tapped, the software claimed that the device was "uncertified" and needed to mine "LOSCoins", which were a virtual currency and could not actually be spent. Affected builds also had a preinstalled "Wallet" app that showed the current balance of LOSCoins.[65]
+
+Many users mistook the prank for actual malware, and others reportedly found it to be in "poor taste". It was especially criticized for being too "late" for an April Fool's joke, since many users didn't receive the update until days later, making the jest less obvious. On 10 April 2018, LineageOS team director ciwrl issued an official apology for the deceptive prank.[66][67]
+
+Forks
+LineageOS has a number of notable forks:
+
+Replicant intends to be a completely free software variant of LineageOS, with all kernel blobs and non-free drivers removed.
+As a response to the refusal for several reasons of support for signature spoofing in official builds,[68] a LineageOS fork with microG[69] services included, known as "LineageOS for microG", was created. The project ships custom builds of LineageOS with the required patch and native F-Droid support, bundled with the MicroG project's free re-implementation of proprietary Gapps.[70][71] In other respects it follows upstream, shipping OTA updates every fourteen days.[72]
+CalyxOS is a privacy and security-focused operating system for smartphones, based on Android Open Source Project (AOSP). CalyxOS makes available during installation optional privacy-preserving apps such as Orbot, Tor Browser, Signal, Calyx VPN, Riseup VPN and MicroG support.[73][74]
+DivestOS is a soft fork of LineageOS that aims to increase security and privacy, and support older devices. As much as possible it removes proprietary Android components and includes only free-software.[75]
+/e/ is a fork of LineageOS created by Gaël Duval that is intended to be "free from Google". It replaces Google Play Services with microG, a free and open-source implementation of Google APIs.[76]
+iodéOS is a fork of LineageOS developed by French company iodé, it does not include Google Play Services, instead using microG as a free and open-source replacement.[77]
+
