@@ -21,7 +21,7 @@ Text files were created by copying and pasting the document contents.
 
 
 ## Task 2
-Task 1 already had the document's contents pasted into text files. The text files were assembled into a single `docs` folder within the working directory in order to generate the corpus. Next, the code that follows is executed. It imports the necessary libraries, sets the seed (to ensure graph reproducibility), and uses the `Corpus()` function from the `tm` package to construct the corpus.
+Task 1 already had the document's contents pasted into text files. The text files were assembled into the `text` folder within the working directory in order to generate the corpus. Next, the code that follows is executed. It installs and imports the necessary libraries, sets the seed and uses the `Corpus()` function from the `tm` package to construct the corpus.
 
 ```{r message = FALSE}
 rm(list = ls())
