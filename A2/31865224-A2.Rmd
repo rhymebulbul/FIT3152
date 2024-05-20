@@ -11,8 +11,6 @@ output:
 
 **Student ID:** 31865224
 
-**AI Statement:** Generative AI was not used in this assignment.
-
 We start by utilizing the R skeleton code to import out phishing dataset and set a seed using my student number so the unique data is replicable. Next, we take a random sample of 2000 rows of data, and import libraries further code will rely on.
 
 ```{r message = FALSE}
@@ -24,23 +22,14 @@ L <- L[sample(nrow(L), 10, replace = FALSE),]
 Phish <- Phish[(Phish$A01 %in% L),]
 PD <- Phish[sample(nrow(Phish), 2000, replace = FALSE),]
 
-#install.packages("dplyr")
 library(dplyr)
-#install.packages("caret")
 library(caret)
-#install.packages("tree")
 library(tree)
-#install.packages("e1071")
 library(e1071)
-#install.packages("adabag", dependencies = TRUE)
 library(adabag)
-#install.packages("randomForest")
 library(randomForest)
-#install.packages("ROCR")
 library(ROCR)
-#install.packages("lightgbm")
 library(lightgbm)
-#install.packages("kernlab")
 library(kernlab)
 ```
 
@@ -87,7 +76,6 @@ clean_pd <- PD[complete.cases(PD), ]
 clean_pd$Class <- as.factor(clean_pd$Class)
 
 nrow(clean_pd)
-#table(clean_pd$Class)
 ```
 
 
@@ -476,8 +464,6 @@ Given that gradient boosting is a variation of boosting, the most potent classif
 To implement an artificial neural network (ANN) classifier, the `neuralnet` package is used. 
 
 ```{r message = FALSE}
-#rm(list = ls())
-#install.packages("neuralnet")
 library(neuralnet)
 ```
 
