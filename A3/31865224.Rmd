@@ -40,9 +40,62 @@ list.files("text")
 
 Documents are named based on the topic, suffixed by a number. Such as, `linux01.txt` is the first text document on linux systems, followed by `linux02.txt` the second text document on the same topic, and so fourth.
 
+
 ## Task 3
 
+We start by text transforming the corpus, meanwhile replacing dashes and line breaks with spaces for consistency, removing numbers, punctuation, converting all characters to lowercase, and removing any extra white spaces. In addition, we also remove English stopwords before finally stemming all words for consistency. This is required as we don't want these characters creating an unwanted bias in our data, as it would be harder to work with, as well as inaccurate.
 
+```{r}
+to_space <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+docs <- tm_map(docs, to_space, "-")
+docs <- tm_map(docs, to_space, "\n")
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, stemDocument, language = "english")
+```
+
+With our unwanted terms removed, and desired keywords preserverd, the corpus is now ready to create a document term matrix from.
+
+```{r}
+dtm <- DocumentTermMatrix(docs)
+```
+
+Let's analyse the attributes of the document term matrix by inspecting a sample of 20 from it's head and tail of most and least frequent terms in alphabetical order.
+
+```{r}
+inspect(dtm)
+```
+
+```{r}
+freq <- colSums(as.matrix(dtm))
+freq[head(order(freq), 20)]
+```
+
+```{r}
+freq[tail(order(freq), 20)]
+```
+
+With 6062 terms, or as we call it, tokens; the DTM is highly sparse at 88%. Interestingly, the least occurring tokens seem to only appear once, while the most frequent token is `android`, occurring almost 500 times, although it is only expected to be used in 3 documents, pointing to it's sparsity.
+
+This leads us to the removal of sparse tokens from the document term matrix. This time we set the sparsity to 0.7 as it gives us the best mix of efficiency, reliability, and observability.
+
+<!-- The next step is to remove sparse terms from the DTM. The maximal allowed sparsity, `sparse`, is set to 0.65, which gives a DTM with 54% sparsity and 32 tokens. A DTM closer to the guideline with 51% sparsity and 23 tokens can be obtained by setting `sparse` to 0.6, but through my analysis I observed that the 32-token DTM gives a better cluster dendrogram and network graph. **I also discovered that setting the sparsity even higher further improves the clustering, but I avoided this due to efficiency issues and poor readability of graphs.** -->
+
+```{r}
+dtms <- removeSparseTerms(dtm, 0.7)
+inspect(dtms)
+freqs <- colSums(as.matrix(dtms))
+freqs[head(order(freqs), 20)]
+freqs[tail(order(freqs), 20)]
+```
+
+This time round, the least frequent tokens are `exact`, `speed`, `pass` and `care` while the most frequent is `use` with 259 uses. The Document term matrix in it's full length can be found attached in the appendix.
+
+
+## Task 4
 
 
 
