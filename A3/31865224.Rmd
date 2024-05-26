@@ -85,7 +85,7 @@ This leads us to the removal of sparse tokens from the document term matrix. Thi
 <!-- The next step is to remove sparse terms from the DTM. The maximal allowed sparsity, `sparse`, is set to 0.65, which gives a DTM with 54% sparsity and 32 tokens. A DTM closer to the guideline with 51% sparsity and 23 tokens can be obtained by setting `sparse` to 0.6, but through my analysis I observed that the 32-token DTM gives a better cluster dendrogram and network graph. **I also discovered that setting the sparsity even higher further improves the clustering, but I avoided this due to efficiency issues and poor readability of graphs.** -->
 
 ```{r}
-dtms <- removeSparseTerms(dtm, 0.7)
+dtms <- removeSparseTerms(dtm, 0.15)
 inspect(dtms)
 freqs <- colSums(as.matrix(dtms))
 freqs[head(order(freqs), 20)]
@@ -97,6 +97,73 @@ This time round, the least frequent tokens are `exact`, `speed`, `pass` and `car
 
 ## Task 4
 
+<!-- A hierarchical clustering of the corpus is done based on two metrics, Euclidean distance and cosine distance, to see which performs better. The DTM is first converted to a standard matrix format. -->
+
+```{r}
+dtms_matrix <- as.matrix(dtms)
+```
+
+<!-- In document clustering, each document is represented as a vector with many dimensions that correspond to terms it contains. Euclidean distance measures the straight-line distance between these vectors, grouping them based on closeness. A smaller distance represents higher similarity. Cosine distance measures the angle between vectors, with smaller angles corresponding to closer distance and higher similarity. Clustering with cosine distance can be further improved by weighting the DTM with the term frequency-inverse document frequency (TF-IDF) statistic beforehand, which assigns higher weights to terms that appear frequently within a document (implying importance), but rarely across all documents (implying significance). -->
+
+<!-- The code for clustering using Euclidean distance is adapted from Lecture 10. `dtms_matrix` is scaled and converted to a Euclidean distance matrix, and a dendrogram is plotted. -->
+
+```{r fig.height = 5, fig.width = 7}
+dist_euclid <- dist(scale(dtms_matrix))
+fit_euclid <- hclust(dist_euclid, method = "ward.D")
+plot(fit_euclid, hang = -1)
+```
+
+<!-- To cluster with TF-IDF weighting and cosine distance, the IDF for each term is first computed and a TF-IDF weighted matrix is obtained by applying the cross product of the TFs and IDFs. The formula for cosine distance is then applied to the matrix to get a cosine distance matrix. The dendrogram is then plotted. The code for this was adapted from [this Stack Overflow thread](https://stackoverflow.com/questions/52391558/hierarchical-clustering-using-cosine-distance-in-r). The code was studied and understood before application. -->
+
+```{r fig.height = 5, fig.width = 7}
+idf <- log(ncol(dtms_matrix) / (1 + rowSums(dtms_matrix != 0)))
+idf <- diag(idf)
+dtms_matrix_tfidf <- crossprod(dtms_matrix, idf)
+colnames(dtms_matrix_tfidf) <- rownames(dtms_matrix)
+
+dist_cos <- 1 - crossprod(dtms_matrix_tfidf) / (sqrt(colSums(dtms_matrix_tfidf ** 2) %*%
+            t(colSums(dtms_matrix_tfidf ** 2))))
+dist_cos[is.na(dist_cos)] <- 0
+dist_cos <- as.dist(dist_cos)
+
+fit_cos <- hclust(dist_cos, method = "ward.D")
+plot(fit_cos, hang = -1)
+```
+
+<!-- At the highest level in Euclidean distance clustering, `linux02` is in a single cluster while all other documents are grouped into another cluster. This indicates that the clustering algorithm identifies `linux02` as an outlier document with distinct characteristics. However, it does share a common topic with `linux01`, so this is an inaccurate and imbalanced result. For the rest of the documents, some documents with the same topics are clustered together at low levels, such as `churchill01` and `churchill02`. However, there are some prominent inaccuracies, such as `bitcoin01` and `bitcoin02` being clustered far from each other (only grouped together at the highest level) and `asioaf02` (an extract from a fantasy novel) being clustered together with `stats01` (an extract from a statistics textbook) at the lowest level. -->
+
+<!-- With cosine distance, the clustering produces more balanced clusters. `linux02` is grouped with several other documents at the highest level, but it is still separated from `linux01`. However, this clustering is overall better at grouping documents of the same topic together. For example, `bitcoin01` and `bitcoin02` are closer together, while the pairs of `covid01`-`covid02` and `yeats01`-`yeats03` are each in their own clusters at the lowest level. The overall height values of the clustering are also much smaller (with Euclidean distance, the largest height was 28.6 compared to 2.28 for cosine distance), indicating higher confidence in the grouping of similar documents. Conclusively, this is a better clustering for the documents compared to that with Euclidean distance. -->
+
+<!-- Since the actual topic of each document is known, it is possible to get a quantitative measure of each clustering by labelling each document with its topic, plotting a confusion matrix of the clustering, and computing the accuracy. Due to length, the confusion matrices and the cluster-topic assignments are shown in the Appendix (for Euclidean distance, 15 clusters are created to reduce topic-cluster ambiguity). -->
+
+```{r results = "hide"}
+# function to remove suffix in document filename
+short_name <- function(doc) {
+    return(substr(doc, 1, nchar(doc) - 6))
+}
+
+doc_names <- list.files("docs")
+doc_names_short <- unlist
+
+# table(Topic = doc_names_short, Cluster = cutree(fit_euclid, k = 10))
+# table(Topic = doc_names_short, Cluster = cutree(fit_cos, k = 10))
+```
+
+<!-- The accuracies of each matrix is calculated by hand. For clustering with Euclidean distance, this is given by -->
+
+```{r}
+13 / 23
+```
+
+<!-- Whereas for cosine distance, this is given by -->
+
+```{r}
+15 / 23
+```
+
+<!-- In agreement with the observations, clustering with cosine distance has a significantly higher accuracy than clustering with Euclidean distance. -->
+
+## Task 5
 
 
 
@@ -109,6 +176,9 @@ This time round, the least frequent tokens are `exact`, `speed`, `pass` and `car
 
 
 
+TODO: Have approx 20 tokens after removing sparse terms
+Remove name suffixes
+generate euclid and cos distances
 
 
 
