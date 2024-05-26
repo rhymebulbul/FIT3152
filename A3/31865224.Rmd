@@ -163,7 +163,189 @@ doc_names_short <- unlist
 
 <!-- In agreement with the observations, clustering with cosine distance has a significantly higher accuracy than clustering with Euclidean distance. -->
 
+<!-- Hierarchical clustering can be said to be the quicker and easier way to get an understanding of the relationships between documents and tokens in the corpus. It neatly groups documents into clusters at different heights, so groupings can be interpreted based on the desired cluster size. The accuracies of the clusterings performed in Task 4 are not very high, but an accuracy of around 0.65 for clustering with cosine distance can be considered strong for a small corpus (only 23 documents) and the genericness of the tokens. -->
+
+<!-- However, clustering does not identify important documents, tokens or groups. Social network analysis visualises relationships between documents, tokens and document-token pairs, allowing viewers to quickly gain insight about the relationships within the corpus. If needed, viewers can access computable metrics (eg. closeness, betweenness, transitivity, etc.) to gauge the overall connectedness of the network or the importance of each document/token. This makes social networks a flexible way to identify important groups and relationships in the data that can be utilised by more viewers, be they a general audience or a technical one. -->
+
 ## Task 5
+
+<!-- To create a single-mode network visualising the connections between documents based on the number of shared terms, the DTM is first converted to a binary matrix and then multiplied by its transpose. After the first step, a matrix which records 1 for each token that appears in that row's document is produced. After multiplication, the resulting matrix shows the number of shared tokens in each pair of documents. After getting this abstracts matrix, `graph_from_adjacency_matrix()` is used to plot the graph. -->
+
+```{r fig.height = 7, fig.width = 7}
+dtms_mat_bin <- as.matrix((dtms_matrix > 0) + 0)
+abs_mat <- dtms_mat_bin %*% t(dtms_mat_bin)
+diag(abs_mat) <- 0
+
+abs_net <- graph_from_adjacency_matrix(abs_mat, mode = "undirected", weighted = TRUE)
+plot(abs_net)
+```
+
+<!-- The graph's high density can be immediately observed; almost every possible pair of vertices have an edge. Computing the density of the graph proves this. -->
+
+```{r}
+graph.density(abs_net)
+```
+
+<!-- This shows that, based on shared terms, each document is related to almost every other document to some extent. `linux02` and `asioaf03` are very close to each other compared to other vertex pairs, indicating a strong relationship, while `yeats03` seems to have relatively weaker connections to the other documents. -->
+
+<!-- To identify clear groups in the data, a good start is to get the transitivity of the graph. -->
+
+```{r}
+transitivity(abs_net)
+```
+
+<!-- Transitivity, or clustering coefficient, is the proportion of triangles relative to the number of connected triples, a higher value of which indicates more tightly connected groups. The transitivity of this graph is very high at 0.992. The distribution of the documents into groups can be done in many ways, as in hierarchical clustering, but a more prominent group might be `yeats03`, `yeats02`, `hamlet02` and `hamlet01`, all of which are literary texts. -->
+
+<!-- At first glance, `asioaf03` and `linux02` seem to be the most important documents due to their central positions. To get numerical measurements, the following code is run. Due to length, the outputs are shown in the Appendix. -->
+
+```{r results = "hide"}
+sort(-closeness(abs_net))
+sort(-betweenness(abs_net))
+sort(evcent(abs_net)$vector)
+sort(degree(abs_net))
+```
+
+<!-- Closeness measures how well a document is connected to others, betweenness measures the document's potential to be an intermediary (and thus have more influence over the network flow), eigenvector centrality measures the quality of connections of a document, and degree is a vertex's number of connections. For closeness and betweenness, the results are made negative as the weights of the vertices correspond to the number of shared terms, meaning when two documents are closely connected, the distance (weight of the edge) between them is high.  -->
+
+<!-- For betweenness, 13 documents have values of 0, indicating that they all have maximum potential of being the network's "hubs". For degree, only `yeats03`, `bitcoin01` and `stats02` are not connected to every other document. However, this is not a strong indicator that they are less important, as their degrees are still very close to the maximum of 22. `yeats03` has the smallest value for all four metrics, so there is confidence that it is the least important document. On the contrary, `linux02` has the highest closeness and eigenvector centralities, a sign that it is possibly the most important document. -->
+
+<!-- To visualise the interesting features of the data, the graph is improved by colouring the vertices based on topic, scaling the width of edges based on inter-document strength (number of shared terms) and scaling the vertex sizes based on the document's closeness centrality. The code to do this is given as follows. -->
+
+```{r fig.height = 7, fig.width = 7}
+doc_colr <- c("red", "green", "dodgerblue", "yellow", "orange", "magenta", "pink",
+              "chocolate", "gray", "cyan")
+# topics <- unique(doc_names_short)
+
+for (doc in doc_names) {
+    V(abs_net)[doc]$color <- doc_colr[match(short_name(doc), topics)]
+}
+
+V(abs_net)$size <- 1 / closeness(abs_net, mode = "all") / 10
+E(abs_net)$width <- E(abs_net)$weight / 6
+
+plot(abs_net)
+# legend(x = -1.5, y = -0.5, legend = topics, pch = 21, cex = 1,
+#        pt.bg = doc_colr, bty = "n", ncol = 1)
+```
+
+<!-- With this graph, we can more clearly understand the distance between the `yeats` documents and the others. It is also easier to observe that some topics have all documents close together (eg. `asioaf`) while others have the opposite (eg. `hamlet`). -->
+
+
+## Task 6
+
+<!-- To create a single-mode network to illustrate the connections between the tokens based on the number of common documents they appear in, most of the code is reused from Task 5 with some adjustments. To create the tokens matrix, the transpose of the binary matrix is multiplied by the original. The graph is then plotted with the same function. -->
+
+```{r fig.height = 7, fig.width = 7}
+tok_mat <- t(dtms_mat_bin) %*% dtms_mat_bin
+diag(tok_mat) <- 0
+
+tok_net <- graph_from_adjacency_matrix(tok_mat, mode = "undirected", weighted = TRUE)
+plot(tok_net)
+```
+
+<!-- This graph looks denser than the one for documents. -->
+
+```{r}
+graph.density(tok_net)
+```
+
+<!-- In line with the observation, the graph is indeed denser with a density of 1, meaning all vertices are interconnected. This tells us that the tokens are quite generic words, appearing across all documents of various topics. -->
+
+<!-- Looking at the graph, it is difficult to identify clear groups as the vertices seem quite evenly spread out. A suspected cluster is `time`, `like` and `just` at the top of the graph, which forms a noticeable triangle. -->
+
+```{r}
+transitivity(tok_net)
+```
+
+<!-- The transitivity of the graph is 1. Even though it is hard to distinguish clusters by observation, this metric tells us that every three tokens can form a triangle, indicating a very high number of potential clusters. This is possibly also due to the genericness of the tokens. **I have experimented with manually removing some generic words during DTM pre-processing, but it lead to poorer clustering performance.** This is probably because the generic terms, despite being common, provide important contextual information that links documents together. -->
+
+<!-- The visually centre-most tokens are `can` and `one`, a sign that they may be relatively important. The following code is run to investigate this. The outputs are shown in the Appendix. -->
+
+```{r results = "hide"}
+sort(-closeness(tok_net))
+sort(-betweenness(tok_net))
+sort(evcent(tok_net)$vector)
+sort(degree(tok_net))
+```
+
+<!-- `can` has the second highest closeness centrality behind `make`, maximum betweenness centrality, the second highest eigenvector centrality also behind `make`, and the maximum degree. `one` performs worse than expected; it ranks 5th in closeness and 6th in eigenvector centrality, but still has maximum possible betweenness. Looking at the `make` vertex in hindsight, it is noticeable now that the edges surrounding this vertex are more layered and dense. -->
+
+<!-- To improve this graph, the vertex sizes are scaled to their closeness centralities, and the edge widths are scaled to their weights (number of shared documents between tokens). -->
+
+```{r fig.height = 7, fig.width = 7}
+V(tok_net)$size <- 1 / closeness(tok_net, mode = "all") / 10
+E(tok_net)$width <- E(tok_net)$weight / 5
+
+plot(tok_net)
+```
+
+<!-- With this graph, it can now be clearly seen that `make` and `can` are two important central tokens, while `man` is notably further away from the rest and, as justified by the previously computed metrics, is relatively less important. -->
+
+## Task 7
+
+<!-- To create a bipartite (two-mode) network graph, the data is first formatted using code adapted from Lecture 12. -->
+
+```{r}
+dtms_dfa <- as.data.frame(dtms_matrix)
+dtms_dfa$abstract <- rownames(dtms_dfa)
+dtms_dfb <- data.frame()
+for (i in seq_len(nrow(dtms_dfa))) {
+    for (j in seq_len(ncol(dtms_dfa) - 1)) {
+        to_use <- cbind(dtms_dfa[i, j], dtms_dfa[i, ncol(dtms_dfa)],
+                        colnames(dtms_dfa[j]))
+        dtms_dfb <- rbind(dtms_dfb, to_use)
+    }
+}
+colnames(dtms_dfb) <- c("weight", "abstract", "token")
+
+dtms_dfc <- dtms_dfb[dtms_dfb$weight != 0, ]
+dtms_dfc <- dtms_dfc[, c("abstract", "token", "weight")]
+```
+
+<!-- In the above code, a data frame showing the frequency (weight) of each token in each document (`dtms_dfb`) is created. Rows with weights of 0 are removed in a new data frame (`dtms_dfc`) and this data frame is used to plot the bipartite graph. -->
+
+```{r fig.height = 8, fig.width = 8}
+bipart <- graph.data.frame(dtms_dfc, directed = FALSE)
+V(bipart)$type <- bipartite_mapping(bipart)$type
+V(bipart)$color <- ifelse(V(bipart)$type, "pink", "green")
+V(bipart)$shape <- ifelse(V(bipart)$type, "square", "circle")
+E(bipart)$color <- "grey"
+
+plot(bipart)
+```
+
+<!-- As this graph is bipartite, the density and transitivity are expected to be very low. The closeness, betweenness and eigenvector centralities do not give us new insight, as the relationship between documents and that between tokens have already been analysed in Tasks 5 and 6. Hence, this graph is analysed by observation. -->
+
+<!-- The overall structure of this graph resembles a "cluster" of documents in the middle surrounded by the tokens in a ring, all of which are surrounded by the remaining documents. The central cluster of documents are positioned as such as they are linked to most of the tokens. This cluster includes `linux02`, `asioaf03` and `covid03`, which the metrics computed in Task 5 determined to be the relatively more important documents. Similar to the graph in Task 5, `yeats03` lies relatively further away from the other vertices, with links to fewer tokens. The degrees of the vertices prove this (output shown in Appendix). -->
+
+```{r results = "hide"}
+sort(degree(bipart))
+```
+
+<!-- `linux02` and `covid03` have the two highest degrees while `yeats03` has the least. -->
+
+<!-- Other notable groups of documents which are not within the central cluster include the group of all three `stats` documents, which are situated close together on the left of the graph, and the pair of `asoiaf02` and `covid02` at the top, which are separated from the other documents by a "wall" of tokens. -->
+
+<!-- To improve this graph, document vertices are made smaller for readability and coloured as in Task 5, token vertices are scaled according to their degree and re-coloured white, edges are coloured based on the document vertex it connects to, and edge widths are scaled according to the weight of the edge (frequency of token in document). Document vertex sizes are not scaled as the observable amount of coloured outgoing edges gives a good idea of their degrees.  -->
+
+```{r fig.height = 8, fig.width = 8}
+for (i in seq_len(23)) V(bipart)$size[i] <- 10
+V(bipart)$size[24:55] <- degree(bipart)[24:55]
+for (j in seq_len(length(doc_names))) {
+    V(bipart)[j]$color <- doc_colr[match(short_name(doc_names[j]), topics)]
+}
+for (k in c(24:length(V(bipart)))) V(bipart)[k]$color <- "white"
+E(bipart)$width <- as.numeric(dtms_dfc$weight) / 5
+E(bipart)$color <- tail_of(bipart, E(bipart))$color
+
+plot(bipart)
+legend(x = -1.5, y = -0.5, legend = c(topics, "token"), pch = 21, cex = 1,
+       pt.bg = c(doc_colr, "white"), bty = "n", ncol = 1)
+```
+
+<!-- From this improved graph, the high relative importance of `linux02` is more clearly seen, having edges that are significantly thicker than its close neighbour `bitcoin02`, which is considered to be of high importance as well. `make`, `can` and `will` form a triple of tokens that appear the most across all documents. Some documents, such as `churchill01`, are within the central cluster despite having thin edges, indicating that they contain smaller numbers of many tokens. This contrasts with outer documents such as the `yeats` documents, which have thick edges but not that many edges in total, indicating a larger numbers of fewer tokens. -->
+
+
 
 
 
