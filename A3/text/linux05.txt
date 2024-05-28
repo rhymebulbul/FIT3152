@@ -1,0 +1,278 @@
+CyanogenMod
+
+Article
+Talk
+Read
+Edit
+View history
+
+Tools
+From Wikipedia, the free encyclopedia
+CyanogenMod
+
+
+The default CyanogenMod 13 homescreen, based on Android 6.0 "Marshmallow"
+Developer	CyanogenMod open-source community[1]
+Written in	C (core), C++ (some third-party libraries), Java (UI)
+OS family	Android (Linux)
+Working state	Discontinued[2]
+Source model	Open source
+Initial release	3.1 (Dream & Magic) 1 July 2009; 14 years ago
+Final release	13.0 ZNH5YAO (from Android 6.0.1 r61) / 20 December 2016; 7 years ago[3]
+Final preview	14.1 nightly build / 25 December 2016; 7 years ago[4]
+Marketing target	Firmware replacement for Android mobile devices
+Available in	27 languages[citation needed]
+List of languages
+Update method	Over-the-air (OTA), ROM flashing
+Package manager	APK-based
+Platforms	ARM, x86
+Kernel type	Monolithic (Linux)
+Default
+user interface	Android Launcher (3, 4)
+ADW Launcher (5, 6, 7)
+Trebuchet Launcher (9, 10, 11, 12, 13, 14)
+License	Apache License 2 and GNU GPL v2,[5] with some proprietary libraries[6][7]
+Succeeded by	LineageOS
+Official website	CyanogenMod's website at the Wayback Machine (archived 2013-08-03)
+CyanogenMod (/saɪˈænoʊdʒɛnmɒd/ sy-AN-oh-jen-mod; CM) is a discontinued open-source operating system for mobile devices, based on the Android mobile platform. Developed between 2009 and 2016, it was free and open-source software based on the official releases of Android by Google, with added original and third-party code, and based on a rolling release development model. Although only a subset of total CyanogenMod users elected to report their use of the firmware,[8] on 23 March 2015, some reports indicated that over 50 million people ran CyanogenMod on their phones.[9][10] It was also frequently used as a starting point by developers of other ROMs.
+
+In 2013, the founder, Stefanie Jane (née Kondik),[11][12] obtained venture funding under the name Cyanogen Inc. to allow commercialization of the project.[1][13] However, the company did not, in her view, capitalize on the project's success, and in 2016 she left or was forced out[14] as part of a corporate restructure, which involved a change of CEO, closure of offices and projects, and cessation of services,[15][16] and therefore left uncertainty over the future of the company. The code itself, being open source, was later forked, and its development continues as a community project under the LineageOS name.[17]
+
+CyanogenMod offered features and options not found in the official firmware distributed by mobile device vendors. Features supported by CyanogenMod included native theme support,[18] FLAC audio codec support, a large Access Point Name list, Privacy Guard (per-application permission management application), support for tethering over common interfaces, CPU overclocking and other performance enhancements, unlockable bootloader and root access, soft buttons, status bar customisation and other "tablet tweaks", toggles in the notification pull-down (such as Wi-Fi, Bluetooth and GPS), and other interface enhancements. CyanogenMod did not contain spyware or bloatware, according to its developers.[19][20] CyanogenMod was also said to increase performance and reliability compared with official firmware releases.[21]
+
+The name CyanogenMod derived from cyanogen (the name of a chemical compound adopted as a nickname by Jane) + Mod (a term for user-developed modifications, known as modding).
+
+History and development
+Soon after the introduction of HTC Dream (named the "T-Mobile G1" in the United States) mobile phone in September 2008, a method was discovered to attain privileged control (termed "root access") within Android's Linux-based subsystem.[22] Having root access, combined with the open-source nature of the Android operating system, allowed the phone's stock firmware to be modified and re-installed onto the phone.
+
+In the following year, modified firmware for the Dream was developed and distributed by Android enthusiasts. One, maintained by a developer named JesusFreke, became popular among Dream owners. After Google issued its Android RC30 over-the-air update in November 2008 that fixed the bug that had previously been used for root access,[23] he began offering modified versions that restored root access and gradually expanded them.[24] In August 2009, JesusFreke stopped work on his firmware and suggested users to switch to a version of his ROM that had been further enhanced by developer Cyanogen (the online name used by Stefanie Jane, a Samsung software engineer[25]) called "CyanogenMod" (user adaptations being often known as modding).[26]
+
+CyanogenMod grew in popularity, and a community of developers, called the CyanogenMod Team (and informally "Team Douche"[27]) made contributions. Within a few months, the number of devices and features supported by CyanogenMod blossomed, and CyanogenMod became one of the popular Android firmware distributions.
+
+Similar to many open-source projects, CyanogenMod was developed using a distributed revision control system with the official repositories being hosted on GitHub.[28] Contributors submit new features or bugfix changes using Gerrit.[29] Contributions may be tested by anyone, voted up or down by registered users, and ultimately accepted into the code by one of a handful of CyanogenMod developers.
+
+A version of ADW.Launcher, an alternative launcher (home screen) for the Android operating system, became the default launcher on CyanogenMod 5.0.8. The launcher provides additional features not provided by the default Android launcher, including more customization abilities (including icon themes, effects, and behavior), the ability to backup and restore configuration settings, and other features.[30][31] As of version 9, CyanogenMod's own launcher, Trebuchet, is included with the firmware.
+
+Initially, CyanogenMod releases were provided on a nightly, milestone, and "stable version" schedule; as of CyanogenMod 11 M6, the "stable" label will no longer be used, having been supplanted by "milestone" M-builds that are part of the CyanogenMod's rolling release development model.[32]
+
+Current CyanogenMod version list:
+
+CM Version	Based on
+CyanogenMod 3	Android 1.5
+(Cupcake)
+
+CyanogenMod 4	Android 1.6
+(Donut)
+
+CyanogenMod 5	Android 2.x.x
+(Eclair)
+
+CyanogenMod 6	Android 2.2.x
+(Froyo)
+
+CyanogenMod 7	Android 2.3.x
+(Gingerbread)
+
+CyanogenMod 9	Android 4.0.x
+(Ice Cream Sandwich)
+
+CyanogenMod 10/10.1/10.2	Android 4.x.x
+(Jellybean)
+
+CyanogenMod 11	Android 4.4.x
+(KitKat)
+
+CyanogenMod 12	Android 5.0.x
+(Lollipop)
+
+CyanogenMod 12.1	Android 5.1.x
+(Lollipop)
+
+CyanogenMod 13	Android 6.0.x
+(Marshmallow)
+
+CyanogenMod 14	Android 7.0
+(Nougat)
+
+LineageOS 14.1	Android 7.1.x
+(Nougat)
+
+CyanogenMod 7
+
+A Motorola Flipout displaying the CyanogenMod 7.2 (Android 2.3) boot animation
+CyanogenMod 7 firmware is based on Android 2.3 Gingerbread with additional custom code contributed by the CyanogenMod Team. The custom portions of CyanogenMod are primarily written by Cyanogen (Stefanie Jane) but include contributions from the XDA Developers community (such as an improved launcher tray, dialer, and browser) and code from established open-source projects (such as BusyBox in the shell).[33]
+
+CyanogenMod 7 development began when Google released Android 2.3's source code.[34] On 15 February 2011, the first release candidates of CyanogenMod 7 were rolled out on several of the supported devices.[35][36] The fourth release candidate was released on 30 March 2011 and brought increased support for the Nook Color and similar devices, as well as many bug fixes.[37] On 11 April 2011, the public version of CyanogenMod 7.0 was released, based on Android 2.3.3.[38] CyanogenMod 7.1 was released on 10 October 2011, based on Android 2.3.4.[39] The latest stable version, CyanogenMod 7.2 was released on 16 June 2012, based on Android 2.3.7,[40] bringing a predictive phone dialer, lock-screen updates, ICS animation backports and many bug fixes.[41]
+
+CyanogenMod 8
+CyanogenMod version 8 was planned to be based on Android 3.x Honeycomb. However, as the source code for Honeycomb wasn't provided by Google until it appeared in the source tree history of its successor, Android 4.0 Ice Cream Sandwich, the release schedule advanced from CyanogenMod 7 (Gingerbread) directly to CyanogenMod 9 (Ice Cream Sandwich).[citation needed]
+
+CyanogenMod 9
+CyanogenMod 9 is based on Google's Android 4.0 Ice Cream Sandwich and is the first version of CyanogenMod to use the Trebuchet launcher.[42] Stefanie Jane and her team have announced that they had begun work on the new release after Google released the source code of Android 4.0.1.[43] Development on this release took longer than with previous releases due to the significance of the changes between Android 2.3 "Gingerbread" and 4.0 "Ice Cream Sandwich", and the team took this opportunity to clarify their vision for the ROM and rethink any modifications which were no longer necessary due to improvements within Android.[44]
+
+By the last days of November 2011, some alpha versions had been distributed, in particular for the Samsung mobile phones Nexus S and Galaxy S. On 9 August 2012, after various betas and release candidates, CyanogenMod released the finished version of CyanogenMod 9.[45] Given that the next version of Android, 4.1 "Jelly Bean", had already been released by that point, development moved swiftly on to CyanogenMod 10. On 29 August 2012, CyanogenMod released a minor update, version 9.1.0, bringing bugfixes and an app called SimplyTapp for NFC payments.[46]
+
+On 4 April 2012, during development, CyanogenMod unveiled "Cid" (pronounced /sɪd/), the new CyanogenMod mascot, which replaced the previous mascot, Andy the skateboarding "bugdroid". Designed by user Ciao, Cid (C.I.D.) is an abbreviation of "Cyanogenmod ID".[47]
+
+CyanogenMod 10
+CyanogenMod 10.0
+In early July 2012, the CyanogenMod team announced, via its Google+ account, that CyanogenMod 10 would be based on Android 4.1 Jelly Bean.[48] Nightly builds of CyanogenMod 10 were made available for many devices supported by CyanogenMod 9.[49][50] Starting with the September 2012 M1 build, the CyanogenMod team began monthly "M-series" releases. At the beginning of each month, a soft freeze of the CyanogenMod codebase is put into effect; once the team deems a build stable enough for daily use, it is released under the milestone or "M" series.[51]
+On 13 November 2012, final stable builds were released for several devices.[52]
+CyanogenMod 10.1
+CyanogenMod 10.1 is based on Android 4.2 Jelly Bean.[53] Nightly versions are currently being released for an array of devices, along with M Snapshots (Monthly Snapshots) which are being released for select devices.
+On 24 June 2013, the CyanogenMod 10.1.0 codebase (based on Android version 4.2.2) was moved to "stable" status, with a majority of currently-supported devices receiving stable builds on the same day.[54][55] CyanogenMod's developers have indicated that they will continue the Monthly Snapshot schedule to incorporate new features until the next Cyanogenmod release. Unfortunately, many devices utilizing Samsung Exynos and Nvidia Tegra 2 SoC's were not part of the initial release.
+CyanogenMod 10.2
+The first nightly release of CyanogenMod 10.2, which is based on Android 4.3 Jelly Bean, began rolling out for a selected number of devices on 14 August 2013.[56] It brings in some new enhancements to the system, such as Bluetooth Low Energy and OpenGL ES 3.0 support, a renewed Phone app, 4K resolution support, as well as many security and stability improvements.
+CyanogenMod 11
+
+CyanogenMod 11
+On 6 November 2013 the CyanogenMod team started pushing the code of CyanogenMod 11, based on Android 4.4 KitKat, to GitHub.[57] The first nightly release of CyanogenMod 11.0 began rolling out for a selected number of devices on 5 December 2013.[58] Since then, M-builds have been released every month for supported devices, offering a more stable experience than nightlies. With build M6 it was clarified that CyanogenMod would no longer be releasing final builds specially tagged "stable", but instead would utilize the rolling release model with M-builds representing a stable channel.[32]
+
+The global OnePlus One is shipped with a variant of CyanogenMod 11 M9 known as "CyanogenMod 11S". The latest version of CyanogenMod 11S for the One is 11.0-XNPH05Q, based on CyanogenMod 11 M11 and Android 4.4.4 "KitKat", and was released as an over-the-air (OTA) update in February 2015.[59]
+
+CyanogenMod 12
+The first nightly release of CyanogenMod 12, based on Android 5.0 Lollipop, began rolling out for a selected number of devices on 6 January 2015. A stable snapshot was released on 25 June 2015, and a security patch snapshot was released on 1 September 2015.[60]
+
+Cyanogen OS 12, a variant of CyanogenMod 12 for the OnePlus One and Yu Yureka was released in April 2015. Yu Yuphoria got Cyanogen OS 12 out-of-the-box when it was launched in May 2015.
+
+CyanogenMod 12.1
+The first nightly release of CyanogenMod 12.1, based on Android 5.1, was announced on 16 April 2015.[61] A stable snapshot build was released on 1 September 2015, but nightly builds continue to roll out every day.
+
+Lenovo ZUK Z1, Wileyfox Swift and Storm got Cyanogen OS 12.1 out-of-the-box when it was launched in September 2015.[62][63] YU's Yureka, Yureka Plus, and Yuphoria got a Cyanogen OS 12.1 OTA update.[64]
+
+CyanogenMod 13
+The first nightly release of CyanogenMod 13.0, based on Android 6.0, was released on 23 November 2015 for a small number of devices, but was gradually developed for other devices.[65] A few weeks after the first nightly release of CyanogenMod 13.0 for Android 6.0, CyanogenMod was given a minor update and was based on Android 6.0.1. First stable builds were released on 2016-03-15.[66]
+
+CyanogenMod 14.0
+
+CyanogenMod 14 homescreen (German)
+Due to the early release of Android 7.1, CyanogenMod skipped producing nightly builds for CyanogenMod 14.0.[67] Code initially written for CyanogenMod 14 was cherry-picked into the cm-14.1 branch.
+
+CyanogenMod 14.1
+The first experimental build of Cyanogenmod 14.1 based on Android 7.1 was released for Oneplus 3 devices[68] on 4 November 2016. On 8 November 2016, official nightlies began[69] for angler (Huawei Nexus 6P), bullhead (LG Nexus 5X), cancro (Xiaomi Mi3w/Mi4), d855 (LG G3), falcon/peregrine/thea/titan/osprey (Moto G variants), h811/h815 (LG G4), klte/kltedv/kltespr/klteusc/kltevzw (Samsung Galaxy S5), oneplus3 (OnePlus 3), Z00L/Z00T (ZenFone 2). It is missing some of the signature features of CyanogenMod, however, and was considered a "work in progress".[69] This version will add multi-window support.[70]
+
+This was the final release to use the name "CyanogenMod".
+
+CyanogenMod versions 13 and 14.1[71] and uses the name LineageOS for subsequent releases.[72] This project is supported by the community-operated LineageOS Project.[73] LineageOS version 15.1 is the first release fully controlled by the new LineageOS team, although it will continue to include many of the common features previously provided in CyanogenMod.
+Cyanogen Inc.
+
+Cyanogen logo from April 2014
+
+Cyanogen logo from March 2015
+Cyanogen Inc. was an American venture-funded company with offices in Seattle, Washington and Palo Alto, California, announced officially in September 2013, which aimed to commercialize CyanogenMod.[1][74] The funding was led by Mitch Lasky of Benchmark and raised $7 million.[75] It began when Kirt McMaster approached Stefanie Jane on LinkedIn in 2013, to discuss possible commercialization of the project.[25]
+
+Commercialization controversy
+Rumors of plans to commercialize CyanogenMod, as well as the subsequent announcement of Cyanogen Inc., led to a certain level of discord within the CyanogenMod community. Several CyanogenMod developers raised concerns that developers who had provided their work in the past were not being appropriately acknowledged or compensated for their free work on what was now a commercial project, further that the original ethos of the community project was being undermined and that these concerns were not being adequately addressed by Cyanogen Inc.[76] Examples include the "Focal" camera app developer Guillaume Lesniak ("xplodwild") whose app was withdrawn from CyanogenMod allegedly following demands by the new company to adopt closed-source modifications and licensing.[76][77][78]
+
+In response, Stefanie Jane affirmed commitment to the community, stating that the majority of CyanogenMod historically did not use GPL but the Apache licence (the same license used by Google for Android), and dual licensing was being proposed in order to offer "a stronger degree of protection for contributors... while still offering CM some of the freedoms that the Apache license offers":[79]
+
+Google has gone to great lengths to avoid the GPL by building their own low level components such as Dalvik and Bionic. In CM, the only GPL component that currently comes to mind that we’ve added is our Torch app (originally called Nexus One Torch) ... The Apache license specifically ALLOWS precisely what you suggest it doesn't. A dual-license would do the same, but also protect contributors by forcing unaffiliated entities to contribute back if they use the software in a commercial context. It's not so that CM can close the source and still ship it to our users. Again, we don’t have any plans to change licenses.
+
+Focal is a special case– it has to be GPL because ... Focal uses a number of GPL components under the hood ... I proposed the dual-license extension as a way to work around some of the inherent problems with the GPL and give a greater degree of freedom to both him and CM as an organization. This is a very common licensing model in the open-source world.
+
+But none of this matters. We’re not closing the source or changing the license of any code that has been contributed to the project.
+
+Developer Entropy512 also observed that CyanogenMod was legally bound by its position to make some of the firmware changes, because of the Android license and marketing conditions ("CTS terms"), which specify what apps may and may not do, and these were raised in part by Android developers at Google informally speculatively as a result of perceptions of CyanogenMod's high profile in the market.[80]
+
+In his 2013 blog post on Cyanogen's funding, venture funder Mitch Lasky stated:[75]
+
+Benchmark has a long history of supporting open source projects intent on becoming successful enterprises. Our open source history includes Red Hat, MySQL, SpringSource, JBoss, Eucalyptus, Zimbra, Elasticsearch, HortonWorks, and now Cyanogen. We’ve been behind many of the most successful open source software companies in the world. We have a deep respect for the special needs of these businesses, and how to build companies while preserving the transparency and vigor of the open source communities.
+
+In January 2015, it was reported that Microsoft had invested in Cyanogen, and that this might be part of a strategy to create an Android version that worked well with Microsoft platforms.[81][82] In April 2015, Cyanogen announced a strategic partnership with Microsoft, to integrate Microsoft apps and services into Cyanogen OS.[83] In January 2016, Cyanogen rolled out an update that started presenting Microsoft applications when a user attempts to open certain file types on Cyanogen OS phones.[84]
+
+Restructure and cessation of services
+Further information: LineageOS
+Despite the popularity of CyanogenMod as a custom ROM, Cyanogen Inc. failed to persuade phone companies to use its version of Android. In July 2016 it fired around 30 of its 136 staff and management, including its product head, and closed its Seattle office (other offices were described as "gutted"), as part of a strategic change by the newly employed Chief Operating Officer Lior Tal.[85][86] CEO Kirt McMaster also stepped down from his role in October 2016 with Tal becoming CEO at that point,[87] and CyanogenMod founder Stefanie Jane was believed to have been removed from the board and left a month later in November 2016.[14][88]
+
+Media analysis focused on dubious management decisions at Cyanogen Inc. as part of the reason for the failure. In 2014 the company abruptly notified its existing partner OnePlus – who used CyanogenMod for its phones and had just launched models in India – that it had reached an exclusive agreement covering India with another supplier, leading to an acrimonious breakup of their relationship, which was described in the media as "practically screwing over" and "betraying" OnePlus and a "surprisingly childish" move; OnePlus was banned from selling in India as a result.[89][90][91] Subsequently, Cyanogen's CEO boasted of their intention to displace Google in controlling the Android operating system.[89] Unable to gain sufficient uptake of its operating system, it then shifted focus and fired its core team and replaced its CEO, before shutting down its core operating system development operations.
+
+A day after leaving, Stefanie Jane wrote a blog post in which she stated that in hindsight, she had trusted and hired "the wrong people", who had not shared a common vision, and that she had ended up unable to prevent the failure of the company and the forming of a "new team" in its place. She drew attention to her own part in the failure, the loss of rights to the "CyanogenMod" name by the community, and to the rift in perception among Android developers ("The rest of the ROM community seems to be highly dependent on us, but simultaneously wants us dead. How on earth do you fix this?").[92] She asked the community to consider forking and rebranding the source code, possibly with some form of crowdfunding based on the project's underlying popularity.[92]
+
+On 23 December 2016, Cyanogen Inc. announced that it was shutting down the infrastructure behind CyanogenMod.[93] This was shortly followed by news that the main CyanogenMod project would migrate, renaming itself as "LineageOS".[16] On 24 December 2016, Head of Developer Relations and community forum administrator Abhisek Devkota, a Cyanogen "core team" member,[94] wrote that the community had lost its "last remaining advocate" within the company and its voice in Cyanogen Inc. and its software's future. He stated that while "that this most recent action from [Cyanogen Inc.] is definitely a death blow for CyanogenMod", the community had already begun taking the steps needed to fork the project under a new name and aimed to return to its grassroots origins while retaining professional approaches adopted during the Cyanogen Inc. era.[95] Due to the negative connotations attached to Cyanogen Inc's conduct, as well as the scope for legal dispute, the forked project decided not to use the existing brand names "Cyanogen" or "CyanogenMod", which in any case belonged to the company.[89]
+
+Industry reaction
+See also: Android rooting
+Early responses of tablet and smartphone manufacturers and mobile carriers were typically unsupportive of third-party firmware development such as CyanogenMod. Manufacturers expressed concern about improper functioning of devices running unofficial software and the related support costs.[96] Moreover, modified firmware such as CyanogenMod sometimes offer features for which carriers would otherwise charge a premium (e.g., tethering). As a result, technical obstacles including locked bootloaders and restricted access to root permissions were common in many devices.
+
+However, as community-developed software has grown more popular[97][98][failed verification] and following a statement by the U.S. Library of Congress that permits "jailbreaking" mobile devices,[99] manufacturers and carriers have softened their position regarding CyanogenMod and other unofficial firmware distributions, with some, including HTC,[100] Motorola,[101] Samsung[102][103] and Sony Ericsson,[104] providing support and encouraging development. As a result of this, in 2011 the need to circumvent hardware restrictions to install unofficial firmware lessened as an increasing number of devices shipped with unlocked or unlockable bootloaders, similar to the Nexus series of phones. Device manufacturers HTC[96] and Motorola announced that they would support aftermarket software developers by making the bootloaders of all new devices unlockable, although this still violates a device's warranty. Samsung sent several Galaxy S II phones to the CyanogenMod team with the express purpose of bringing CyanogenMod to the device,[103] and mobile carrier T-Mobile US voiced its support for the CyanogenMod project, tweeting "CM7 is great!".[105]
+
+Phone manufacturers have also taken to releasing "developer editions" of phones that are unlocked.[106]
+
+Licensing
+Until version 4.1.11.1, CyanogenMod included proprietary software applications provided by Google, such as Gmail, Maps, Android Market (now known as Play Store), Talk (now Hangouts), and YouTube, as well as proprietary hardware drivers. These packages were included with the vendor distributions of Android, but not licensed for free distribution. After Google sent a cease and desist letter to CyanogenMod's chief developer, Stefanie Jane, in late September 2009 demanding she stop distributing the aforementioned applications, development ceased for a few days.[107][108][109][110] The reaction from many CyanogenMod users towards Google was hostile, with some claiming that Google's legal threats hurt their own interests, violated their informal corporate motto "Don't be evil" and was a challenge to the open-source community Google claimed to embrace.[111][112][113][better source needed]
+
+Following a statement from Google clarifying its position[114] and a subsequent negotiation between Google and Cyanogen, it was resolved that the CyanogenMod project would continue, in a form that did not directly bundle in the proprietary "Google Experience" components.[115][116] It was determined that the proprietary Google apps may be backed-up from the Google-supplied firmware on the phone and then re-installed onto CyanogenMod releases without infringing copyright.
+
+On 28 September 2009, Cyanogen warned that while issues no longer remain with Google, there were still potential licensing problems regarding proprietary, closed-source device drivers.[117] On 30 September 2009, Cyanogen posted an update on the matter. Jane wrote she was rebuilding the source tree, and that she believed the licensing issues with drivers could be worked out. She added that she was also receiving assistance from Google employees.[118] On 16 June 2012, the CyanogenMod 7.2 release announcement stated: "CyanogenMod does still include various hardware-specific code, which is also slowly being open-sourced anyway."[119]
+
+Replicant is a CyanogenMod fork that removes all proprietary software and drivers and thus avoids all aforementioned legal issues. However, Replicant does not support devices that depend on proprietary drivers, which is most phones as of 2016.[120]
+
+Version history
+See also: Android version history
+CyanogenMod main version	Android version	Last or major release	Recommended build release date	Notable changes[121]
+1	Android 1.0
+(Alpha)	None	None	Never Released
+2	Android 1.1
+(Beta)	None	None	Never Released
+3	Android 1.5
+(Cupcake)	3.6.8.1	1 July 2009[122]	3.6.8 onwards based on Android 1.5r3
+3.9.3	22 July 2009[123]	3.9.3 onwards has FLAC support
+4	Android 1.5/1.6
+(Cupcake/Donut)	4.1.4	30 August 2009[124]	4.1.4 onwards based on Android 1.6 (Donut); QuickOffice removed from 4.1.4 onwards; Google proprietary software separated due to cease and desist from 4.1.99 onwards
+4.2.15.1	24 October 2009[125]	4.2.3 onwards has USB tethering support; 4.2.6 onwards based on Android 1.6r2; 4.2.11 onwards added pinch zoom for Browser, pinch zoom and swipe for Gallery.
+5	Android 2.0/2.1
+(Eclair)	5.0.8	19 July 2010[31]	Introduced ADW.Launcher as the default launcher.
+6	Android 2.2
+(Froyo)	6.0.0	28 August 2010[126]	Introduced dual camera and ad hoc Wi-Fi support, Just-in-time (JIT) compiler for more performance
+6.1.3	6 December 2010[127]	6.1.0 onwards based on Android 2.2.1.
+7	Android 2.3
+(Gingerbread)	7.0.3	10 April 2011[38]	7.0.0 onwards based on Android 2.3.3
+7.1.0	10 October 2011[39]	Based on Android 2.3.7[41]
+7.2.0	16 June 2012[128]	New devices, updated translations, predictive phone dialer, ability to control haptic feedback in quiet hours, lockscreen updates, ICS animation backports, ability to configure the battery status bar icon, many bug fixes[41]
+8	Android 3.x
+(Honeycomb)	—	—	CyanogenMod 8 was never released due to Google not releasing the source code for Android 3.0 Honeycomb.
+9	Android 4.0
+(Ice Cream Sandwich)	9.1	29 August 2012[46]	Advanced security: deactivated root usage by default.[129] Added support for SimplyTapp.
+Introduced Cyanogen's own launcher, Trebuchet.
+10	Android 4.1
+(Jelly Bean)	10.0.0	13 November 2012[53]	Expandable desktop mode. Built-in, root-enabled file manager.
+Android 4.2
+(Jelly Bean)	10.1.3	24 June 2013[130]	
+Android 4.3
+(Jelly Bean)	10.2.1	31 January 2014[130]	Phone: Blacklist-Feature added.
+11	Android 4.4
+(KitKat)	11.0 XNG3C	31 August 2015[131]	WhisperPush: Integration of TextSecure's (now Signal's) end-to-end encryption protocol as an opt-in feature. Enabled sending encrypted instant messages to other users of CM and Signal.[132][133] This feature was discontinued in February 2016.[134]
+CyanogenMod ThemeEngine: new powerful theme engine that let user apply and mix custom themes that can edit resources file[135]
+
+12	Android 5.0
+(Lollipop)	12.0 YNG4N	1 September 2015[131]	LiveDisplay: advanced display management tool, with features such as color, gamma, saturation and temperature calibration
+Updates to theme engine: allows now separate theming for packages (used on CyanogenMod for NavigationBar and StatusBar, on CyanogenOS for AppThemer, which allows you to apply a different theme for each app) UI Revamp: all applications have been updated to the material theme AudioFX and Eleven: two new audio-related apps (AudioFX replacing DSPManager and Eleven replacing Music)
+
+Android 5.1
+(Lollipop)	12.1 YOG7DAO	27 January 2016	CyanogenPlatform SDK: allows third-party developers to add custom APIs to integrate their app with CyanogenMod
+13	Android 6.0
+(Marshmallow)	13.0 ZNH5YAO	20 December 2016[3]	Wi-Fi Tethering, profiles, Do Not Disturb/Priority Mode, Privacy Guard/App data usage, Bluetooth Devices battery support, reintroduction of Lockscreen Wallpaper picker, Lockscreen Weather and new Weather plug-in support, Lockscreen Blur support and the ability to disable the effect, Live Lockscreen support, new LiveDisplay hardware enhancements and API, Snap Camera, Gello Browser, improved translations, Cyanogen Apps support, additional CM SDK APIs, security fixes[3]
+14	Android 7.0
+(Nougat)	—		Skipped, since Google soon released 7.1 before the development of CM 14.0 was completed.
+Android 7.1
+(Nougat)	14.1	9 November 2016	CM14.1 was considered a "work in progress" and missing some of the signature features of CyanogenMod. Changelog is unknown. Never attained stable build. After CyanogenMod was later discontinued, it was succeeded in December 2016 by LineageOS.
+Cyanogen OS
+Cyanogen commercially developed operating systems that came pre-installed on some devices (OnePlus One, YU Yureka, YU Yuphoria, Smartfren Andromax Q, BQ Aquaris X5, Lenovo ZUK Z1, Wileyfox Swift, Wileyfox Storm, Alcatel OneTouch Pop Mirage) based upon the CyanogenMod source code.
+
+Cyanogen OS was often distributed with additional bundled proprietary apps such as the Google Play ecosystem,[136] and a suite of software unique to Cyanogen OS known as C-Apps.[137] CyanogenMod does not include either by default, but users can obtain them separately if they wish.[137][138]
+
+Initially distinguished with the suffix -S (CyanogenMod 11S), with version 12 Cyanogen rebranded the custom offering as Cyanogen OS. Cyanogen started pushing Cyanogen OS 13 based on Android 6.0.1 to OnePlus One phones OTA on 9 April 2016 phase wise by the code name ZNH0EAS26M. CyanogenMod can be installed on Cyanogen OS devices.
+
+Differences between CyanogenMod and Cyanogen OS
+Name	Stock or replacement firmware?	Based on:	Pre-installed or manual installation required?	Root access (Superuser)?	Developers:
+Cyanogen OS	Stock firmware pre-installed on some smartphones.	Android Open Source Project.	Comes pre-installed on some devices.	No	Cyanogen
+CyanogenMod	Replacement firmware for devices with Android pre-installed.	Manual installation required	Yes	Cyanogen and The CyanogenMod community
+Supported devices
+CyanogenMod officially supported a large number of devices, including most Nexus and Google Play Edition devices. It provided SNAPSHOT (stable) and NIGHTLY builds for more than 150 devices (on the development branch).[139]
+
+See also
+Android rooting
+Comparison of mobile operating systems
+List of custom Android firmware
+List of free and open-source Android applications
+Open-source software

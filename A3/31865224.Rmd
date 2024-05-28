@@ -10,7 +10,7 @@ output: pdf_document
 
 **Student ID:** 31865224
 
-**AI statement:** 
+**AI statement:** Artificial Intelligence was not used in this report
 
 
 
@@ -20,17 +20,16 @@ I gathered a collection of 19 text documents from different sources that covered
 Text files were created by copying and pasting the document contents.
 
 
+
 ## Task 2
 Task 1 already had the document's contents pasted into text files. The text files were assembled into the `text` folder within the working directory in order to generate the corpus. Next, the code that follows is executed. It installs and imports the necessary libraries, sets the seed and uses the `Corpus()` function from the `tm` package to construct the corpus.
 
 ```{r message = FALSE}
 rm(list = ls())
 set.seed(31865224)
-#install.packages("tm")
+
 library(tm)
-#install.packages("cluster")
 library(cluster)
-#install.packages("igraph")
 library(igraph)
 
 cname <- file.path(".", "text")
@@ -41,9 +40,10 @@ list.files("text")
 Documents are named based on the topic, suffixed by a number. Such as, `linux01.txt` is the first text document on linux systems, followed by `linux02.txt` the second text document on the same topic, and so fourth.
 
 
+
 ## Task 3
 
-We start by text transforming the corpus, meanwhile replacing dashes and line breaks with spaces for consistency, removing numbers, punctuation, converting all characters to lowercase, and removing any extra white spaces. In addition, we also remove English stopwords before finally stemming all words for consistency. This is required as we don't want these characters creating an unwanted bias in our data, as it would be harder to work with, as well as inaccurate.
+We start by text transforming the corpus, meanwhile replacing dashes and line breaks with spaces for consistency, removing numbers, punctuation, converting all characters to lowercase, and removing any extra white spaces. In addition, we also remove English stop words before finally stemming all words for consistency. This is required as we don't want these characters creating an unwanted bias in our data, as it would be harder to work with, as well as inaccurate.
 
 ```{r}
 to_space <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
@@ -80,12 +80,10 @@ freq[tail(order(freq), 20)]
 
 With 6062 terms, or as we call it, tokens; the DTM is highly sparse at 88%. Interestingly, the least occurring tokens seem to only appear once, while the most frequent token is `android`, occurring almost 500 times, although it is only expected to be used in 3 documents, pointing to it's sparsity.
 
-This leads us to the removal of sparse tokens from the document term matrix. This time we set the sparsity to 0.7 as it gives us the best mix of efficiency, reliability, and observability.
-
-<!-- The next step is to remove sparse terms from the DTM. The maximal allowed sparsity, `sparse`, is set to 0.65, which gives a DTM with 54% sparsity and 32 tokens. A DTM closer to the guideline with 51% sparsity and 23 tokens can be obtained by setting `sparse` to 0.6, but through my analysis I observed that the 32-token DTM gives a better cluster dendrogram and network graph. **I also discovered that setting the sparsity even higher further improves the clustering, but I avoided this due to efficiency issues and poor readability of graphs.** -->
+This leads us to the removal of sparse tokens from the document term matrix. This time we set the sparsity to 9% as it gives us the best mix of efficiency, reliability, and observability. This figure was chosen as it allows the DTM to have around 20 tokens after removing sparse terms without sacrificing on other attributes.
 
 ```{r}
-dtms <- removeSparseTerms(dtm, 0.15)
+dtms <- removeSparseTerms(dtm, 0.09)
 inspect(dtms)
 freqs <- colSums(as.matrix(dtms))
 freqs[head(order(freqs), 20)]
@@ -95,17 +93,18 @@ freqs[tail(order(freqs), 20)]
 This time round, the least frequent tokens are `exact`, `speed`, `pass` and `care` while the most frequent is `use` with 259 uses. The Document term matrix in it's full length can be found attached in the appendix.
 
 
+
 ## Task 4
 
-<!-- A hierarchical clustering of the corpus is done based on two metrics, Euclidean distance and cosine distance, to see which performs better. The DTM is first converted to a standard matrix format. -->
+To determine which performs better, a hierarchical clustering of the corpus is carried out using two metrics: Euclidean distance and cosine distance. First, the DTM is transformed into a regular matrix format.
 
 ```{r}
 dtms_matrix <- as.matrix(dtms)
 ```
 
-<!-- In document clustering, each document is represented as a vector with many dimensions that correspond to terms it contains. Euclidean distance measures the straight-line distance between these vectors, grouping them based on closeness. A smaller distance represents higher similarity. Cosine distance measures the angle between vectors, with smaller angles corresponding to closer distance and higher similarity. Clustering with cosine distance can be further improved by weighting the DTM with the term frequency-inverse document frequency (TF-IDF) statistic beforehand, which assigns higher weights to terms that appear frequently within a document (implying importance), but rarely across all documents (implying significance). -->
+Each document in document clustering is represented as a vector with numerous dimensions that match the terms it contains. Euclidean distance classifies these vectors according to proximity by measuring the straight-line distance between them. Greater similarity is indicated by a shorter distance. The angle between vectors is measured by cosine distance; smaller angles indicate closer distances and more similarity. By pre-weighting the DTM with the term frequency-inverse document frequency (TF-IDF) statistic, which gives higher weights to terms that appear frequently within a document (implying importance) but infrequently across all documents (implying significance), clustering with cosine distance can be further enhanced.
 
-<!-- The code for clustering using Euclidean distance is adapted from Lecture 10. `dtms_matrix` is scaled and converted to a Euclidean distance matrix, and a dendrogram is plotted. -->
+This code is an adaptation of Lecture 10's clustering using Euclidean distance algorithm. After scaling and converting `dtms_matrix` to a Euclidean distance matrix, a dendrogram is shown.
 
 ```{r fig.height = 5, fig.width = 7}
 dist_euclid <- dist(scale(dtms_matrix))
@@ -113,7 +112,7 @@ fit_euclid <- hclust(dist_euclid, method = "ward.D")
 plot(fit_euclid, hang = -1)
 ```
 
-<!-- To cluster with TF-IDF weighting and cosine distance, the IDF for each term is first computed and a TF-IDF weighted matrix is obtained by applying the cross product of the TFs and IDFs. The formula for cosine distance is then applied to the matrix to get a cosine distance matrix. The dendrogram is then plotted. The code for this was adapted from [this Stack Overflow thread](https://stackoverflow.com/questions/52391558/hierarchical-clustering-using-cosine-distance-in-r). The code was studied and understood before application. -->
+The IDF for each term is first calculated, and a TF-IDF weighted matrix is generated by applying the cross product of the TFs and IDFs in order to cluster with TF-IDF weighting and cosine distance. Next, the matrix is subjected to the cosine distance formula to obtain a cosine distance matrix. After that, the dendrogram is plotted.
 
 ```{r fig.height = 5, fig.width = 7}
 idf <- log(ncol(dtms_matrix) / (1 + rowSums(dtms_matrix != 0)))
@@ -130,46 +129,47 @@ fit_cos <- hclust(dist_cos, method = "ward.D")
 plot(fit_cos, hang = -1)
 ```
 
-<!-- At the highest level in Euclidean distance clustering, `linux02` is in a single cluster while all other documents are grouped into another cluster. This indicates that the clustering algorithm identifies `linux02` as an outlier document with distinct characteristics. However, it does share a common topic with `linux01`, so this is an inaccurate and imbalanced result. For the rest of the documents, some documents with the same topics are clustered together at low levels, such as `churchill01` and `churchill02`. However, there are some prominent inaccuracies, such as `bitcoin01` and `bitcoin02` being clustered far from each other (only grouped together at the highest level) and `asioaf02` (an extract from a fantasy novel) being clustered together with `stats01` (an extract from a statistics textbook) at the lowest level. -->
+In terms of Euclidean distance clustering, the first divide is between two clusters, one of movie reviews including `fast`, `pirates` and `impossible`, and another of purely `linux`. This is pretty accurate, with the `linux` cluster branching off with a new document in each cluster. The movies reviews cluster is further branched off with `fast02` seperated from all others. While unexpected, this points the document to be an outlier. The next two clusters branched do a worse job, with all movies reviews being split accross the clusters, it also noted that with heights much lower than 20, we expect lower accuracy compared to the `linux` cluster.
 
-<!-- With cosine distance, the clustering produces more balanced clusters. `linux02` is grouped with several other documents at the highest level, but it is still separated from `linux01`. However, this clustering is overall better at grouping documents of the same topic together. For example, `bitcoin01` and `bitcoin02` are closer together, while the pairs of `covid01`-`covid02` and `yeats01`-`yeats03` are each in their own clusters at the lowest level. The overall height values of the clustering are also much smaller (with Euclidean distance, the largest height was 28.6 compared to 2.28 for cosine distance), indicating higher confidence in the grouping of similar documents. Conclusively, this is a better clustering for the documents compared to that with Euclidean distance. -->
+Cosine Distance clustering is similar story, however only correctly identifying three `linux` documents into a cluster, and all the others into another. With an even lower height, less than one, for this cluster this time, even for the `linux` cluster, it is no surprise that the movies reviews cluster is highly inaccurate, with no real correlation between clustered documents.
 
-<!-- Since the actual topic of each document is known, it is possible to get a quantitative measure of each clustering by labelling each document with its topic, plotting a confusion matrix of the clustering, and computing the accuracy. Due to length, the confusion matrices and the cluster-topic assignments are shown in the Appendix (for Euclidean distance, 15 clusters are created to reduce topic-cluster ambiguity). -->
+By marking each document with its topic, creating a confusion matrix of the clustering, and calculating the accuracy, it is able to obtain a quantitative assessment of each clustering because each document's true topic is known. Owing to their length, the Appendix displays the confusion matrices and the cluster-topic assignments, and in order to reduce topic-cluster ambiguity for Euclidean distance, 15 clusters are produced.
 
 ```{r results = "hide"}
-# function to remove suffix in document filename
 short_name <- function(doc) {
     return(substr(doc, 1, nchar(doc) - 6))
 }
 
-doc_names <- list.files("docs")
-doc_names_short <- unlist
+doc_names <- list.files("text")
+doc_names_short <- unlist(lapply(doc_names, short_name))
 
-# table(Topic = doc_names_short, Cluster = cutree(fit_euclid, k = 10))
-# table(Topic = doc_names_short, Cluster = cutree(fit_cos, k = 10))
+table(Topic = doc_names_short, Cluster = cutree(fit_euclid, k = 15))
+table(Topic = doc_names_short, Cluster = cutree(fit_cos, k = 10))
 ```
 
-<!-- The accuracies of each matrix is calculated by hand. For clustering with Euclidean distance, this is given by -->
+The matrix accuracy is determined by hand. This is provided for clustering using Euclidean distance by
 
 ```{r}
-13 / 23
+13 / 20
 ```
 
-<!-- Whereas for cosine distance, this is given by -->
+And for Cosine distance is provided by
 
 ```{r}
-15 / 23
+15 / 20
 ```
 
-<!-- In agreement with the observations, clustering with cosine distance has a significantly higher accuracy than clustering with Euclidean distance. -->
+Clustering with cosine distance has a considerably higher accuracy than clustering with Euclidean distance, which is consistent with the data.
 
-<!-- Hierarchical clustering can be said to be the quicker and easier way to get an understanding of the relationships between documents and tokens in the corpus. It neatly groups documents into clusters at different heights, so groupings can be interpreted based on the desired cluster size. The accuracies of the clusterings performed in Task 4 are not very high, but an accuracy of around 0.65 for clustering with cosine distance can be considered strong for a small corpus (only 23 documents) and the genericness of the tokens. -->
+Hierarchical clustering can be said to be the quicker and easier way to get an understanding of the relationships between documents and tokens in the corpus. It neatly groups documents into clusters at different heights, so groupings can be interpreted based on the desired cluster size. The accuracies of the clusterings performed in Task 4 are not very high, but an accuracy of around 0.65 for clustering with cosine distance can be considered strong for a small corpus (only 20 documents) and the genericness of the tokens.
 
-<!-- However, clustering does not identify important documents, tokens or groups. Social network analysis visualises relationships between documents, tokens and document-token pairs, allowing viewers to quickly gain insight about the relationships within the corpus. If needed, viewers can access computable metrics (eg. closeness, betweenness, transitivity, etc.) to gauge the overall connectedness of the network or the importance of each document/token. This makes social networks a flexible way to identify important groups and relationships in the data that can be utilised by more viewers, be they a general audience or a technical one. -->
+Clustering, however, is unable to recognise significant documents, tokens, or groupings. Social network analysis helps users quickly understand the relationships within the corpus by visualising the relationships between documents, tokens, and document-token pairs. Viewers can use computed metrics (such as proximity, betweenness, transitivity, etc.) to determine the significance of each document or token or the network's overall connectivity if necessary. Because of this, social networks provide a versatile means of locating significant clusters and connections within the data that may be leveraged by a larger number of users, whether they be technical or public viewers.
+
+
 
 ## Task 5
 
-<!-- To create a single-mode network visualising the connections between documents based on the number of shared terms, the DTM is first converted to a binary matrix and then multiplied by its transpose. After the first step, a matrix which records 1 for each token that appears in that row's document is produced. After multiplication, the resulting matrix shows the number of shared tokens in each pair of documents. After getting this abstracts matrix, `graph_from_adjacency_matrix()` is used to plot the graph. -->
+The DTM is first transformed into a binary matrix and then multiplied by its transpose in order to construct a single-mode network that visualises the connections between documents based on the quantity of shared phrases. Following the first phase, a matrix is created that has a record of 1 for each token that appears in the document of that row. Following multiplication, the number of shared tokens in every pair of documents is displayed in the resulting matrix.
 
 ```{r fig.height = 7, fig.width = 7}
 dtms_mat_bin <- as.matrix((dtms_matrix > 0) + 0)
@@ -180,15 +180,15 @@ abs_net <- graph_from_adjacency_matrix(abs_mat, mode = "undirected", weighted = 
 plot(abs_net)
 ```
 
-<!-- The graph's high density can be immediately observed; almost every possible pair of vertices have an edge. Computing the density of the graph proves this. -->
+It is easy to see that the graph is quite dense; practically every pair of vertices that might exist has an edge. This is demonstrated by computing the graph's density.
 
 ```{r}
 graph.density(abs_net)
 ```
 
-<!-- This shows that, based on shared terms, each document is related to almost every other document to some extent. `linux02` and `asioaf03` are very close to each other compared to other vertex pairs, indicating a strong relationship, while `yeats03` seems to have relatively weaker connections to the other documents. -->
+This demonstrates how each document is connected to nearly every other document to some degree based on common phrases. In comparison to other vertex pairings, `pirates03`, and `pirates01` are extremely close to `fast02`, suggesting a strong association, whereas `linux05` appears to have comparatively weaker ties to the other documents.
 
-<!-- To identify clear groups in the data, a good start is to get the transitivity of the graph. -->
+Finding the graph's transitivity is an excellent place to start when trying to find distinct groups in the data.
 
 ```{r}
 transitivity(abs_net)
@@ -214,18 +214,18 @@ sort(degree(abs_net))
 ```{r fig.height = 7, fig.width = 7}
 doc_colr <- c("red", "green", "dodgerblue", "yellow", "orange", "magenta", "pink",
               "chocolate", "gray", "cyan")
-# topics <- unique(doc_names_short)
+topics <- unique(doc_names_short)
 
 for (doc in doc_names) {
     V(abs_net)[doc]$color <- doc_colr[match(short_name(doc), topics)]
 }
 
-V(abs_net)$size <- 1 / closeness(abs_net, mode = "all") / 10
-E(abs_net)$width <- E(abs_net)$weight / 6
+V(abs_net)$size <- 1 / closeness(abs_net, mode = "all") / 20
+E(abs_net)$width <- E(abs_net)$weight / 12
 
 plot(abs_net)
-# legend(x = -1.5, y = -0.5, legend = topics, pch = 21, cex = 1,
-#        pt.bg = doc_colr, bty = "n", ncol = 1)
+legend(x = -1.5, y = -0.5, legend = topics, pch = 21, cex = 1,
+       pt.bg = doc_colr, bty = "n", ncol = 1)
 ```
 
 <!-- With this graph, we can more clearly understand the distance between the `yeats` documents and the others. It is also easier to observe that some topics have all documents close together (eg. `asioaf`) while others have the opposite (eg. `hamlet`). -->
@@ -273,8 +273,8 @@ sort(degree(tok_net))
 <!-- To improve this graph, the vertex sizes are scaled to their closeness centralities, and the edge widths are scaled to their weights (number of shared documents between tokens). -->
 
 ```{r fig.height = 7, fig.width = 7}
-V(tok_net)$size <- 1 / closeness(tok_net, mode = "all") / 10
-E(tok_net)$width <- E(tok_net)$weight / 5
+V(tok_net)$size <- 1 / closeness(tok_net, mode = "all") / 20
+E(tok_net)$width <- E(tok_net)$weight / 15
 
 plot(tok_net)
 ```
@@ -330,7 +330,7 @@ sort(degree(bipart))
 
 ```{r fig.height = 8, fig.width = 8}
 for (i in seq_len(23)) V(bipart)$size[i] <- 10
-V(bipart)$size[24:55] <- degree(bipart)[24:55]
+V(bipart)$size[20:50] <- degree(bipart)[20:50]
 for (j in seq_len(length(doc_names))) {
     V(bipart)[j]$color <- doc_colr[match(short_name(doc_names[j]), topics)]
 }
@@ -358,12 +358,19 @@ legend(x = -1.5, y = -0.5, legend = c(topics, "token"), pch = 21, cex = 1,
 
 
 
-TODO: Have approx 20 tokens after removing sparse terms
-Remove name suffixes
-generate euclid and cos distances
+TODO: 
 
+4
+Calculate euclid and cos matrix accuracies by hand
 
+5
+Adjust graph 2 parameters [Graph density]
 
+6
+Adjust graph 2 parameters [Graph density]
+
+7
+Adjust graph 2 bipart ratio parameters
 
 
 
@@ -415,35 +422,116 @@ Wikimedia Foundation. (2024a, April 5). Lineageos. Wikipedia. https://en.wikiped
 
 Wikimedia Foundation. (2024b, May 7). Android (Operating System). Wikipedia. https://en.wikipedia.org/wiki/Android_(operating_system) 
 
-Encyclopædia Britannica, inc. (2024, May 14). Australia. Encyclopædia Britannica. https://www.britannica.com/place/Australia 
-
-Goode, L. (2024, May 14). It’s the end of google search as we know it. Wired. https://www.wired.com/story/google-io-end-of-google-search/ 
+Wikimedia Foundation. (2024b, May 7). Android (Operating System). Wikipedia. https://en.wikipedia.org/wiki/CyanogenMod
 
 IMDb.com. (2003, June 6). 2 fast 2 furious. IMDb. https://www.imdb.com/title/tt0322259/?ref_=nv_sr_srsg_0_tt_7_nm_1_q_2%2520fast 
 
 IMDb.com. (2009, April 3). Fast & Furious. IMDb. https://www.imdb.com/title/tt1013752/?ref_=nv_sr_srsg_1_tt_7_nm_0_q_fast%2520and%2520fur 
 
+IMDb.com. (2006, June 16). The Fast and the Furious: Tokyo Drift. IMDb. https://www.imdb.com/title/tt0463985/?ref_=nv_sr_srsg_1_tt_7_nm_0_q_tokyo%2520d
+
+IMDb.com. (2011, April 29). Fast five. IMDb. https://www.imdb.com/title/tt1596343/?ref_=fn_al_tt_6 
+
+IMDb.com. (2013). Fast & Furious 6. IMDb. https://www.imdb.com/title/tt1905041/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_fast%25206
+
 IMDb.com. (2003b, July 9). Pirates of the Caribbean: The curse of the black pearl. IMDb. https://www.imdb.com/title/tt0325980/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_pirates 
+
+IMDb.com. (2006). Pirates of the Caribbean: Dead Man's Chest. IMdb. https://www.imdb.com/title/tt0383574/?ref_=nv_sr_srsg_6_tt_5_nm_3_q_pirates%2520of%2520the%2520carribean
+
+IMDb.com. (2003b, July 9). Pirates of the Caribbean: At World's End. IMdb. https://www.imdb.com/title/tt0449088/?ref_=nv_sr_srsg_7_tt_5_nm_3_q_pirates%2520of%2520the%2520carribean
+
+IMDb.com. (2003b, July 9). Pirates of the Caribbean: On Stranger Tides. IMdb. https://www.imdb.com/title/tt1298650/?ref_=nv_sr_srsg_9_tt_5_nm_3_q_pirates%2520of%2520the%2520carribean
 
 IMDb.com. (2017, May 26). Pirates of the caribbean: Dead men tell no tales. IMDb. https://www.imdb.com/title/tt1790809/?ref_=nv_sr_srsg_3_tt_8_nm_0_q_pirates 
 
-IMDb.com. (2014, October 24). John Wick. IMDb. https://www.imdb.com/title/tt2911666/?ref_=nv_sr_srsg_1_tt_7_nm_1_q_jon%2520wick 
-
 IMDb.com. (1996, May 22). Mission: Impossible. IMDb. https://www.imdb.com/title/tt0117060/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_mission 
 
-IMDb.com. (2016, February 12). Deadpool. IMDb. https://www.imdb.com/title/tt1431045/?ref_=nv_sr_srsg_3_tt_6_nm_2_q_deadpool 
+IMDb.com. (2000). Mission: Impossible II. IMDb. https://www.imdb.com/title/tt0120755/?ref_=tt_sims_tt_t_1
 
-IMDb.com. (1984, October 26). The terminator. IMDb. https://www.imdb.com/title/tt0088247/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_terminator 
+IMDb.com. (2006). Mission: Impossible III. IMDb.  https://www.imdb.com/title/tt0317919/?ref_=tt_sims_tt_t_2
 
-IMDb.com. (1977, May 25). Star wars: Episode IV - A new hope. IMDb. https://www.imdb.com/title/tt0076759/?ref_=nv_sr_srsg_4_tt_7_nm_0_q_star%2520wars 
+IMDb.com. (2011). Mission: Impossible - Ghost Protocol. IMDb.  https://www.imdb.com/title/tt1229238/?ref_=tt_sims_tt_t_3
 
-IMDb.com. (2004, May 19). Shrek 2. IMDb. https://www.imdb.com/title/tt0298148/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_shrek%25202 
+IMDb.com. (2015). Mission: Impossible - Rogue Nation. IMDb. https://www.imdb.com/title/tt2381249/?ref_=tt_sims_tt_t_4
 
-IMDb.com. (2006, October 20). The prestige. IMDb. https://www.imdb.com/title/tt0482571/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_prestige 
 
-IMDb.com. (2013, December 25). The wolf of wall street. IMDb. https://www.imdb.com/title/tt0993846/?ref_=nm_flmg_t_38_prd 
 
-IMDb.com. (2002, December 25). Catch me if you can. IMDb. https://www.imdb.com/title/tt0264464/?ref_=nv_sr_srsg_0_tt_8_nm_0_q_catch%2520me 
+
+
+<!-- Document-term matrix at the end of Task 3, printed as a data frame. -->
+
+```{r}
+as.data.frame(as.matrix(dtms))
+```
+
+<!-- Confusion matrices used for quantitative measure of clustering in Task 4. -->
+
+```{r}
+table(Topic = doc_names_short, Cluster = cutree(fit_euclid, k = 10))
+table(Topic = doc_names_short, Cluster = cutree(fit_cos, k = 10))
+```
+
+<!-- Euclidean distance cluster assignment for each topic, from Task 4. -->
+
+<!-- - **1** `asoiaf` -->
+<!-- - **2** `stats` -->
+<!-- - **3** `NA` -->
+<!-- - **4** `bitcoin` -->
+<!-- - **5** `churchill` -->
+<!-- - **6** `covid` -->
+<!-- - **7** `NA` -->
+<!-- - **8** `NA` -->
+<!-- - **9** `hamlet` -->
+<!-- - **10** `linux` -->
+<!-- - **11** `NA` -->
+<!-- - **12** `peaky` -->
+<!-- - **13** `queen` -->
+<!-- - **14** `yeats` -->
+<!-- - **15** `NA` -->
+
+<!-- Cosine distance cluster assignment for each topic, from Task 4. -->
+
+<!-- - **1** `asioaf` -->
+<!-- - **2** `queen` -->
+<!-- - **3** `stats` -->
+<!-- - **4** `bitcoin` -->
+<!-- - **5** `churchill` -->
+<!-- - **6** `covid` -->
+<!-- - **7** `hamlet` -->
+<!-- - **8** `peaky` -->
+<!-- - **9** `linux` -->
+<!-- - **10** `yeats` -->
+
+<!-- Outputs for closeness, betweeness, eigenvector centralities and degree measurements of the abstracts network for Task 5. -->
+
+```{r}
+sort(-closeness(abs_net))
+sort(-betweenness(abs_net))
+sort(evcent(abs_net)$vector)
+sort(degree(abs_net))
+```
+
+<!-- Outputs for closeness, betweeness, eigenvector centralities and degree measurements of the tokens matrix for Task 6. -->
+
+```{r}
+sort(-closeness(tok_net))
+sort(-betweenness(tok_net))
+sort(evcent(tok_net)$vector)
+sort(degree(tok_net))
+```
+
+<!-- Degrees of vertices of the bipartite graph in Task 7. -->
+
+```{r}
+sort(degree(bipart))
+```
+
+
+
+
+
+
+
 
 
 
