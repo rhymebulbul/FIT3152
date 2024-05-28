@@ -364,12 +364,15 @@ TODO:
 Calculate euclid and cos matrix accuracies by hand
 
 5
+para
 Adjust graph 2 parameters [Graph density]
 
 6
+para
 Adjust graph 2 parameters [Graph density]
 
 7
+para
 Adjust graph 2 bipart ratio parameters
 
 
