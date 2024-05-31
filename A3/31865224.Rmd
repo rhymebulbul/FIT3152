@@ -281,11 +281,11 @@ E(tok_net)$width <- E(tok_net)$weight / 20
 plot(tok_net)
 ```
 
-<!-- With this graph, it can now be clearly seen that `make` and `can` are two important central tokens, while `man` is notably further away from the rest and, as justified by the previously computed metrics, is relatively less important. -->
+Using this graph, it is evident that `play` and `product` are two significant central tokens, whereas `top` is significantly less significant and is situated further away from the others, as supported by the previously calculated metrics.
 
 ## Task 7
 
-<!-- To create a bipartite (two-mode) network graph, the data is first formatted using code adapted from Lecture 12. -->
+Using code taken from Lecture 12, the data is first prepared to produce a bipartite (two-mode) network graph.
 
 ```{r}
 dtms_dfa <- as.data.frame(dtms_matrix)
@@ -304,7 +304,7 @@ dtms_dfc <- dtms_dfb[dtms_dfb$weight != 0, ]
 dtms_dfc <- dtms_dfc[, c("abstract", "token", "weight")]
 ```
 
-<!-- In the above code, a data frame showing the frequency (weight) of each token in each document (`dtms_dfb`) is created. Rows with weights of 0 are removed in a new data frame (`dtms_dfc`) and this data frame is used to plot the bipartite graph. -->
+The code mentioned above creates a data frame called `dtms_dfb` that displays the weight of each token in each document. The bipartite graph is plotted using a fresh data frame `dtms_dfc` that has had all of its rows with weights of 0 removed.
 
 ```{r fig.height = 8, fig.width = 8}
 bipart <- graph.data.frame(dtms_dfc, directed = FALSE)
@@ -316,7 +316,7 @@ E(bipart)$color <- "grey"
 plot(bipart)
 ```
 
-<!-- As this graph is bipartite, the density and transitivity are expected to be very low. The closeness, betweenness and eigenvector centralities do not give us new insight, as the relationship between documents and that between tokens have already been analysed in Tasks 5 and 6. Hence, this graph is analysed by observation. -->
+Given that this graph is bipartite, extremely low transitivity and density are anticipated. Since the relationship between tokens and documents has previously been examined in Tasks 5 and 6, the proximity, betweenness, and eigenvector centralities do not provide any new information. This graph is therefore examined through observation.
 
 <!-- The overall structure of this graph resembles a "cluster" of documents in the middle surrounded by the tokens in a ring, all of which are surrounded by the remaining documents. The central cluster of documents are positioned as such as they are linked to most of the tokens. This cluster includes `linux02`, `asioaf03` and `covid03`, which the metrics computed in Task 5 determined to be the relatively more important documents. Similar to the graph in Task 5, `yeats03` lies relatively further away from the other vertices, with links to fewer tokens. The degrees of the vertices prove this (output shown in Appendix). -->
 
@@ -324,7 +324,7 @@ plot(bipart)
 sort(degree(bipart))
 ```
 
-<!-- `linux02` and `covid03` have the two highest degrees while `yeats03` has the least. -->
+Most movie reviews, such as `pirates`, `fast` and `impossible` have the highest degrees of 30, while `box`, `color`, `connect` and several others jointly have the least.
 
 <!-- Other notable groups of documents which are not within the central cluster include the group of all three `stats` documents, which are situated close together on the left of the graph, and the pair of `asoiaf02` and `covid02` at the top, which are separated from the other documents by a "wall" of tokens. -->
 
