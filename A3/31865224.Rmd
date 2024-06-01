@@ -80,7 +80,7 @@ freq[tail(order(freq), 20)]
 
 With 6062 terms, or as we call it, tokens; the DTM is highly sparse at 88%. Interestingly, the least occurring tokens seem to only appear once, while the most frequent token is `android`, occurring almost 500 times, although it is only expected to be used in 3 documents, pointing to it's sparsity.
 
-This leads us to the removal of sparse tokens from the document term matrix. This time we set the sparsity to 9% as it gives us the best mix of efficiency, reliability, and observability. This figure was chosen as it allows the DTM to have around 20 tokens after removing sparse terms without sacrificing on other attributes, due to the nature of the corpus chosen.
+This leads us to the removal of sparse tokens from the document term matrix. This time we set the sparsity to 9% as it gives us the best mix of efficiency, reliability, and observability. This figure was chosen as it allows the DTM to have around 20 tokens after removing sparse terms without sacrificing on other attributes, due to the nature and length of the corpus chosen.
 
 ```{r}
 dtms <- removeSparseTerms(dtm, 0.09)
@@ -183,7 +183,7 @@ plot(abs_net)
 
 The graph depicted is quite dense; practically every pair of vertices that might exist has an edge. This is demonstrated by computing the graph's density.
 
-```{r}
+```{r warning=FALSE} 
 graph.density(abs_net)
 ```
 
@@ -199,7 +199,7 @@ The ratio of triangles to linked triples is known as transitivity, or clustering
 
 Because of their prominent locations, `impossible02`, `impossible03` and `linux03` initially appear to be the most significant documents. To obtain numerical measurements, execute the code provided. The outcomes are displayed in the Appendix due of their length.
 
-```{r results = "hide"}
+```{r results = "hide",  warning=FALSE}
 sort(-closeness(abs_net))
 sort(-betweenness(abs_net))
 sort(evcent(abs_net)$vector)
@@ -247,7 +247,7 @@ plot(tok_net)
 
 The graph depicted appears to be much denser than the one for documents, with many more connections between nodes.
 
-```{r}
+```{r warning=FALSE}
 graph.density(tok_net)
 ```
 
@@ -259,7 +259,7 @@ The vertices of the graph appear to be rather uniformly distributed, making it c
 transitivity(tok_net)
 ```
 
-The graph's transitivity is 1. This measure shows us that every three tokens can form a triangle, indicating a very large number of potential clusters, even though it is difficult to distinguish clusters by observation. The generic nature of the tokens may also be to blame for this.*During DTM pre-processing, I tried manually eliminating a few generic terms, but it resulted in worse clustering performance. This is most likely due to the fact that, despite being widely used, generic phrases offer crucial contextual information that ties papers together.
+The graph's transitivity is 1. This measure shows us that every three tokens can form a triangle, indicating a very large number of potential clusters, even though it is difficult to distinguish clusters by observation. The generic nature of the tokens may also be to blame for this.Manually eliminating a few generic terms during DTM creation had been attempted, but it resulted in worse clustering performance. This is most likely due to the fact that, despite being widely used, generic phrases offer crucial contextual information that ties papers together.
 
 `open`, `play`, `help` and `top` are the tokens that appear to be the most central, suggesting that they may hold some significance. To look into this, execute the code below. The Appendix displays the results.
 
@@ -349,7 +349,7 @@ The revised graph depicts all `linux` documents with higher relative importance 
 
 
 
-## Appendix
+
 
 
 ## References
@@ -396,7 +396,7 @@ IMDb.com. (2015). Mission: Impossible - Rogue Nation. IMDb. https://www.imdb.com
 
 
 
-
+## Appendix
 
 At the conclusion of Task 3, the document-term matrix is printed as a data frame.
 
