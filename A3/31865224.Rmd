@@ -15,14 +15,14 @@ output: pdf_document
 
 
 ## Task 1
-I gathered a collection of 19 text documents from different sources that covered a range of themes for this task. Primarily these focus on either `linux`, or movie reviews. `fast`, `pirates` and `impossible` are the movie reviews included in these publications. These refer to the movie sequels "The Fast and The Furious", "The Pirates of the Caribbean" and "Mission Impossible" respectively.
+I gathered a collection of 20 text documents from different sources that covered a range of themes for this task. Primarily these focus on either `linux`, or movie reviews. `fast`, `pirates` and `impossible` are the movie reviews included in these publications. These refer to the movie sequels "The Fast and The Furious", "The Pirates of the Caribbean" and "Mission Impossible" respectively.
 
 Text files were created by copying and pasting the document contents, and references can be found in the appendix.
 
 
 
 ## Task 2
-Task 1 already had the document's contents pasted into text files. The text files were assembled into the `text` folder within the working directory in order to generate the corpus. Next, the code that follows is executed. It installs and imports the necessary libraries, sets the seed and uses the `Corpus()` function from the `tm` package to construct the corpus.
+The document's contents pasted into text files in Task 1. The text files were assembled into the `text` folder within the working directory in order to generate the corpus. Next, the code that follows is executed. It installs and imports the necessary libraries, sets the seed and uses the `Corpus()` function from the `tm` package to construct the corpus.
 
 ```{r message = FALSE}
 rm(list = ls())
@@ -337,7 +337,7 @@ for (j in seq_len(length(doc_names))) {
     V(bipart)[j]$color <- doc_colr[match(short_name(doc_names[j]), topics)]
 }
 for (k in c(21:length(V(bipart)))) V(bipart)[k]$color <- "white"
-E(bipart)$width <- as.numeric(dtms_dfc$weight) / 5
+E(bipart)$width <- as.numeric(dtms_dfc$weight) / 10
 E(bipart)$color <- tail_of(bipart, E(bipart))$color
 
 plot(bipart)
@@ -345,31 +345,7 @@ legend(x = -1.5, y = -0.5, legend = c(topics, "token"), pch = 21, cex = 1,
        pt.bg = c(doc_colr, "white"), bty = "n", ncol = 1)
 ```
 
-With much thicker edges than its close neighbour ``, which is also deemed to be of high importance, it is easier to perceive the high relative importance of `` in this revised graph. The triplet of tokens ``, ``, and `` is the most common in all publications. Certain documents, like ``, have thin edges but are located within the central cluster, suggesting that they have fewer tokens overall. This is in contrast to external papers like the `` documents, which contain a greater number of fewer tokens but thicker margins overall.
-
-
-
-
-
-
-
-
-
-<!-- TODO:  -->
-
-
-<!-- 7 -->
-<!-- para. last 
-graph pdf render density-->
-
-
-
-
-
-
-
-
-
+The revised graph depicts all `linux` documents with higher relative importance than others. It is hard to find a token that appears in all documents, however `open`, `release`, `user` and `feature` seem to be shared in all `linux` documents, which comes as no surprise given the documents describe software releases and features for users. The only token that seems to be common among the movie reviews cluster is `see`, appearing related to `fast` movies the most, as well as some `pirates` movies. However movie reviews in general have relatively thinner edges, denoting fewer shared tokens between them as well.
 
 
 
