@@ -1,8 +1,9 @@
-# FIT3152 Data Analytics - Coursework
+# FIT3152 Data Analytics
 
-Academic assignments completed for **FIT3152 Data Analytics** at Monash University (Semester 1, 2024).
+**Classification**: Machine Learning & Data Science
 
-> **Note**: This repository contains university coursework assignments, not independent research projects. The work demonstrates applied data analytics techniques as taught in the course.
+**Note**: This project was completed in R using R Markdown (.Rmd) for reproducible analysis and reporting.
+
 
 ## Assignments Overview
 
@@ -91,8 +92,46 @@ Rscript -e "rmarkdown::render('A3/<filename>.Rmd')"
 - **Multiple Paradigms**: Statistical analysis, supervised learning, unsupervised learning, text mining
 - **Professional Documentation**: Full R Markdown reports with code, analysis, and visualizations
 
-## Academic Context
+## Python Package Equivalents
 
-**Course**: FIT3152 Data Analytics
-**Institution**: Monash University
-**Semester**: Semester 1, 2024
+For reference, here are the Python equivalents of the R packages used in this project:
+
+### Assignment 1 (COVID-19 Analysis)
+
+| R Package | Python Equivalent | Purpose |
+|-----------|------------------|---------|
+| `ggplot2` | `matplotlib`, `seaborn`, or `plotnine` | Visualization (plotnine is most similar to ggplot2) |
+| `dplyr` | `pandas` | Data manipulation |
+| `tidyr` | `pandas` | Data tidying/reshaping |
+
+### Assignment 2 (Phishing Detection)
+
+| R Package | Python Equivalent | Purpose |
+|-----------|------------------|---------|
+| `dplyr` | `pandas` | Data preprocessing |
+| `caret` | `scikit-learn` | ML pipeline and preprocessing |
+| `tree` | `scikit-learn.tree` (DecisionTreeClassifier) | Decision trees |
+| `e1071` | `scikit-learn.svm` | SVM and Naive Bayes |
+| `adabag` | `scikit-learn.ensemble` (AdaBoostClassifier) | AdaBoost |
+| `randomForest` | `scikit-learn.ensemble` (RandomForestClassifier) | Random forests |
+| `ROCR` | `scikit-learn.metrics` | ROC curves and model evaluation |
+| `lightgbm` | `lightgbm` | Gradient boosting (same package name!) |
+| `kernlab` | `scikit-learn.svm` (with kernel options) | Kernel-based ML methods |
+
+### Assignment 3 (Text Mining)
+
+| R Package | Python Equivalent | Purpose |
+|-----------|------------------|---------|
+| `tm` | `nltk`, `sklearn.feature_extraction.text`, or `gensim` | Text mining and corpus management |
+| `cluster` | `scikit-learn.cluster` | Clustering algorithms |
+| `igraph` | `networkx` or `igraph` (Python version) | Network analysis |
+
+### Core Python Stack Summary
+
+For all three assignments combined, the core Python packages would be:
+- **`pandas`** - replaces dplyr/tidyr for data manipulation
+- **`scikit-learn`** - replaces most ML packages (caret, tree, e1071, adabag, randomForest, ROCR, kernlab, cluster)
+- **`matplotlib`/`seaborn`/`plotnine`** - replaces ggplot2
+- **`nltk`** or **`sklearn.feature_extraction.text`** - replaces tm
+- **`lightgbm`** - same in both R and Python
+- **`networkx`** or **`igraph`** - replaces igraph

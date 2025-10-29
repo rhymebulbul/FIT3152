@@ -8,9 +8,9 @@ output:
 
 ## Assignment 1, Semester 1, 2024
 
-**Rhyme Bulbul** 
+**Firstname Lastname**
 
-**31865224** 
+**42857193** 
 
 **Project:** Analysis of country-level predictors of pro-social behaviours to reduce the spread of COVID-19 during the early stages of the pandemic
 
@@ -27,7 +27,7 @@ We start by taking a unique sample of the data set based on my student ID, and a
 
 ```{r message = FALSE}
 rm(list = ls())
-set.seed(31865224) 
+set.seed(42857193) 
 cvbase = read.csv("PsyCoronaBaselineExtract.csv")
 cvbase <- cvbase[sample(nrow(cvbase), 40000), ] 
 attach(cvbase)
