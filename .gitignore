@@ -57,3 +57,49 @@ A2/.Rhistory
 A3/.Rhistory
 .DS_Store
 .idea
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+A1/python/venv/
+A2/python/venv/
+A3/python/venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Python output files
+*.log
+*.png
+*.jpg
+*.pdf
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
